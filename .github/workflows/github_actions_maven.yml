@@ -24,3 +24,5 @@ jobs:
       run: mvn install -f code/eclipse_project/pom.xml
     - name: Test Warzone
       run: mvn test -f code/eclipse_project/pom.xml
+    - name: Javadoc Generation
+      run: mvn javadoc:javadoc -f code/eclipse_project/
