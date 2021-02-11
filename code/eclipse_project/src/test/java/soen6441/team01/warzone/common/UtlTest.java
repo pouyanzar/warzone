@@ -8,9 +8,14 @@ public class UtlTest
 {
 
 	@Test
-	public void test()
+	/**
+	 * Simple test to see if the current working directory can be listed to the
+	 * console. Also useful during the build (locally and remotely) to see what is
+	 * the current working dorectory.
+	 */
+	public void test_printCurrentDirectory()
 	{
-		//fail("Not yet implemented");
+		Utl.printCurrentDirectory();
 		assertTrue(true);
 	}
 

@@ -8,7 +8,6 @@ import org.junit.Test;
 
 public class MapTest
 {
-	//private String MAP_DIR = ".\\target\\test-classes\\maps\\";
 	private String MAP_DIR = "./src/test/resources/maps/";
 	
 	@Test
@@ -22,7 +21,7 @@ public class MapTest
 		try
 		{
 			map.editMap(MAP_DIR + "canada/canada.map");
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			fail("failure loading an existing valid map");
