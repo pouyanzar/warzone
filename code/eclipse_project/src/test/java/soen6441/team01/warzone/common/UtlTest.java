@@ -4,8 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class UtlTest
-{
+public class UtlTest {
 
 	@Test
 	/**
@@ -13,8 +12,7 @@ public class UtlTest
 	 * console. Also useful during the build (locally and remotely) to see what is
 	 * the current working dorectory.
 	 */
-	public void test_printCurrentDirectory()
-	{
+	public void test_printCurrentDirectory() {
 		Utl.printCurrentDirectory();
 		assertTrue(true);
 	}

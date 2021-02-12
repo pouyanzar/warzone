@@ -8,14 +8,12 @@ import java.io.File;
  * @author John
  *
  */
-public class Utl
-{
+public class Utl {
 	/**
 	 * Print the current directory to the console. Useful for debugging a unit test
 	 * that references resources.
 	 */
-	public static void printCurrentDirectory()
-	{
+	public static void printCurrentDirectory() {
 		System.out.println("current directory: " + System.getProperty("user.dir"));
 	}
 
@@ -28,22 +26,18 @@ public class Utl
 	 * 
 	 * @param path the path where to list the directory contents from
 	 */
-	public static void printDirectory(String path)
-	{
+	public static void printDirectory(String path) {
 		File root = new File(path);
 		File[] list = root.listFiles();
 
 		if (list == null)
 			return;
 
-		for (File f : list)
-		{
-			if (f.isDirectory())
-			{
+		for (File f : list) {
+			if (f.isDirectory()) {
 				printDirectory(f.getAbsolutePath());
 				System.out.println("Dir:" + f.getAbsoluteFile());
-			} else
-			{
+			} else {
 				System.out.println("File:" + f.getAbsoluteFile());
 			}
 		}

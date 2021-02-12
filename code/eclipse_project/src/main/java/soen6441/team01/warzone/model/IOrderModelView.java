@@ -1,6 +1,5 @@
 package soen6441.team01.warzone.model;
 
-public interface IOrderModelView
-{
+public interface IOrderModelView {
 
 }
