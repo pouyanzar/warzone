@@ -42,4 +42,7 @@ public class Utl {
 			}
 		}
 	}
+	
+	public void no_op() {}
+	
 }
