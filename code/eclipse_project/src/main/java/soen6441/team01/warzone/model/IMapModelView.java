@@ -1,6 +1,5 @@
 package soen6441.team01.warzone.model;
 
-public interface IMapModelView
-{
+public interface IMapModelView {
 
 }
