@@ -1,48 +1,117 @@
 package soen6441.team01.warzone.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
+import soen6441.team01.warzone.model.contracts.IContinentModel;
+import soen6441.team01.warzone.model.contracts.IContinentModelView;
+import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IMapModelView;
+
 /**
- * Manages Warzone Maps
- * 
- * The following link describes the format of the "domination" map file used
- * herein: http://domination.sourceforge.net/makemaps.shtml
+ * Manages Warzone Maps. Maps are basically composed of continents, countries
+ * and the links (ie neighbors) between countries.
  *
  */
 public class Map implements IMapModel, IMapModelView {
+	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
+	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
+
 	/**
-	 * Loads for editing an existing Warzone map from an existing "domination" map
-	 * file; or, will create an empty Warzone map if there is no existing map file.
-	 * 
-	 * @param p_map_filename the filename of the "domination" map file to load or
-	 *                       create
-	 * @throws Exception
+	 * @return the current list of continents defined on the map
 	 */
-	public void editMap(String p_map_filename) throws Exception {
-		File l_map_file = new File(p_map_filename);
-		if (!l_map_file.exists()) {
-			// create 'empty' map file
-			String l_empty_map = "; map: #MAP#.map\n" + "[files]\n" + "[continents]\n" + "[countries]\n"
-					+ "[borders]\n";
-			PrintWriter l_pw = new PrintWriter(p_map_filename);
-			l_pw.println(l_empty_map);
-			l_pw.close();
-		}
-		loadMap(p_map_filename);
+	public ArrayList<IContinentModel> getContinents() {
+		return (ArrayList<IContinentModel>) d_continents.clone();
 	}
 
 	/**
-	 * Loads a Warzone map from an existing “domination” map file
+	 * @return the current list of countries defined on the map
+	 */
+	public ArrayList<ICountryModel> getCountries() {
+		return (ArrayList<ICountryModel>) d_countries.clone();
+	}
+
+	/**
+	 * Add a continent to the current map
+	 * 
+	 * @param p_continent_id   a unique continent identifier
+	 * @param p_continent_name the name of the continent
+	 * @param p_extra_army     the number of extra armies to assign if player has
+	 *                         all countries
+	 * @return the created continent
+	 * @throws Exception when there is an exception
+	 */
+	public IContinentModel addContinent(int p_continent_id, String p_continent_name, int p_extra_army)
+			throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		if (l_continent != null) {
+			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
+		}
+		l_continent = new Continent(p_continent_id, p_continent_name, p_extra_army);
+		d_continents.add(l_continent);
+		return l_continent;
+	}
+
+	/**
+	 * Add a country to the current map
+	 * 
+	 * @param p_country_id   a unique country identifier
+	 * @param p_country_name the name of the country
+	 * @param p_continent    the associated continent
+	 * @param p_x            the x coordinate as defined in the map file
+	 * @param p_y            the y coordinate as defined in the map file
+	 * @return the created country
+	 * @throws Exception when there is an exception
+	 */
+	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y)
+			throws Exception {
+		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+		if (l_country != null) {
+			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
+		}
+		l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y);
+		d_countries.add(l_country);
+		return l_country;
+	}
+
+	/**
+	 * Loads a Warzone map from an existing "domination" style map file. The
+	 * following link describes the format of the "domination" map file :
+	 * http://domination.sourceforge.net/makemaps.shtml
 	 * 
 	 * @param p_map_filename the filename of the "domination" map file
-	 * @throws Exception
+	 * @throws IOException when there is a problem processing the map file
 	 */
-	public void loadMap(String p_map_filename) throws Exception {
+	public void loadMap(String p_map_filename) throws IOException {
 		List<String> list = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
-		// todo: parse the map file... (another method?)
+		// todo: parse the map file...
 	}
 }
+
+///**
+//* Loads for editing an existing Warzone map from an existing "domination" style
+//* map file; or, will create an empty Warzone map if there is no existing map
+//* file.
+//* 
+//* @param p_map_filename the filename of the "domination" map file to load or
+//*                       create
+//* @throws Exception
+//*/
+//public void editMap(String p_map_filename) throws Exception {
+//	File l_map_file = new File(p_map_filename);
+//	if (!l_map_file.exists()) {
+//		// create 'empty' map file
+//		String l_empty_map = "; map: #MAP#.map\n" + "[files]\n" + "[continents]\n" + "[countries]\n"
+//				+ "[borders]\n";
+//		PrintWriter l_pw = new PrintWriter(p_map_filename);
+//		l_pw.println(l_empty_map);
+//		l_pw.close();
+//	}
+//	loadMap(p_map_filename);
+//}

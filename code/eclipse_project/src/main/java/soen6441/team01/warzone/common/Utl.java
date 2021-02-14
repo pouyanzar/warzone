@@ -13,7 +13,7 @@ public class Utl {
 	 * Print the current directory to the console. Useful for debugging a unit test
 	 * that references resources.
 	 */
-	public static void printCurrentDirectory() {
+	public static void PrintCurrentDirectory() {
 		System.out.println("current directory: " + System.getProperty("user.dir"));
 	}
 
@@ -26,7 +26,7 @@ public class Utl {
 	 * 
 	 * @param path the path where to list the directory contents from
 	 */
-	public static void printDirectory(String path) {
+	public static void PrintDirectory(String path) {
 		File root = new File(path);
 		File[] list = root.listFiles();
 
@@ -35,14 +35,31 @@ public class Utl {
 
 		for (File f : list) {
 			if (f.isDirectory()) {
-				printDirectory(f.getAbsolutePath());
+				PrintDirectory(f.getAbsolutePath());
 				System.out.println("Dir:" + f.getAbsoluteFile());
 			} else {
 				System.out.println("File:" + f.getAbsoluteFile());
 			}
 		}
 	}
-	
-	public void no_op() {}
-	
+
+	/**
+	 * Checks that the p_map_name contains valid characters as defined by the
+	 * Country and Continent names, i.e. letters, digits, '_', '-' (e.g. no spaces)
+	 * 
+	 * @param p_map_name the name of the map element to check
+	 * @return true if the name is valid; otherwise false
+	 */
+	public static boolean IsValidMapName(String p_map_name) {
+		if(p_map_name == null || p_map_name == "") {
+			return false;
+		}
+		char[] l_chars = p_map_name.toCharArray();
+		for (char l_ch : l_chars) {
+			if (!Character.isLetter(l_ch) && !Character.isDigit(l_ch) && l_ch != '_' && l_ch != '-') {
+				return false;
+			}
+		}
+		return true;
+	}
 }
