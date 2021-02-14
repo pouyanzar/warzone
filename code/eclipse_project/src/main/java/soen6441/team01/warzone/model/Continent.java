@@ -107,5 +107,4 @@ public class Continent implements IContinentModel, IContinentModelView {
 		}
 		return null;
 	}
-
 }
