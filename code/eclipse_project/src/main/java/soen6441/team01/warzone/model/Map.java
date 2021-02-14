@@ -19,14 +19,17 @@ public class Map implements IMapModel, IMapModelView {
 
 	private HashMap<Country, List<Country>> neighborhood;
 
+	/**
+	 * Constructor
+	 */
 	public Map() {
 		this.neighborhood = new HashMap<Country, List<Country>>();
 	}
 	
 	/**
 	 * Adds desired country to map
-	 * @param p_countryID
-	 * @return none
+	 * @param p_countryID The name of country to add to map
+	 *
 	 */
 	public void addCountry(String p_countryID) {
 		neighborhood.putIfAbsent(new Country(p_countryID), new ArrayList<Country>());
@@ -34,8 +37,8 @@ public class Map implements IMapModel, IMapModelView {
 	
 	/**
 	 * Removes selected country from map
-	 * @param p_countryID
-	 * @return none
+	 * @param p_countryID The name of country to delete from map
+	 * 
 	 */
 	public void removeCountry(String p_countryID) {
 		Country l_countryToRemove = new Country(p_countryID);
@@ -49,7 +52,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * 
 	 * @param p_map_filename the filename of the "domination" map file to load or
 	 *                       create
-	 * @throws Exception
+	 * @throws Exception if the file is not accessible
 	 */
 	public void editMap(String p_map_filename) throws Exception {
 		File l_map_file = new File(p_map_filename);
@@ -68,7 +71,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * Loads a Warzone map from an existing “domination” map file
 	 * 
 	 * @param p_map_filename the filename of the "domination" map file
-	 * @throws Exception
+	 * @throws Exception if the file is not accessible
 	 */
 	public void loadMap(String p_map_filename) throws Exception {
 		List<String> list = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
