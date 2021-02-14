@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Manages Warzone Maps
@@ -14,6 +16,33 @@ import java.util.List;
  *
  */
 public class Map implements IMapModel, IMapModelView {
+
+	private HashMap<Country, List<Country>> neighborhood;
+
+	public Map() {
+		this.neighborhood = new HashMap<Country, List<Country>>();
+	}
+	
+	/**
+	 * Adds desired country to map
+	 * @param p_countryID
+	 * @return none
+	 */
+	public void addCountry(String p_countryID) {
+		neighborhood.putIfAbsent(new Country(p_countryID), new ArrayList<Country>());
+	}
+	
+	/**
+	 * Removes selected country from map
+	 * @param p_countryID
+	 * @return none
+	 */
+	public void removeCountry(String p_countryID) {
+		Country l_countryToRemove = new Country(p_countryID);
+		neighborhood.values().stream().forEach(l_country -> l_country.remove(l_countryToRemove));
+		neighborhood.remove(new Country(p_countryID));
+	}
+
 	/**
 	 * Loads for editing an existing Warzone map from an existing "domination" map
 	 * file; or, will create an empty Warzone map if there is no existing map file.
@@ -45,4 +74,5 @@ public class Map implements IMapModel, IMapModelView {
 		List<String> list = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
 		// todo: parse the map file... (another method?)
 	}
+
 }
