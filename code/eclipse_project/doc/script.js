@@ -1,5 +1,4 @@
 /*
-<<<<<<< HEAD
  * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -22,30 +21,6 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
-=======
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
->>>>>>> refs/remotes/origin/master
  */
 
 var moduleSearchIndex;
@@ -54,7 +29,6 @@ var typeSearchIndex;
 var memberSearchIndex;
 var tagSearchIndex;
 function loadScripts(doc, tag) {
-<<<<<<< HEAD
     createElem(doc, tag, 'script-dir/jszip/dist/jszip.js');
     createElem(doc, tag, 'script-dir/jszip-utils/dist/jszip-utils.js');
     if (window.navigator.userAgent.indexOf('MSIE ') > 0 || window.navigator.userAgent.indexOf('Trident/') > 0 ||
@@ -128,15 +102,6 @@ function loadScripts(doc, tag) {
     if (!tagSearchIndex) {
         createElem(doc, tag, 'tag-search-index.js');
     }
-=======
-    createElem(doc, tag, 'search.js');
-
-    createElem(doc, tag, 'module-search-index.js');
-    createElem(doc, tag, 'package-search-index.js');
-    createElem(doc, tag, 'type-search-index.js');
-    createElem(doc, tag, 'member-search-index.js');
-    createElem(doc, tag, 'tag-search-index.js');
->>>>>>> refs/remotes/origin/master
 }
 
 function createElem(doc, tag, path) {
@@ -192,16 +157,3 @@ function switchTab(e) {
         e.preventDefault();
     }
 }
-<<<<<<< HEAD
-=======
-
-var updateSearchResults = function() {};
-
-function indexFilesLoaded() {
-    return moduleSearchIndex
-        && packageSearchIndex
-        && typeSearchIndex
-        && memberSearchIndex
-        && tagSearchIndex;
-}
->>>>>>> refs/remotes/origin/master

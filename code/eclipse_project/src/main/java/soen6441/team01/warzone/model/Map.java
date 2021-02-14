@@ -63,7 +63,6 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a country to the current map
 	 * 
-<<<<<<< HEAD
 	 * @param p_country_id   a unique country identifier
 	 * @param p_country_name the name of the country
 	 * @param p_continent    the associated continent
@@ -71,11 +70,6 @@ public class Map implements IMapModel, IMapModelView {
 	 * @param p_y            the y coordinate as defined in the map file
 	 * @return the created country
 	 * @throws Exception when there is an exception
-=======
-	 * @param p_map_filename the filename of the "domination" map file to load or
-	 *                       create
-	 * @throws Exception if the file is not accessible
->>>>>>> refs/remotes/origin/master
 	 */
 	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y)
 			throws Exception {
@@ -94,11 +88,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * http://domination.sourceforge.net/makemaps.shtml
 	 * 
 	 * @param p_map_filename the filename of the "domination" map file
-<<<<<<< HEAD
 	 * @throws IOException when there is a problem processing the map file
-=======
-	 * @throws Exception if the file is not accessible
->>>>>>> refs/remotes/origin/master
 	 */
 	public void loadMap(String p_map_filename) throws IOException {
 		List<String> list = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
