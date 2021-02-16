@@ -107,4 +107,23 @@ public class Continent implements IContinentModel, IContinentModelView {
 		}
 		return null;
 	}
+	
+	/**
+	 * Deactivate the continent whenever it is no longer required, e.g. when the continent is deleted/removed.
+	 * this is useful if a continent is deleted and there may still be references to it from other objects
+	 */
+	public void deactivate() {
+		d_id = -1;
+	}
+	
+	/**
+	 * Checks that the continent is valid, e.g. is not deleted 
+	 * @return false if the continent has been deleted
+	 */
+	public boolean isActive() {
+		if( d_id < 0 ) {
+			return false;
+		}
+		return true;
+	}
 }
