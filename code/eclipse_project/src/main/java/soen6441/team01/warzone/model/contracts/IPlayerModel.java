@@ -15,7 +15,7 @@ public interface IPlayerModel {
 	ArrayList<ICountryModel> getPlayerCountries();
 
 	void addPlayerCountry(ICountryModel p_country) throws Exception;
-	
+
 	void removePlayerCountry(ICountryModel p_country) throws Exception;
 
 	ArrayList<IContinentModel> getPlayerContinents();
@@ -23,4 +23,10 @@ public interface IPlayerModel {
 	void addPlayerContinent(IContinentModel p_continent) throws Exception;
 
 	void removePlayerContinent(IContinentModel p_continent) throws Exception;
+
+	ArrayList<IOrderModel> getOrders();
+
+	void issue_order();
+
+	IOrderModel next_order();
 }
