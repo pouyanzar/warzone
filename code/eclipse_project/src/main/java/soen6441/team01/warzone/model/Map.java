@@ -95,6 +95,21 @@ public class Map implements IMapModel, IMapModelView {
 		// todo: parse the map file...
 	}
 
+	/**
+	 * remove the continent from the list of existing continents
+	 * @param p_continent_id
+	 * @return the deleted continent object
+	 * @throws Exception if the continent cannot be removed
+	 */
+	public IContinentModel removeContinent(int p_continent_id) throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		if (l_continent == null) {
+			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
+		}
+		l_continent.deactivate();
+		d_continents.remove(l_continent);
+		return l_continent;
+	}
 }
 
 ///**
