@@ -107,36 +107,4 @@ public class MapTest {
 		ICountryModel l_usa = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
 	}
 
-	/**
-	 * simple check of remove continent without countries or neighbors
-	 * @throws Exception when there is an exception
-	 */
-	@Test
-	public void test_remove_continent_1() throws Exception {
-		Map l_map = new Map();
-		l_map.addContinent(1, "North-America", 4);
-		l_map.removeContinent(1);
-		assertTrue(l_map.getContinents().size() == 0);
-		l_map.addContinent(10, "North-America", 4);
-		l_map.addContinent(11, "Europe", 4);
-		l_map.removeContinent(10);
-		assertTrue(l_map.getContinents().size() == 1);
-		assertEquals("Europe", l_map.getContinents().get(0).getName());
-	}
-	
-	/**
-	 * simple check of remove continent error checking
-	 * @throws Exception when there is an exception
-	 */
-	@Test(expected = Exception.class)
-	public void test_remove_continent_2() throws Exception {
-		Map l_map = new Map();
-		l_map.addContinent(1, "North-America", 4);
-		l_map.addContinent(2, "Europe", 4);
-		IContinentModel l_continent = l_map.removeContinent(2);
-		assertTrue(l_map.getContinents().size() == 1);
-		assertEquals("North-America", l_map.getContinents().get(0).getName());
-		assertFalse(l_continent.isActive());
-		l_map.removeContinent(2);
-	}
 }

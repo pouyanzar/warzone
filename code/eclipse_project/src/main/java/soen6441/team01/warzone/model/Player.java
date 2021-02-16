@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IOrderModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModelView;
 
@@ -17,8 +18,10 @@ public class Player implements IPlayerModel, IPlayerModelView {
 
 	private String d_name;
 	private int d_player_army;
+	private IOrderModel d_order;
 	private ArrayList<ICountryModel> d_player_countries;
 	private ArrayList<IContinentModel> d_player_continents;
+	private ArrayList<IOrderModel> d_order_list;
 
 	/**
 	 * Constructor for class Player
@@ -31,6 +34,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 		this.d_player_army = 0;
 		this.d_player_countries = new ArrayList<ICountryModel>();
 		this.d_player_continents = new ArrayList<IContinentModel>();
+		this.d_order_list = new ArrayList<IOrderModel>();
 	}
 
 	/**
@@ -121,6 +125,34 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 */
 	public void removePlayerContinent(IContinentModel p_continent) throws Exception {
 		d_player_continents.remove(p_continent);
+	}
+
+	/**
+	 * gets the list of orders player issues
+	 * 
+	 * @return d_order_list the list of orders player issues
+	 */
+	public ArrayList<IOrderModel> getOrders() {
+		return d_order_list;
+	}
+
+	/**
+	 * adds the order issued by player to the player's order list
+	 */
+	public void issue_order() {
+		d_order_list.add(d_order);
+	}
+
+	/**
+	 * finds the first order in order list returns it and removes it from the order
+	 * list
+	 * 
+	 * @return l_first_order the first order in order list
+	 */
+	public IOrderModel next_order() {
+		IOrderModel l_first_order = d_order_list.get(0);
+		d_order_list.remove(d_order_list.get(0));
+		return l_first_order;
 	}
 
 }
