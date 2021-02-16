@@ -17,4 +17,8 @@ public interface IContinentModel {
 	int getExtraArmy();
 
 	void setExtraArmy(int p_extra_army) throws Exception;
+	
+	void deactivate();
+	
+	boolean isActive();
 }
