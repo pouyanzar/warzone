@@ -5,5 +5,5 @@ package soen6441.team01.warzone.view;
  * playing Warzone. The view interacts with the user via the system console.
  */
 public class MapEditorConsoleView implements IMapEditorView {
-
+	
 }
