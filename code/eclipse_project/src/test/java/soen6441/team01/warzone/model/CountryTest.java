@@ -17,6 +17,7 @@ public class CountryTest {
 	/**
 	 * test that the constructor is setting the core attributes properly and that
 	 * the core getters and setters are working with valid data
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -26,7 +27,7 @@ public class CountryTest {
 		assertEquals(1, l_country.getId());
 		assertEquals("Canada", l_country.getName());
 		assertEquals(l_continent, l_country.getContinent());
-		
+
 		l_country.setId(-1);
 		l_country.setName("United_States");
 		l_continent = new Continent(1, "Europe", 2);
@@ -40,7 +41,8 @@ public class CountryTest {
 	}
 
 	/**
-	 * test id setter is validating properly 
+	 * test id setter is validating properly
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -50,7 +52,8 @@ public class CountryTest {
 	}
 
 	/**
-	 * test name setter is validating properly 
+	 * test name setter is validating properly
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -60,8 +63,9 @@ public class CountryTest {
 	}
 
 	/**
-	 * simple add neighbor tests 
-	 * @throws Exception when there is an exception 
+	 * simple add neighbor tests
+	 * 
+	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_addNeighbor() throws Exception {
@@ -70,13 +74,14 @@ public class CountryTest {
 		l_country_1.addNeighbor(l_country_2);
 		l_country_2.addNeighbor(l_country_1);
 		assertTrue(l_country_1.getNeighbors().size() == 1);
-        assertSame(l_country_1.getNeighbors().get(0), l_country_2); 
-        assertTrue(l_country_2.getNeighbors().size() == 1);
-        assertSame(l_country_2.getNeighbors().get(0), l_country_1); 
+		assertSame(l_country_1.getNeighbors().get(0), l_country_2);
+		assertTrue(l_country_2.getNeighbors().size() == 1);
+		assertSame(l_country_2.getNeighbors().get(0), l_country_1);
 	}
-	
+
 	/**
 	 * add existing neighbor
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -86,11 +91,12 @@ public class CountryTest {
 		l_country_1.addNeighbor(l_country_2);
 		l_country_1.addNeighbor(l_country_2);
 		assertTrue(l_country_1.getNeighbors().size() == 1);
-        assertSame(l_country_1.getNeighbors().get(0), l_country_2); 
+		assertSame(l_country_1.getNeighbors().get(0), l_country_2);
 	}
-	
+
 	/**
 	 * add yourself as neighbor
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -102,6 +108,7 @@ public class CountryTest {
 
 	/**
 	 * add yourself as neighbor
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -111,20 +118,21 @@ public class CountryTest {
 	}
 
 	/**
-	 * test static function findCountry 
+	 * test static function findCountry
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_findCountry_1() throws Exception {
-		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>(); 
+		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
 		l_countries.add(new Country(1, "Canada", null, 0, 0));
 		l_countries.add(new Country(2, "USA", null, 0, 0));
 		ICountryModel l_result = Country.findCountry(2, l_countries);
-		if( l_result.getName() != "USA") {
+		if (l_result.getName() != "USA") {
 			fail("problem finding existing country");
 		}
 		l_result = Country.findCountry(3, l_countries);
-		if( l_result != null ) {
+		if (l_result != null) {
 			fail("problem finding non-existing country");
 		}
 	}

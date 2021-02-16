@@ -17,6 +17,7 @@ public class ContinentTest {
 	/**
 	 * test that the constructor is setting the core attributes properly and that
 	 * the core getters and setters are working with valid data
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -34,7 +35,8 @@ public class ContinentTest {
 	}
 
 	/**
-	 * test id setter is validating properly 
+	 * test id setter is validating properly
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -44,7 +46,8 @@ public class ContinentTest {
 	}
 
 	/**
-	 * test name setter is validating properly 
+	 * test name setter is validating properly
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -55,7 +58,8 @@ public class ContinentTest {
 
 	/**
 	 * test extra_army setter is validating properly
-	 * @throws Exception when there is an exception 
+	 * 
+	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
 	public void test_extra_army_setter_1() throws Exception {
@@ -64,20 +68,21 @@ public class ContinentTest {
 	}
 
 	/**
-	 * test static function findContinent 
+	 * test static function findContinent
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_findContinent_1() throws Exception {
-		ArrayList<IContinentModel> l_continents = new ArrayList<IContinentModel>(); 
+		ArrayList<IContinentModel> l_continents = new ArrayList<IContinentModel>();
 		l_continents.add(new Continent(1, "North-America", 0));
 		l_continents.add(new Continent(2, "Europe", 0));
 		IContinentModel l_result = Continent.findContinent(2, l_continents);
-		if( l_result.getName() != "Europe") {
+		if (l_result.getName() != "Europe") {
 			fail("problem finding existing continent");
 		}
 		l_result = Continent.findContinent(3, l_continents);
-		if( l_result != null ) {
+		if (l_result != null) {
 			fail("problem finding non-existing continent");
 		}
 	}
