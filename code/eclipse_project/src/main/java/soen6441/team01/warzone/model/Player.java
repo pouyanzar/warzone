@@ -29,8 +29,8 @@ public class Player implements IPlayerModel, IPlayerModelView {
 		super();
 		setName(d_name);
 		this.d_player_army = 0;
-		this.d_player_countries = null;
-		this.d_player_continents = null;
+		this.d_player_countries = new ArrayList<ICountryModel>();
+		this.d_player_continents = new ArrayList<IContinentModel>();
 	}
 
 	/**
