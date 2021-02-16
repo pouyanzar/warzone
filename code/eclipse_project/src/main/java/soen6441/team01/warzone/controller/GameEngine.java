@@ -12,7 +12,7 @@ public class GameEngine {
 	
 	public GameEngine(IMapModel p_map, IPlayerModel p_player) {
 		d_map = p_map;
-		d_player = p+player;
+		d_player = p_player;
 	}
 
 }
