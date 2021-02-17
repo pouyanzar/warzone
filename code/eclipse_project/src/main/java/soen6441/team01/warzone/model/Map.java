@@ -63,7 +63,7 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a continent to the current map
 	 * 
-	 * @param p_continent_name  the name of the continent
+	 * @param p_continent_id    the name of the continent
 	 * @param p_continent_value the number of extra armies to assign if player
 	 *                          controls all countries
 	 * @return the created continent
@@ -117,7 +117,7 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * remove the continent from the list of existing continents
 	 * 
-	 * @param p_continent_id
+	 * @param p_continent_id the id of the continent
 	 * @return the deleted continent object
 	 * @throws Exception if the continent cannot be removed
 	 */

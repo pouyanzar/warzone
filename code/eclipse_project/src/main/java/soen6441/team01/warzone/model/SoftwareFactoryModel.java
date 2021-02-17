@@ -4,7 +4,8 @@ import soen6441.team01.warzone.model.contracts.*;
 
 /**
  * This class implements the Software Factory design pattern to manage the set
- * of objects that define the respective classes for the different Warzone models.
+ * of objects that define the respective classes for the different Warzone
+ * models.
  */
 public class SoftwareFactoryModel {
 	private IMapModel d_map_model = null;
@@ -20,6 +21,7 @@ public class SoftwareFactoryModel {
 	 * Constructor with models defined. Models passed as null will result in the
 	 * default model being passed back.
 	 * 
+	 * @param p_map_model the map model to use
 	 */
 	public SoftwareFactoryModel(IMapModel p_map_model) {
 		d_map_model = p_map_model;

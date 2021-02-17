@@ -51,7 +51,7 @@ public class Utl {
 	 * @return true if the name is valid; otherwise false
 	 */
 	public static boolean IsValidMapName(String p_map_name) {
-		if(p_map_name == null || p_map_name == "") {
+		if (p_map_name == null || p_map_name == "") {
 			return false;
 		}
 		char[] l_chars = p_map_name.toCharArray();
@@ -61,5 +61,19 @@ public class Utl {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Check if a given string is null, empty or spaces
+	 * 
+	 * @param p_string string to check
+	 * @return true = string is null, empty or spaces; otherwise false
+	 */
+	public static boolean isEmpty(String p_string) {
+		if (p_string == null)
+			return true;
+		if (p_string.trim().equals(""))
+			return true;
+		return false;
 	}
 }

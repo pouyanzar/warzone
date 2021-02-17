@@ -34,7 +34,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	/**
 	 * The constructor for the Continent class.
 	 * 
-	 * @param p_continent_name  the name of the continent
+	 * @param p_continent_id    the name of the continent
 	 * @param p_continent_value the number of extra armies to assign if player has
 	 *                          all countries
 	 * @throws Exception when there is an exception

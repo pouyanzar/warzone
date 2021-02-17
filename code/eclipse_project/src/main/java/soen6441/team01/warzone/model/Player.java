@@ -27,6 +27,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * Constructor for class Player
 	 * 
 	 * @param d_name the name of player
+	 * @throws Exception general exceptions
 	 */
 	public Player(String d_name) throws Exception {
 		super();
