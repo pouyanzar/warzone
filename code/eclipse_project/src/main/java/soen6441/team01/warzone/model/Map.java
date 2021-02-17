@@ -61,6 +61,25 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * Add a continent to the current map
+	 * 
+	 * @param p_continent_name  the name of the continent
+	 * @param p_continent_value the number of extra armies to assign if player
+	 *                          controls all countries
+	 * @return the created continent
+	 * @throws Exception when there is an exception
+	 */
+	public IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		if (l_continent != null) {
+			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
+		}
+		l_continent = new Continent(p_continent_id, p_continent_value);
+		d_continents.add(l_continent);
+		return l_continent;
+	}
+
+	/**
 	 * Add a country to the current map
 	 * 
 	 * @param p_country_id   a unique country identifier
@@ -71,8 +90,8 @@ public class Map implements IMapModel, IMapModelView {
 	 * @return the created country
 	 * @throws Exception when there is an exception
 	 */
-	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y)
-			throws Exception {
+	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x,
+			int p_y) throws Exception {
 		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
 		if (l_country != null) {
 			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
@@ -97,6 +116,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * remove the continent from the list of existing continents
+	 * 
 	 * @param p_continent_id
 	 * @return the deleted continent object
 	 * @throws Exception if the continent cannot be removed
@@ -109,6 +129,48 @@ public class Map implements IMapModel, IMapModelView {
 		l_continent.deactivate();
 		d_continents.remove(l_continent);
 		return l_continent;
+	}
+
+	/**
+	 * remove the continent from the list of existing continents
+	 * 
+	 * @param p_continent_id the continent name
+	 * @return the deleted continent object
+	 * @throws Exception if the continent cannot be removed
+	 */
+	public IContinentModel removeContinent(String p_continent_id) throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		if (l_continent == null) {
+			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
+		}
+		l_continent.deactivate();
+		d_continents.remove(l_continent);
+		return l_continent;
+	}
+
+	/**
+	 * based on string commands adds or removes continents.
+	 * 
+	 * @param p_commands the string commands
+	 * @throws NumberFormatException when there is no appropriate format in string
+	 *                               to convert into integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editcontinent(String p_commands) throws NumberFormatException, Exception {
+
+		String[] l_commands = p_commands.split("-");
+
+		for (String l_command : l_commands) {
+
+			if (l_command.contains("add")) {
+				String[] l_command_parameter = l_command.split(" ");
+				addContinent(l_command_parameter[1], Integer.parseInt(l_command_parameter[2]));
+			} else if (l_command.contains("remove")) {
+				String[] l_command_parameter = l_command.split(" ");
+				removeContinent(l_command_parameter[1]);
+			}
+
+		}
 	}
 }
 

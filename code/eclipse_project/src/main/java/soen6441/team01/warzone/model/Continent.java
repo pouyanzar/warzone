@@ -32,6 +32,20 @@ public class Continent implements IContinentModel, IContinentModelView {
 	}
 
 	/**
+	 * The constructor for the Continent class.
+	 * 
+	 * @param p_continent_name  the name of the continent
+	 * @param p_continent_value the number of extra armies to assign if player has
+	 *                          all countries
+	 * @throws Exception when there is an exception
+	 */
+	public Continent(String p_continent_id, int p_continent_value) throws Exception {
+		super();
+		setName(p_continent_id);
+		setExtraArmy(p_continent_value);
+	}
+
+	/**
 	 * @return the name of the continent
 	 */
 	public String getName() {
@@ -107,21 +121,40 @@ public class Continent implements IContinentModel, IContinentModelView {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Deactivate the continent whenever it is no longer required, e.g. when the continent is deleted/removed.
-	 * this is useful if a continent is deleted and there may still be references to it from other objects
+	 * find a given continent by name
+	 * 
+	 * @param p_continent_id the continent name to find
+	 * @param p_continents   an array of continents to search from
+	 * @return null if not found, otherwise return the continent with the specified
+	 *         id
+	 */
+	public static IContinentModel findContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
+		for (IContinentModel l_xcontinent : p_continents) {
+			if (l_xcontinent.getName() == p_continent_id) {
+				return l_xcontinent;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Deactivate the continent whenever it is no longer required, e.g. when the
+	 * continent is deleted/removed. this is useful if a continent is deleted and
+	 * there may still be references to it from other objects
 	 */
 	public void deactivate() {
 		d_id = -1;
 	}
-	
+
 	/**
-	 * Checks that the continent is valid, e.g. is not deleted 
+	 * Checks that the continent is valid, e.g. is not deleted
+	 * 
 	 * @return false if the continent has been deleted
 	 */
 	public boolean isActive() {
-		if( d_id < 0 ) {
+		if (d_id < 0) {
 			return false;
 		}
 		return true;
