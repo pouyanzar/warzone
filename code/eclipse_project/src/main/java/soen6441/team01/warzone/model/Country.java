@@ -17,6 +17,7 @@ public class Country implements ICountryModel, ICountryModelView {
 	private IContinentModel d_continent;
 	private int d_x;
 	private int d_y;
+	private int d_continent_id;
 	private ArrayList<ICountryModel> d_neighbors = new ArrayList<ICountryModel>();
 
 	/**
@@ -36,6 +37,19 @@ public class Country implements ICountryModel, ICountryModelView {
 		setContinent(p_continent);
 		d_x = p_x;
 		d_y = p_y;
+	}
+
+	/**
+	 * The constructor for the Country class.
+	 * 
+	 * @param p_id           a unique country identifier
+	 * @param p_continent_id the continent id this country belongs to countries
+	 * @throws Exception when there is an exception
+	 */
+	public Country(int p_id, int p_continent_id) throws Exception {
+		super();
+		setId(p_id);
+		setContinentId(p_continent_id);
 	}
 
 	/**
@@ -96,12 +110,23 @@ public class Country implements ICountryModel, ICountryModelView {
 	}
 
 	/**
+	 * the continent that this country is associated with. set to null if not
+	 * associated with a continent
+	 * 
+	 * @param p_continent_id the continent id associated with this country to set
+	 */
+	public void setContinentId(int p_continent_id) {
+		this.d_continent_id = p_continent_id;
+	}
+
+	/**
 	 * @return the list of neighboring countries that this country can access
 	 */
 	public ArrayList<ICountryModel> getNeighbors() {
 		return (ArrayList<ICountryModel>) d_neighbors.clone();
 	}
 
+	
 	/**
 	 * Add a neighboring country that this country can access
 	 * 
@@ -116,6 +141,8 @@ public class Country implements ICountryModel, ICountryModelView {
 			d_neighbors.add(p_country);
 		}
 	}
+	
+	
 
 	/**
 	 * find a given country

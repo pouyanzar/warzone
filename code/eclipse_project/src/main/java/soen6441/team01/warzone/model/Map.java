@@ -24,6 +24,7 @@ import soen6441.team01.warzone.model.contracts.IMapModelView;
 public class Map implements IMapModel, IMapModelView {
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
+	private ArrayList<ArrayList<Integer>> d_neighborhoods = new ArrayList<ArrayList<Integer>>();
 
 	/**
 	 * @return the current list of continents defined on the map
@@ -102,6 +103,24 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * Add a country to the current map
+	 * 
+	 * @param p_country_id   a unique country identifier
+	 * @param p_continent_id the associated continent
+	 * @return the created country
+	 * @throws Exception when there is an exception
+	 */
+	public ICountryModel addCountry(int p_country_id, int p_continent_id) throws Exception {
+		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+		if (l_country != null) {
+			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
+		}
+		l_country = new Country(p_country_id, p_continent_id);
+		d_countries.add(l_country);
+		return l_country;
+	}
+
+	/**
 	 * Loads a Warzone map from an existing "domination" style map file. The
 	 * following link describes the format of the "domination" map file :
 	 * http://domination.sourceforge.net/makemaps.shtml
@@ -149,6 +168,49 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * remove the country from the list of existing countries
+	 * 
+	 * @param p_country_id the country id
+	 * @return the deleted country object
+	 * @throws Exception if the country cannot be removed
+	 */
+	public ICountryModel removeCountry(int p_country_id) throws Exception {
+		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+		if (l_country == null) {
+			throw new Exception("Cannot remove continent with id " + p_country_id + " since it doesn't exist.");
+		}
+		d_continents.remove(l_country);
+		return l_country;
+	}
+
+	/**
+	 * creates the adjacency list of countries
+	 * 
+	 * @param p_country_id          the current country id
+	 * @param p_neighbor_country_id the id of the country associated to the current
+	 *                              country
+	 */
+	public void addNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
+			int p_neighbor_country_id) {
+
+		p_neighborhoods.get(p_country_id).add(p_neighbor_country_id);
+	}
+
+	public void removeNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
+			int p_neighbor_country_id) {
+
+		if (!p_neighborhoods.isEmpty()) {
+			for (int i = 0; i < p_neighborhoods.size(); i++) {
+
+				if (p_neighborhoods.get(p_country_id).get(i) == p_neighbor_country_id) {
+					p_neighborhoods.get(p_country_id).remove(i);
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * based on string commands adds or removes continents.
 	 * 
 	 * @param p_commands the string commands
@@ -165,9 +227,52 @@ public class Map implements IMapModel, IMapModelView {
 			if (l_command.contains("add")) {
 				String[] l_command_parameter = l_command.split(" ");
 				addContinent(l_command_parameter[1], Integer.parseInt(l_command_parameter[2]));
+
+			}
+		}
+	}
+
+	/**
+	 * based on string commands adds or removes countries.
+	 * 
+	 * @param p_commands the string commands
+	 * @throws NumberFormatException when there is no appropriate format in string
+	 *                               to convert into integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editcountry(String p_commands) throws NumberFormatException, Exception {
+		String[] l_commands = p_commands.split("-");
+		for (String l_command : l_commands) {
+			if (l_command.contains("add")) {
+				String[] l_command_parameter = l_command.split(" ");
+				addCountry(Integer.parseInt(l_command_parameter[1]), Integer.parseInt(l_command_parameter[2]));
 			} else if (l_command.contains("remove")) {
 				String[] l_command_parameter = l_command.split(" ");
-				removeContinent(l_command_parameter[1]);
+				removeCountry(Integer.parseInt(l_command_parameter[1]));
+			}
+
+		}
+	}
+
+	/**
+	 * edit adjacency of two countries based on command
+	 * 
+	 * @param p_commands the string command to edit adjacency of two countries
+	 * @throws NumberFormatException when there is no appropriate format in string
+	 *                               to convert into integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editneighbor(String p_commands) throws NumberFormatException, Exception {
+		String[] l_commands = p_commands.split("-");
+		for (String l_command : l_commands) {
+			if (l_command.contains("add")) {
+				String[] l_command_parameter = l_command.split(" ");
+				addNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
+						Integer.parseInt(l_command_parameter[2]));
+			} else if (l_command.contains("remove")) {
+				String[] l_command_parameter = l_command.split(" ");
+				removeNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
+						Integer.parseInt(l_command_parameter[2]));
 			}
 
 		}

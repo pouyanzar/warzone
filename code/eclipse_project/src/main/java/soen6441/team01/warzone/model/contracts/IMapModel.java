@@ -12,4 +12,15 @@ public interface IMapModel {
 
 	ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y)
 			throws Exception;
+
+	IContinentModel removeContinent(String p_continent_id) throws Exception;
+
+	void editcontinent(String p_commands) throws NumberFormatException, Exception;
+
+	IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception;
+
+	void editcountry(String p_commands) throws NumberFormatException, Exception;
+
+	ICountryModel addCountry(int p_country_id, int p_continent_id) throws Exception;
+
 }
