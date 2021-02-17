@@ -24,6 +24,7 @@ import soen6441.team01.warzone.model.contracts.IMapModelView;
 public class Map implements IMapModel, IMapModelView {
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
+	private ArrayList<ArrayList<Integer>> d_neighborhoods = new ArrayList<ArrayList<Integer>>();
 
 	/**
 	 * @return the current list of continents defined on the map
@@ -183,6 +184,33 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * creates the adjacency list of countries
+	 * 
+	 * @param p_country_id          the current country id
+	 * @param p_neighbor_country_id the id of the country associated to the current
+	 *                              country
+	 */
+	public void addNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
+			int p_neighbor_country_id) {
+
+		p_neighborhoods.get(p_country_id).add(p_neighbor_country_id);
+	}
+
+	public void removeNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
+			int p_neighbor_country_id) {
+
+		if (!p_neighborhoods.isEmpty()) {
+			for (int i = 0; i < p_neighborhoods.size(); i++) {
+
+				if (p_neighborhoods.get(p_country_id).get(i) == p_neighbor_country_id) {
+					p_neighborhoods.get(p_country_id).remove(i);
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * based on string commands adds or removes continents.
 	 * 
 	 * @param p_commands the string commands
@@ -221,6 +249,30 @@ public class Map implements IMapModel, IMapModelView {
 			} else if (l_command.contains("remove")) {
 				String[] l_command_parameter = l_command.split(" ");
 				removeCountry(Integer.parseInt(l_command_parameter[1]));
+			}
+
+		}
+	}
+
+	/**
+	 * edit adjacency of two countries based on command
+	 * 
+	 * @param p_commands the string command to edit adjacency of two countries
+	 * @throws NumberFormatException when there is no appropriate format in string
+	 *                               to convert into integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editneighbor(String p_commands) throws NumberFormatException, Exception {
+		String[] l_commands = p_commands.split("-");
+		for (String l_command : l_commands) {
+			if (l_command.contains("add")) {
+				String[] l_command_parameter = l_command.split(" ");
+				addNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
+						Integer.parseInt(l_command_parameter[2]));
+			} else if (l_command.contains("remove")) {
+				String[] l_command_parameter = l_command.split(" ");
+				removeNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
+						Integer.parseInt(l_command_parameter[2]));
 			}
 
 		}

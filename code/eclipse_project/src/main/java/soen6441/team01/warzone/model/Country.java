@@ -126,6 +126,7 @@ public class Country implements ICountryModel, ICountryModelView {
 		return (ArrayList<ICountryModel>) d_neighbors.clone();
 	}
 
+	
 	/**
 	 * Add a neighboring country that this country can access
 	 * 
@@ -140,6 +141,8 @@ public class Country implements ICountryModel, ICountryModelView {
 			d_neighbors.add(p_country);
 		}
 	}
+	
+	
 
 	/**
 	 * find a given country
