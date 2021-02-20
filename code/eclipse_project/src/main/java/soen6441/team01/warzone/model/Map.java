@@ -277,6 +277,28 @@ public class Map implements IMapModel, IMapModelView {
 
 		}
 	}
+
+	/**
+	 * Checks if there is at least one continent, one country, and there is at least
+	 * one neighbor for each country on the current map
+	 * 
+	 * @return true when the map is valid
+	 * @return false if the map is not valid
+	 */
+	public boolean validatemap() {
+
+		if (d_continents.size() < 1)
+			return false;
+		if (d_countries.size() < 1)
+			return false;
+		for (ArrayList<Integer> l_neighbor : d_neighborhoods) {
+			if (l_neighbor.size() < 1) {
+				return false;
+			} else
+				continue;
+		}
+		return true;
+	}
 }
 
 ///**
