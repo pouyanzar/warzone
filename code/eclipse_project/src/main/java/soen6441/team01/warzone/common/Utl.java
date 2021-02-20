@@ -69,11 +69,51 @@ public class Utl {
 	 * @param p_string string to check
 	 * @return true = string is null, empty or spaces; otherwise false
 	 */
-	public static boolean isEmpty(String p_string) {
+	public static boolean IsEmpty(String p_string) {
 		if (p_string == null)
 			return true;
 		if (p_string.trim().equals(""))
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Parse and extract the 1st word from the specified sentence. 
+	 * 
+	 * @param p_sentence the string containing words (ie separated by space(s)
+	 * @return String[0] = 1st word, String[1] = rest of sentence
+	 */
+	public static String[] GetFirstWord(String p_sentence) {
+		String[] l_reply = new String[2];
+		if (p_sentence == null) {
+			l_reply[0] = "";
+			l_reply[1] = "";
+			return l_reply;
+		}
+
+		p_sentence = p_sentence.trim();
+		int l_idx = p_sentence.indexOf(' ');
+		if (l_idx < 1 && p_sentence.length() > 1) {
+			l_reply[0] = p_sentence;
+			l_reply[1] = "";
+			return l_reply;
+		}
+
+		try {
+			l_reply[0] = p_sentence.substring(0, l_idx);
+		} catch (Exception ex) {
+			l_reply[0] = "";
+			l_reply[1] = "";
+			return l_reply;
+		}
+
+		try {
+			l_idx++;
+			l_reply[1] = p_sentence.substring(l_idx, p_sentence.length()).trim();
+		} catch (Exception ex) {
+			l_reply[1] = "";
+			return l_reply;
+		}
+		return l_reply;
 	}
 }

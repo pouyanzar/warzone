@@ -186,6 +186,7 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * creates the adjacency list of countries
 	 * 
+	 * @param p_neighborhoods       the current neighborhood
 	 * @param p_country_id          the current country id
 	 * @param p_neighbor_country_id the id of the country associated to the current
 	 *                              country

@@ -2,26 +2,36 @@ package soen6441.team01.warzone.view;
 
 import java.util.Scanner;
 
-import soen6441.team01.warzone.common.MessageType;
+import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
+import soen6441.team01.warzone.common.contracts.Observer;
+import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.IInteractionDrivenController;
+import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
  * Warzone MVC console based view. Supports the different views required for
  * playing Warzone. The view interacts with the user via the system console.
  */
-public class MapEditorConsoleView implements IMapEditorView {
-	private IInteractionDrivenController d_controller;
+public class MapEditorConsoleView implements Observer, IMapEditorView {
+	private IInteractionDrivenController d_controller = null;
 	private Scanner d_keyboard = null;
+	private IUserMessageModelView d_user_message_model = null;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_controller the associated controller object
+	 * @param p_controller         the associated controller object
+	 * @param p_user_message_model the user message model to use. note that this
+	 *                             view gets notifications from the model to display
+	 *                             messages to the user.
 	 */
-	public MapEditorConsoleView(IInteractionDrivenController p_controller) {
-		d_controller = p_controller; 
+	public MapEditorConsoleView(IInteractionDrivenController p_controller, IUserMessageModelView p_user_message_model) {
+		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
+		d_user_message_model = p_user_message_model;
+		p_user_message_model.attach(this);
 	}
 
 	/**
@@ -79,12 +89,38 @@ public class MapEditorConsoleView implements IMapEditorView {
 	}
 
 	/**
+	 * process message helper function
+	 * 
+	 * @param p_user_message the UserMessage to process
+	 */
+	public void processMessage(UserMessage p_user_message) {
+		MessageType l_msgtyp = p_user_message.getMessageType();
+		String l_msg = p_user_message.getMessage();
+		processMessage(l_msgtyp, l_msg);
+	}
+
+	/**
 	 * do a clean shutdown of the view
 	 */
 	public void shutdown() {
 		if (d_keyboard != null) {
 			d_keyboard.close();
 		}
+		if (d_user_message_model != null) {
+			d_user_message_model.detach(this);
+		}
+	}
+
+	/**
+	 * called by Observable whenever the system adds a new user message that needs
+	 * to be communicated to the user.
+	 */
+	@Override
+	public void update(Observable p_obserable) {
+		if (p_obserable == d_user_message_model) {
+			processMessage(d_user_message_model.getLastMessage());
+		}
+
 	}
 
 }

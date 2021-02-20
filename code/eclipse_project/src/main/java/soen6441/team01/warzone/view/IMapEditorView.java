@@ -1,6 +1,6 @@
 package soen6441.team01.warzone.view;
 
-import soen6441.team01.warzone.common.MessageType;
+import soen6441.team01.warzone.common.entities.MessageType;
 
 /**
  * Defines the interface used to support the Warzone map editor view

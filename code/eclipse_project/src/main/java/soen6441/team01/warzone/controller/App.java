@@ -16,6 +16,6 @@ public class App {
 	 */
 	public static void main(String[] args) {
 		GameEngine l_game_engine = new GameEngine();
-		l_game_engine.startGame();
+		l_game_engine.startNewGame();
 	}
 }
