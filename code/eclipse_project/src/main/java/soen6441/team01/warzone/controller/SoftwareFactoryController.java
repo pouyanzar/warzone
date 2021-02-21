@@ -22,6 +22,7 @@ public class SoftwareFactoryController {
 	 * default view being passed back.
 	 * 
 	 * @param p_models the software factory for all the game models
+	 * @param p_view_factory the software factory for all the views
 	 */
 	public SoftwareFactoryController(SoftwareFactoryModel p_models, SoftwareFactoryView p_view_factory) {
 		d_model_factory = p_models;

@@ -43,6 +43,7 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * The constructor for the Country class.
 	 * 
 	 * @param p_id           a unique country identifier
+	 * @param p_name         country name
 	 * @param p_continent_id the continent id this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
@@ -127,7 +128,6 @@ public class Country implements ICountryModel, ICountryModelView {
 		return (ArrayList<ICountryModel>) d_neighbors.clone();
 	}
 
-	
 	/**
 	 * Add a neighboring country that this country can access
 	 * 
@@ -142,8 +142,6 @@ public class Country implements ICountryModel, ICountryModelView {
 			d_neighbors.add(p_country);
 		}
 	}
-	
-	
 
 	/**
 	 * find a given country given it's ID
@@ -160,12 +158,12 @@ public class Country implements ICountryModel, ICountryModelView {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * find a given country given it's name
 	 * 
-	 * @param p_country_id the country id of the neighboring country to find
-	 * @param p_countries  list of countries to search from
+	 * @param p_country_name the country id of the neighboring country to find
+	 * @param p_countries    list of countries to search from
 	 * @return null if not found, otherwise return the country with the specified id
 	 */
 	public static ICountryModel findCountry(String p_country_name, ArrayList<ICountryModel> p_countries) {

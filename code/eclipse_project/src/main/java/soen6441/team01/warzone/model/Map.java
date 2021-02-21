@@ -83,7 +83,6 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a country to the current map
 	 * 
-	 * @param p_country_id   a unique country identifier
 	 * @param p_country_name the name of the country
 	 * @param p_continent    the associated continent
 	 * @param p_x            the x coordinate as defined in the map file
@@ -106,7 +105,7 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a country to the current map
 	 * 
-	 * @param p_country_id   a unique country identifier
+	 * @param p_country_name a unique country identifier
 	 * @param p_continent_id the associated continent
 	 * @return the created country
 	 * @throws Exception when there is an exception
@@ -212,8 +211,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
 	 * 
-	 * @return true when the map is valid
-	 * @return false if the map is not valid
+	 * @return true when the map is valid; false if the map is not valid
 	 */
 	public boolean validatemap() {
 
