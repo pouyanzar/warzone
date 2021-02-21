@@ -6,17 +6,17 @@ import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.controller.contracts.IMapEditorController;
+import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
 import soen6441.team01.warzone.model.entities.UserMessage;
-import soen6441.team01.warzone.view.contracts.IMapEditorView;
+import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
 /**
- * Warzone map editor console based view. The view interacts with the user via
+ * Warzone game startup console based view. The view interacts with the user via
  * the system console.
  */
-public class MapEditorConsoleView implements Observer, IMapEditorView {
-	private IMapEditorController d_controller = null;
+public class GameStartupConsoleView implements Observer, IGameStartupView {
+	private IGameStartupController d_controller = null;
 	private Scanner d_keyboard = null;
 	private IUserMessageModelView d_user_message_model = null;
 
@@ -28,30 +28,11 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 *                             view gets notifications from the model to display
 	 *                             messages to the user.
 	 */
-	public MapEditorConsoleView(IMapEditorController p_controller, IUserMessageModelView p_user_message_model) {
+	public GameStartupConsoleView(IGameStartupController p_controller, IUserMessageModelView p_user_message_model) {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
 		d_user_message_model = p_user_message_model;
 		p_user_message_model.attach(this);
-	}
-
-	/**
-	 * Display the Warzone banner
-	 */
-	public void displayWarzoneBanner() {
-		System.out.println("**********************************");
-		System.out.println("*                                *");
-		System.out.println("*           Warzone              *");
-		System.out.println("*                                *");
-		System.out.println("**********************************");
-	}
-
-	/**
-	 * Displays the Warzone map editor banner
-	 */
-	public void displayMapEditorBanner() {
-		System.out.println("");
-		System.out.println("***        Map Editor          ***");
 	}
 
 	/**
@@ -64,13 +45,21 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	}
 	
 	/**
+	 * Displays the startup banner
+	 */
+	public void displayGameStartupBanner() {
+		System.out.println("");
+		System.out.println("***       Game Startup         ***");
+	}
+
+	/**
 	 * Get the next command typed in on the console from the user
 	 * 
 	 * @return the command text typed in by the user
 	 */
 	public String getCommand() {
 		System.out.println("");
-		System.out.print("Map editor command> ");
+		System.out.print("Game startup command> ");
 		String l_user_command = d_keyboard.nextLine();
 		return l_user_command;
 	}

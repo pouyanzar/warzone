@@ -87,12 +87,12 @@ public class MapTest {
 	public void test_add_country_1() throws Exception {
 		Map l_map = new Map();
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		ICountryModel l_canada = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry(3, "USA", l_north_america, 0, 0);
+		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("USA", l_north_america, 0, 0);
 		ArrayList<ICountryModel> l_countries = l_map.getCountries();
 		assertTrue(l_countries.size() == 2);
-		assertTrue(l_countries.get(0).getId() == 2);
-		assertTrue(l_countries.get(1).getId() == 3);
+		assertTrue(l_countries.get(0).getId() == 1);
+		assertTrue(l_countries.get(1).getId() == 2);
 	}
 
 	/**
@@ -103,8 +103,74 @@ public class MapTest {
 	public void test_add_dup_country_1() throws Exception {
 		Map l_map = new Map();
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		ICountryModel l_canada = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
+		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("Canada", l_north_america, 0, 0);
 	}
 
+	/**
+	 * checks addNeighbor valid tests
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_add_neighbor_valid() throws Exception {
+		Map l_map = new Map();
+		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("USA", null, 0, 0);
+		l_canada.addNeighbor(l_usa);
+		ArrayList<ICountryModel> l_countries = l_map.getCountries();
+		assertTrue(l_countries.size() == 2);
+		ArrayList<ICountryModel> l_neighbors = l_canada.getNeighbors();
+		assertTrue(l_neighbors.size() == 1);
+		l_neighbors = l_usa.getNeighbors();
+		assertTrue(l_neighbors.size() == 0);
+	}
+	
+	/**
+	 * checks addNeighbor invalid test
+	 * @throws Exception when there is an exception
+	 */
+	@Test(expected = Exception.class)
+	public void test_add_neighbor_invalid_1() throws Exception {
+		Map l_map = new Map();
+		l_map.addNeighbor("Canada", "USA");
+	}
+
+	/**
+	 * checks addNeighbor invalid test
+	 * @throws Exception when there is an exception
+	 */
+	@Test(expected = Exception.class)
+	public void test_add_neighbor_invalid_2() throws Exception {
+		Map l_map = new Map();
+		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
+		l_map.addNeighbor("Canada", "USA");
+	}
+	
+	/**
+	 * checks removeNeighbor valid tests
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_remove_neighbor_valid() throws Exception {
+		Map l_map = new Map();
+		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("USA", null, 0, 0);
+		l_canada.addNeighbor(l_usa);
+		ArrayList<ICountryModel> l_neighbors = l_canada.getNeighbors();
+		assertTrue(l_neighbors.size() == 1);
+		assertTrue(l_neighbors.get(0).getName().equals("USA"));
+		l_map.removeNeighbor("Canada", "USA");
+		l_neighbors = l_canada.getNeighbors();
+		assertTrue(l_neighbors.size() == 0);
+	}
+
+	/**
+	 * checks removeNeighbor invalid tests
+	 * @throws Exception when there is an exception
+	 */
+	@Test(expected = Exception.class)
+	public void test_remove_neighbor_invalid_1() throws Exception {
+		Map l_map = new Map();
+		l_map.removeNeighbor("Canada", "USA");
+	}
 }

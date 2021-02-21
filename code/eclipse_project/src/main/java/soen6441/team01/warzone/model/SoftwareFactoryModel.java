@@ -15,7 +15,7 @@ public class SoftwareFactoryModel {
 	 * Constructor with models defined. Models passed as null will result in the
 	 * default model being passed back.
 	 * 
-	 * @param p_map_model the map model to use
+	 * @param p_map_model          the map model to use
 	 * @param p_user_message_model the user message model to use
 	 */
 	public SoftwareFactoryModel(IMapModel p_map_model, IUserMessageModel p_user_message_model) {
@@ -70,6 +70,5 @@ public class SoftwareFactoryModel {
 		if (d_user_message_model == null)
 			d_user_message_model = new UserMessageModel();
 		return d_user_message_model;
-
 	}
 }

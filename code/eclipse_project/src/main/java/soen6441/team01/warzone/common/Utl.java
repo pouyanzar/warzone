@@ -2,6 +2,9 @@ package soen6441.team01.warzone.common;
 
 import java.io.File;
 
+import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.model.entities.UserMessage;
+
 /**
  * Utility class holding commonly used general functions
  * 
@@ -76,9 +79,9 @@ public class Utl {
 			return true;
 		return false;
 	}
-	
+
 	/**
-	 * Parse and extract the 1st word from the specified sentence. 
+	 * Parse and extract the 1st word from the specified sentence.
 	 * 
 	 * @param p_sentence the string containing words (ie separated by space(s)
 	 * @return String[0] = 1st word, String[1] = rest of sentence
@@ -93,7 +96,7 @@ public class Utl {
 
 		p_sentence = p_sentence.trim();
 		int l_idx = p_sentence.indexOf(' ');
-		if (l_idx < 1 && p_sentence.length() > 1) {
+		if (l_idx < 1 && p_sentence.length() > 0) {
 			l_reply[0] = p_sentence;
 			l_reply[1] = "";
 			return l_reply;
@@ -115,5 +118,49 @@ public class Utl {
 			return l_reply;
 		}
 		return l_reply;
+	}
+
+	/**
+	 * converts a string into an integer.
+	 * 
+	 * @param p_string the string to convert into an integer
+	 * @return the integer value of the string; otherwise Integer.MAX_VALUE if the
+	 *         string is not an integer
+	 */
+	public static int ConvertToInteger(String p_string) {
+		int result;
+		if (Utl.IsEmpty(p_string)) {
+			return Integer.MAX_VALUE;
+		}
+		p_string = p_string.trim();
+		try {
+			result = Integer.parseInt(p_string);
+		} catch (NumberFormatException e) {
+			result = Integer.MAX_VALUE;
+		}
+		return result;
+	}
+
+	/**
+	 * Display a message to the system console
+	 * 
+	 * @param p_msg_type the type of message to display as defined by the enum
+	 * @param p_message  the message to display to the user
+	 */
+	public static void ConsoleMessage(MessageType p_msg_type, String p_message) {
+		switch (p_msg_type) {
+		case None:
+			System.out.println(p_message);
+			break;
+		case Informational:
+			System.out.println("info: " + p_message);
+			break;
+		case Warning:
+			System.out.println("warn: " + p_message);
+			break;
+		default:
+			System.out.println("error: " + p_message);
+			break;
+		}
 	}
 }

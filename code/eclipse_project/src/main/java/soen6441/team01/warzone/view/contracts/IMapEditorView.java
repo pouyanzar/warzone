@@ -1,4 +1,4 @@
-package soen6441.team01.warzone.view;
+package soen6441.team01.warzone.view.contracts;
 
 import soen6441.team01.warzone.common.entities.MessageType;
 

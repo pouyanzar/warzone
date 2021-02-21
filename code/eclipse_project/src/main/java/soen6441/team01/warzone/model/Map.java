@@ -64,7 +64,7 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public IContinentModel addContinent(int p_continent_id, String p_continent_name, int p_extra_army)
 			throws Exception {
-		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
 		if (l_continent != null) {
 			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
 		}
@@ -83,7 +83,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception when there is an exception
 	 */
 	public IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception {
-		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
 		if (l_continent != null) {
 			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
 		}
@@ -95,7 +95,6 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a country to the current map
 	 * 
-	 * @param p_country_id   a unique country identifier
 	 * @param p_country_name the name of the country
 	 * @param p_continent    the associated continent
 	 * @param p_x            the x coordinate as defined in the map file
@@ -103,13 +102,14 @@ public class Map implements IMapModel, IMapModelView {
 	 * @return the created country
 	 * @throws Exception when there is an exception
 	 */
-	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x,
-			int p_y) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+	public ICountryModel addCountry(String p_country_name, IContinentModel p_continent, int p_x, int p_y)
+			throws Exception {
+		ICountryModel l_country = Country.FindCountry(p_country_name, d_countries);
 		if (l_country != null) {
-			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
+			throw new Exception("Cannot add country '" + p_country_name + "' since it already exists.");
 		}
-		l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y);
+		int l_id = d_countries.size() + 1;
+		l_country = new Country(l_id, p_country_name, p_continent, p_x, p_y);
 		d_countries.add(l_country);
 		return l_country;
 	}
@@ -117,18 +117,14 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a country to the current map
 	 * 
-	 * @param p_country_id   a unique country identifier
+	 * @param p_country_name a unique country identifier
 	 * @param p_continent_id the associated continent
 	 * @return the created country
 	 * @throws Exception when there is an exception
 	 */
-	public ICountryModel addCountry(int p_country_id, int p_continent_id) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
-		if (l_country != null) {
-			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
-		}
-		l_country = new Country(p_country_id, p_continent_id);
-		d_countries.add(l_country);
+	public ICountryModel addCountry(String p_country_name, int p_continent_id) throws Exception {
+		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		ICountryModel l_country = addCountry(p_country_name, l_continent, 0, 0);
 		return l_country;
 	}
 
@@ -153,7 +149,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception if the continent cannot be removed
 	 */
 	public IContinentModel removeContinent(int p_continent_id) throws Exception {
-		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
 		if (l_continent == null) {
 			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
 		}
@@ -170,7 +166,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception if the continent cannot be removed
 	 */
 	public IContinentModel removeContinent(String p_continent_id) throws Exception {
-		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
 		if (l_continent == null) {
 			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
 		}
@@ -182,121 +178,62 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * remove the country from the list of existing countries
 	 * 
-	 * @param p_country_id the country id
+	 * @param p_country_name the country id
 	 * @return the deleted country object
 	 * @throws Exception if the country cannot be removed
 	 */
-	public ICountryModel removeCountry(int p_country_id) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+	public ICountryModel removeCountry(String p_country_name) throws Exception {
+		ICountryModel l_country = Country.FindCountry(p_country_name, d_countries);
 		if (l_country == null) {
-			throw new Exception("Cannot remove continent with id " + p_country_id + " since it doesn't exist.");
+			throw new Exception("Cannot remove continent with id " + p_country_name + " since it doesn't exist.");
 		}
-		d_continents.remove(l_country);
+		d_countries.remove(l_country);
 		return l_country;
 	}
 
 	/**
-	 * creates the adjacency list of countries
+	 * Add a neighboring country to an existing country.
 	 * 
-	 * @param p_neighborhoods       the current neighborhood
-	 * @param p_country_id          the current country id
-	 * @param p_neighbor_country_id the id of the country associated to the current
-	 *                              country
+	 * @param p_country_name             the source country name
+	 * @param p_neighboring_country_name the neighboring country name
+	 * @throws Exception unexpected error or if either countries don't exist
 	 */
-	public void addNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
-			int p_neighbor_country_id) {
-
-		p_neighborhoods.get(p_country_id).add(p_neighbor_country_id);
-	}
-
-	public void removeNeighborhood(ArrayList<ArrayList<Integer>> p_neighborhoods, int p_country_id,
-			int p_neighbor_country_id) {
-
-		if (!p_neighborhoods.isEmpty()) {
-			for (int i = 0; i < p_neighborhoods.size(); i++) {
-
-				if (p_neighborhoods.get(p_country_id).get(i) == p_neighbor_country_id) {
-					p_neighborhoods.get(p_country_id).remove(i);
-				}
-			}
+	public void addNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception {
+		ICountryModel p_country = Country.FindCountry(p_country_name, d_countries);
+		if (p_country == null) {
+			throw new Exception("Cannot add neighbor '" + p_neighboring_country_name + "' to county '" + p_country_name
+					+ "' since country '" + p_country_name + "' doesn't exist.");
 		}
-
+		ICountryModel p_neighbor = Country.FindCountry(p_neighboring_country_name, d_countries);
+		if (p_neighbor == null) {
+			throw new Exception("Cannot add neighbor '" + p_neighboring_country_name + "' to county '" + p_country_name
+					+ "' since country '" + p_neighboring_country_name + "' doesn't exist.");
+		}
+		p_country.addNeighbor(p_neighbor);
 	}
 
 	/**
-	 * based on string commands adds or removes continents.
+	 * Remove a neighboring country
 	 * 
-	 * @param p_commands the string commands
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
+	 * @param p_country_name             the source country name
+	 * @param p_neighboring_country_name the neighboring country name
+	 * @throws Exception if either countries don't exist or if there is an
+	 *                   unexpected error
 	 */
-	public void editcontinent(String p_commands) throws NumberFormatException, Exception {
-
-		String[] l_commands = p_commands.split("-");
-
-		for (String l_command : l_commands) {
-
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addContinent(l_command_parameter[1], Integer.parseInt(l_command_parameter[2]));
-
-			}
+	public void removeNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception {
+		ICountryModel p_country = Country.FindCountry(p_country_name, d_countries);
+		if (p_country == null) {
+			throw new Exception("Cannot remove neighbor '" + p_neighboring_country_name + "' from county '"
+					+ p_country_name + "' since country '" + p_country_name + "' doesn't exist.");
 		}
-	}
-
-	/**
-	 * based on string commands adds or removes countries.
-	 * 
-	 * @param p_commands the string commands
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
-	 */
-	public void editcountry(String p_commands) throws NumberFormatException, Exception {
-		String[] l_commands = p_commands.split("-");
-		for (String l_command : l_commands) {
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addCountry(Integer.parseInt(l_command_parameter[1]), Integer.parseInt(l_command_parameter[2]));
-			} else if (l_command.contains("remove")) {
-				String[] l_command_parameter = l_command.split(" ");
-				removeCountry(Integer.parseInt(l_command_parameter[1]));
-			}
-
-		}
-	}
-
-	/**
-	 * edit adjacency of two countries based on command
-	 * 
-	 * @param p_commands the string command to edit adjacency of two countries
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
-	 */
-	public void editneighbor(String p_commands) throws NumberFormatException, Exception {
-		String[] l_commands = p_commands.split("-");
-		for (String l_command : l_commands) {
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
-						Integer.parseInt(l_command_parameter[2]));
-			} else if (l_command.contains("remove")) {
-				String[] l_command_parameter = l_command.split(" ");
-				removeNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
-						Integer.parseInt(l_command_parameter[2]));
-			}
-
-		}
+		p_country.removeNeighbor(p_neighboring_country_name);
 	}
 
 	/**
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
 	 * 
-	 * @return true when the map is valid
-	 * @return false if the map is not valid
+	 * @return true when the map is valid; false if the map is not valid
 	 */
 	public boolean validatemap() {
 

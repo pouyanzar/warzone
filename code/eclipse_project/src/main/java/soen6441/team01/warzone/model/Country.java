@@ -43,12 +43,14 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * The constructor for the Country class.
 	 * 
 	 * @param p_id           a unique country identifier
+	 * @param p_name         country name
 	 * @param p_continent_id the continent id this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
-	public Country(int p_id, int p_continent_id) throws Exception {
+	public Country(int p_id, String p_name, int p_continent_id) throws Exception {
 		super();
 		setId(p_id);
+		setName(p_name);
 		setContinentId(p_continent_id);
 	}
 	
@@ -141,32 +143,42 @@ public class Country implements ICountryModel, ICountryModelView {
 		return (ArrayList<ICountryModel>) d_neighbors.clone();
 	}
 
-	
 	/**
-	 * Add a neighboring country that this country can access
+	 * Add a neighboring country that this country can access. If the specified
+	 * neighboring country is already a neighbor simply ignore the request.
 	 * 
-	 * @param p_country country to add as a neighboring country
+	 * @param p_neighbor country to add as a neighboring country
 	 */
-	public void addNeighbor(ICountryModel p_country) throws Exception {
-		if (p_country == this || p_country.getId() == d_id) {
+	public void addNeighbor(ICountryModel p_neighbor) throws Exception {
+		if (p_neighbor == this || p_neighbor.getId() == d_id) {
 			throw new Exception("Cannot add yourself as a neighbor");
 		}
-		ICountryModel l_neighbor = findCountry(p_country.getId(), d_neighbors);
+		ICountryModel l_neighbor = FindCountry(p_neighbor.getId(), d_neighbors);
 		if (l_neighbor == null) {
-			d_neighbors.add(p_country);
+			d_neighbors.add(p_neighbor);
 		}
 	}
-	
-	
 
 	/**
-	 * find a given country
+	 * Remove a neighboring country
+	 * 
+	 * @param p_neighbor_name the neighboring country's name
+	 */
+	public void removeNeighbor(String p_neighbor_name) {
+		ICountryModel l_neighbor = FindCountry(p_neighbor_name, d_neighbors);
+		if (l_neighbor != null) {
+			d_neighbors.remove(l_neighbor);
+		}
+	}
+
+	/**
+	 * find a given country given it's ID
 	 * 
 	 * @param p_country_id the country id of the neighboring country to find
 	 * @param p_countries  list of countries to search from
 	 * @return null if not found, otherwise return the country with the specified id
 	 */
-	public static ICountryModel findCountry(int p_country_id, ArrayList<ICountryModel> p_countries) {
+	public static ICountryModel FindCountry(int p_country_id, ArrayList<ICountryModel> p_countries) {
 		for (ICountryModel l_xcountry : p_countries) {
 			if (l_xcountry.getId() == p_country_id) {
 				return l_xcountry;
@@ -174,4 +186,21 @@ public class Country implements ICountryModel, ICountryModelView {
 		}
 		return null;
 	}
+
+	/**
+	 * find a given country given it's name
+	 * 
+	 * @param p_country_name the country id of the neighboring country to find
+	 * @param p_countries    list of countries to search from
+	 * @return null if not found, otherwise return the country with the specified id
+	 */
+	public static ICountryModel FindCountry(String p_country_name, ArrayList<ICountryModel> p_countries) {
+		for (ICountryModel l_xcountry : p_countries) {
+			if (l_xcountry.getName().equals(p_country_name)) {
+				return l_xcountry;
+			}
+		}
+		return null;
+	}
+
 }
