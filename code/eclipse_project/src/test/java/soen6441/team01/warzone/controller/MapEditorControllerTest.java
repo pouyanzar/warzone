@@ -132,7 +132,7 @@ public class MapEditorControllerTest {
 	}
 
 	/**
-	 * test processMapEditorCommand_editcontinent invalid commands
+	 * test editcountry invalid commands
 	 * 
 	 * @throws Exception unexpected error
 	 */
@@ -208,4 +208,108 @@ public class MapEditorControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("editcountry processed successfully"));
 	}
+
+	/**
+	 * test editneighbor invalid add commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processMapEditorCommand_editneighbor_invalid_add() throws Exception {
+		String l_msg;
+		d_map_editor_controller.processMapEditorCommand("editneighbor");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor add");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor option"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Can!ada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -add countryId"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -add neighborcountryID"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada U!SA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -add neighborcountryID"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Canada' doesn't exist."));
+
+		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada 1");
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("USA' doesn't exist."));
+	}
+
+	/**
+	 * test editneighbor invalid remove commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processMapEditorCommand_editneighbor_invalid_remove() throws Exception {
+		String l_msg;
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Can!ada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -remove countryId"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -remove neighborcountryID"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada U!SA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editneighbor -remove neighborcountryID"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada USA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Canada' doesn't exist."));
+	}
+
+	/**
+	 * test editneighbor valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processMapEditorCommand_editneighbor_valid() throws Exception {
+		String l_msg;
+		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada 1");
+		d_map_editor_controller.processMapEditorCommand("editcountry -add USA 1");
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada USA");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA -add USA Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada USA -remove USA Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA -add USA Canada -remove Canada USA -remove USA Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA -remove Canada USA -add USA Canada -remove USA Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+
+		d_map_editor_controller.processMapEditorCommand(" editneighbor   -add   Canada   USA   -remove     Canada      USA     -add       USA       Canada       -remove    USA   Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("editneighbor processed successfully"));
+	}
+
 }

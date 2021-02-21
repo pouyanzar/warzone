@@ -26,4 +26,6 @@ public interface ICountryModel {
 	ArrayList<ICountryModel> getNeighbors();
 
 	void addNeighbor(ICountryModel p_country) throws Exception;
+
+	void removeNeighbor(String p_neighbor_name);
 }

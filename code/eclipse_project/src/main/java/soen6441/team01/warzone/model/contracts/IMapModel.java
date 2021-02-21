@@ -19,6 +19,10 @@ public interface IMapModel {
 	IContinentModel removeContinent(String p_continent_id) throws Exception;
 
 	IContinentModel removeContinent(int p_continent_id) throws Exception;
-	
+
 	ICountryModel removeCountry(String p_country_name) throws Exception;
+
+	void addNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception;
+
+	void removeNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception;
 }

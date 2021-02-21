@@ -118,6 +118,26 @@ public class CountryTest {
 	}
 
 	/**
+	 * simple remove neighbor tests
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_removeNeighbor() throws Exception {
+		Country l_country_1 = new Country(1, "Canada", null, 0, 0);
+		Country l_country_2 = new Country(2, "United_States", null, 0, 0);
+		l_country_1.addNeighbor(l_country_2);
+		l_country_2.addNeighbor(l_country_1);
+		assertTrue(l_country_1.getNeighbors().size() == 1);
+		assertSame(l_country_1.getNeighbors().get(0), l_country_2);
+		assertTrue(l_country_2.getNeighbors().size() == 1);
+		assertSame(l_country_2.getNeighbors().get(0), l_country_1);
+		l_country_1.removeNeighbor("United_States");
+		assertTrue(l_country_1.getNeighbors().size() == 0);
+		assertTrue(l_country_2.getNeighbors().size() == 1);
+	}
+
+	/**
 	 * test static function findCountry
 	 * 
 	 * @throws Exception when there is an exception
@@ -127,11 +147,11 @@ public class CountryTest {
 		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
 		l_countries.add(new Country(1, "Canada", null, 0, 0));
 		l_countries.add(new Country(2, "USA", null, 0, 0));
-		ICountryModel l_result = Country.findCountry(2, l_countries);
+		ICountryModel l_result = Country.FindCountry(2, l_countries);
 		if (l_result.getName() != "USA") {
 			fail("problem finding existing country");
 		}
-		l_result = Country.findCountry(3, l_countries);
+		l_result = Country.FindCountry(3, l_countries);
 		if (l_result != null) {
 			fail("problem finding non-existing country");
 		}
@@ -147,15 +167,15 @@ public class CountryTest {
 		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
 		l_countries.add(new Country(1, "Canada", null, 0, 0));
 		l_countries.add(new Country(2, "USA", null, 0, 0));
-		ICountryModel l_result = Country.findCountry("USA", l_countries);
+		ICountryModel l_result = Country.FindCountry("USA", l_countries);
 		if (l_result.getName() != "USA") {
 			fail("problem finding existing country");
 		}
-		l_result = Country.findCountry("Canada", l_countries);
+		l_result = Country.FindCountry("Canada", l_countries);
 		if (l_result.getName() != "Canada") {
 			fail("problem finding existing country");
 		}
-		l_result = Country.findCountry("France", l_countries);
+		l_result = Country.FindCountry("France", l_countries);
 		if (l_result != null) {
 			fail("problem finding non-existing country");
 		}

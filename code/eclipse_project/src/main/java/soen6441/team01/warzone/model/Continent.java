@@ -113,7 +113,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id
 	 */
-	public static IContinentModel findContinent(int p_continent_id, ArrayList<IContinentModel> p_continents) {
+	public static IContinentModel FindContinent(int p_continent_id, ArrayList<IContinentModel> p_continents) {
 		for (IContinentModel l_xcontinent : p_continents) {
 			if (l_xcontinent.getId() == p_continent_id) {
 				return l_xcontinent;
@@ -130,7 +130,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id
 	 */
-	public static IContinentModel findContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
+	public static IContinentModel FindContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
 		for (IContinentModel l_xcontinent : p_continents) {
 			if (l_xcontinent.getName() == p_continent_id) {
 				return l_xcontinent;
