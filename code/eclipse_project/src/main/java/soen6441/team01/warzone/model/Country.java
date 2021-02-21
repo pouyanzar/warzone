@@ -51,6 +51,21 @@ public class Country implements ICountryModel, ICountryModelView {
 		setId(p_id);
 		setContinentId(p_continent_id);
 	}
+	
+	/**
+	 * The constructor for the Country class.
+	 * 
+	 * @param p_id           a unique country identifier 
+	 * @param p_country_name the name of country
+	 * @param p_continent_id the continent id this country belongs to countries
+	 * @throws Exception when there is an exception
+	 */
+	public Country(int p_id, String p_country_name, int p_continent_id) throws Exception {
+		super();
+		setId(p_id);
+		setName(p_country_name);
+		setContinentId(p_continent_id);
+	}
 
 	/**
 	 * @return the name of the country

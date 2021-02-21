@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,6 +29,14 @@ public class Map implements IMapModel, IMapModelView {
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
 	private ArrayList<ArrayList<Integer>> d_neighborhoods = new ArrayList<ArrayList<Integer>>();
+
+	public Map(ArrayList<IContinentModel> d_continents, ArrayList<ICountryModel> d_countries,
+			ArrayList<ArrayList<Integer>> d_neighborhoods) {
+		this.d_continents = (ArrayList<IContinentModel>) d_continents.clone();
+		this.d_countries = (ArrayList<ICountryModel>) d_countries.clone();
+		this.d_neighborhoods = (ArrayList<ArrayList<Integer>>) d_neighborhoods.clone();
+
+	}
 
 	/**
 	 * @return the current list of continents defined on the map
@@ -300,7 +312,76 @@ public class Map implements IMapModel, IMapModelView {
 		}
 		return true;
 	}
+
+	/**
+	 * loads the desired map from the map file
+	 * 
+	 * @param p_map_name the name of the map file
+	 * @return map the instance of map class
+	 * @throws NumberFormatException when there is no appropriate format in string
+	 *                               to convert into integer
+	 * @throws Exception             when there is an exception
+	 */
+	public Map loadmap(String p_map_name) throws NumberFormatException, Exception {
+
+		String l_filename = "src/main/resources" + p_map_name + ".map";
+		Path l_path = Paths.get(l_filename);
+		Stream<String> l_lines = Files.lines(l_path);
+		ArrayList<String> l_pattern = new ArrayList<>(); // an ArrayList to store the map file
+		int l_continent_index = 0; // index line in continents start
+		int l_country_index = 0; // index line in countries start
+		int l_borders_index = 0; // index line in borders start
+		l_lines.forEach(s -> l_pattern.add(s)); // loop over the map file to add all lines into the ArrayList
+		l_lines.close();
+
+		// loop over ArrayList to find the line indexes for each section of the map file
+		for (int i = 0; i < l_pattern.size(); i++) {
+			switch (l_pattern.get(i)) {
+			case "[continents]":
+				l_continent_index = i;
+				break;
+			case "[countries]":
+				l_country_index = i;
+				break;
+			case "[borders]":
+				l_borders_index = i;
+				break;
+			}
+		}
+
+		// loop to fill the continents on the map inside continents ArrayList
+		for (int i = l_continent_index + 1; i < l_country_index - 1; i++) {
+			String[] l_continents = l_pattern.get(i).split(" ");
+			IContinentModel l_continent = new Continent(i, l_continents[0], Integer.parseInt(l_continents[1]));
+			d_continents.add(l_continent);
+		}
+
+		// loop to fill the countries on the map inside countries ArrayList
+		for (int i = l_country_index + 1; i < l_borders_index - 1; i++) {
+			String[] l_countries = l_pattern.get(i).split(" ");
+			ICountryModel l_country = new Country(Integer.parseInt(l_countries[0]), l_countries[1],
+					Integer.parseInt(l_countries[2]));
+			d_countries.add(l_country);
+		}
+        
+		//loop to fill the neighborhoods ArrayList
+		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
+			d_neighborhoods.add(new ArrayList<>());
+		}
+		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
+			String[] l_neighbors = l_pattern.get(i).split(" ");
+			for (int j = 0; j<l_neighbors.length ; j++) {
+				d_neighborhoods.get(Integer.parseInt(l_neighbors[0])-1).add(Integer.parseInt(l_neighbors[j]));
+			}
+		}
+
+		Map map = new Map(d_continents, d_countries, d_neighborhoods);
+
+		return map;
+	}
 }
+
+	
 
 ///**
 //* Loads for editing an existing Warzone map from an existing "domination" style
