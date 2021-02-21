@@ -62,35 +62,56 @@ public class GameEngine {
 	 * Starts executing the game dynamics
 	 */
 	public void startNewGame() {
-		boolean l_end_game = false;
 		try {
-			String l_cmd = d_controller_factory.getMapEditorController().startMapEditor();
-			String[] l_cmd_params = Utl.GetFirstWord(l_cmd);
-			if (l_cmd_params == null || Utl.IsEmpty(l_cmd_params[0])) {
-				throw new Exception("Internal error 1 processing GameEngine.");
-			}
-			switch (l_cmd_params[0]) {
-			case "exit":
-				l_end_game = true;
-				break;
+			boolean l_continue_game = false;
+			l_continue_game = processMapEditor();
+			if (l_continue_game) {
+				l_continue_game = processGameStartup();
 			}
 		} catch (Exception ex) {
 			System.out.println("Fatal error processing GameEngine.");
 			System.out.println("Exception: " + ex.getMessage());
 			System.out.println("Terminating game.");
-			l_end_game = true;
 		}
 
-		if (!l_end_game) {
-			// process Startup phase of game
-			System.out.println("startup game phase...");
-			try {
-			} catch (Exception ex) {
-				l_end_game = true;
-			}
-		}
-
-		System.out.println("end of game.");
+		System.out.println("End of game.");
 	}
 
+	/**
+	 * Startup and process the map editor phase of the game
+	 * 
+	 * @return true=continue game; false=exit game
+	 * @throws Exception unexpected errors
+	 */
+	public boolean processMapEditor() throws Exception {
+		String l_cmd = d_controller_factory.getMapEditorController().startMapEditor();
+		String[] l_cmd_params = Utl.GetFirstWord(l_cmd);
+		if (l_cmd_params == null || Utl.IsEmpty(l_cmd_params[0])) {
+			throw new Exception("Internal error processing GameEngine map editor.");
+		}
+		switch (l_cmd_params[0]) {
+		case "exit":
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Startup and process the game startup phase of the game
+	 * 
+	 * @return true=continue game; false=exit game
+	 * @throws Exception unexpected errors
+	 */
+	public boolean processGameStartup() throws Exception {
+		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup();
+		String[] l_cmd_params = Utl.GetFirstWord(l_cmd);
+		if (l_cmd_params == null || Utl.IsEmpty(l_cmd_params[0])) {
+			throw new Exception("Internal error processing GameEngine startup.");
+		}
+		switch (l_cmd_params[0]) {
+		case "exit":
+			return false;
+		}
+		return true;
+	}
 }

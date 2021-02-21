@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
@@ -7,6 +8,7 @@ import soen6441.team01.warzone.model.UserMessageModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.view.contracts.IGameStartupView;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
@@ -51,4 +53,15 @@ public class SoftwareFactoryView {
 		return new MapEditorConsoleView(p_controller, l_usermsg);
 	}
 
+	/**
+	 * Creates a GameStartup console view
+	 * 
+	 * @param p_controller the controller to pass into the view
+	 * @return an IGameStartupView object
+	 * @throws Exception if there is a problem creating the view
+	 */
+	public IGameStartupView getGameStartupConsoleView(IGameStartupController p_controller) throws Exception {
+		IUserMessageModelView l_usermsg = (IUserMessageModelView) d_model_factory.getUserMessageModel();
+		return new GameStartupConsoleView(p_controller, l_usermsg);
+	}
 }

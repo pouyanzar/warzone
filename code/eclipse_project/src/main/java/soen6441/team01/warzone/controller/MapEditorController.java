@@ -390,7 +390,7 @@ public class MapEditorController implements IMapEditorController {
 	 */
 	private void mapEditorHelp() {
 		d_view.displayMapEditorBanner();
-		d_view.processMessage(MessageType.None, "List of commands:");
+		d_view.processMessage(MessageType.None, "Map editor commands:");
 		d_view.processMessage(MessageType.None, " - editcontinent -add continentID continentvalue -remove continentID");
 		d_view.processMessage(MessageType.None, " - editcountry -add countryID continentID -remove countryID");
 		d_view.processMessage(MessageType.None,

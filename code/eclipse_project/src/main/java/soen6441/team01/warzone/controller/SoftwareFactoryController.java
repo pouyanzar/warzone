@@ -1,11 +1,9 @@
 package soen6441.team01.warzone.controller;
 
+import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
-import soen6441.team01.warzone.view.MapEditorConsoleView;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
-import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
  * This class implements the Software Factory design pattern to manage the set
@@ -38,4 +36,12 @@ public class SoftwareFactoryController {
 		return new MapEditorController(d_model_factory, d_view_factory);
 	}
 
+	/**
+	 * Create a GameStartupController 
+	 * @return map edit controller
+	 * @throws Exception unexpected error
+	 */
+	public IGameStartupController getGameStartupController() throws Exception {
+		return new GameStartupController(d_model_factory, d_view_factory);
+	}
 }

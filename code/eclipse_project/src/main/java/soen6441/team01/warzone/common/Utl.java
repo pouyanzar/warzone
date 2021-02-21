@@ -2,6 +2,9 @@ package soen6441.team01.warzone.common;
 
 import java.io.File;
 
+import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.model.entities.UserMessage;
+
 /**
  * Utility class holding commonly used general functions
  * 
@@ -126,7 +129,7 @@ public class Utl {
 	 */
 	public static int ConvertToInteger(String p_string) {
 		int result;
-		if( Utl.IsEmpty(p_string)) {
+		if (Utl.IsEmpty(p_string)) {
 			return Integer.MAX_VALUE;
 		}
 		p_string = p_string.trim();
@@ -138,4 +141,26 @@ public class Utl {
 		return result;
 	}
 
+	/**
+	 * Display a message to the system console
+	 * 
+	 * @param p_msg_type the type of message to display as defined by the enum
+	 * @param p_message  the message to display to the user
+	 */
+	public static void ConsoleMessage(MessageType p_msg_type, String p_message) {
+		switch (p_msg_type) {
+		case None:
+			System.out.println(p_message);
+			break;
+		case Informational:
+			System.out.println("info: " + p_message);
+			break;
+		case Warning:
+			System.out.println("warn: " + p_message);
+			break;
+		default:
+			System.out.println("error: " + p_message);
+			break;
+		}
+	}
 }
