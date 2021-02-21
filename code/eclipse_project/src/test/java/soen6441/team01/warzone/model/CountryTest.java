@@ -136,4 +136,28 @@ public class CountryTest {
 			fail("problem finding non-existing country");
 		}
 	}
+	
+	/**
+	 * test static function findCountry
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_findCountry_by_name() throws Exception {
+		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
+		l_countries.add(new Country(1, "Canada", null, 0, 0));
+		l_countries.add(new Country(2, "USA", null, 0, 0));
+		ICountryModel l_result = Country.findCountry("USA", l_countries);
+		if (l_result.getName() != "USA") {
+			fail("problem finding existing country");
+		}
+		l_result = Country.findCountry("Canada", l_countries);
+		if (l_result.getName() != "Canada") {
+			fail("problem finding existing country");
+		}
+		l_result = Country.findCountry("France", l_countries);
+		if (l_result != null) {
+			fail("problem finding non-existing country");
+		}
+	}
 }

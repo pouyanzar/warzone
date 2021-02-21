@@ -6,16 +6,17 @@ import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.controller.IInteractionDrivenController;
+import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
 import soen6441.team01.warzone.model.entities.UserMessage;
+import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
  * Warzone MVC console based view. Supports the different views required for
  * playing Warzone. The view interacts with the user via the system console.
  */
 public class MapEditorConsoleView implements Observer, IMapEditorView {
-	private IInteractionDrivenController d_controller = null;
+	private IMapEditorController d_controller = null;
 	private Scanner d_keyboard = null;
 	private IUserMessageModelView d_user_message_model = null;
 
@@ -27,7 +28,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 *                             view gets notifications from the model to display
 	 *                             messages to the user.
 	 */
-	public MapEditorConsoleView(IInteractionDrivenController p_controller, IUserMessageModelView p_user_message_model) {
+	public MapEditorConsoleView(IMapEditorController p_controller, IUserMessageModelView p_user_message_model) {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
 		d_user_message_model = p_user_message_model;

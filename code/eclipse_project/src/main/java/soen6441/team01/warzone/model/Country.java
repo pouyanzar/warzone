@@ -46,9 +46,10 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * @param p_continent_id the continent id this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
-	public Country(int p_id, int p_continent_id) throws Exception {
+	public Country(int p_id, String p_name, int p_continent_id) throws Exception {
 		super();
 		setId(p_id);
+		setName(p_name);
 		setContinentId(p_continent_id);
 	}
 
@@ -145,7 +146,7 @@ public class Country implements ICountryModel, ICountryModelView {
 	
 
 	/**
-	 * find a given country
+	 * find a given country given it's ID
 	 * 
 	 * @param p_country_id the country id of the neighboring country to find
 	 * @param p_countries  list of countries to search from
@@ -159,4 +160,21 @@ public class Country implements ICountryModel, ICountryModelView {
 		}
 		return null;
 	}
+	
+	/**
+	 * find a given country given it's name
+	 * 
+	 * @param p_country_id the country id of the neighboring country to find
+	 * @param p_countries  list of countries to search from
+	 * @return null if not found, otherwise return the country with the specified id
+	 */
+	public static ICountryModel findCountry(String p_country_name, ArrayList<ICountryModel> p_countries) {
+		for (ICountryModel l_xcountry : p_countries) {
+			if (l_xcountry.getName().equals(p_country_name)) {
+				return l_xcountry;
+			}
+		}
+		return null;
+	}
+
 }

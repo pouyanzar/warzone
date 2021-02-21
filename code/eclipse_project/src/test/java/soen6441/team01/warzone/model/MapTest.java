@@ -87,12 +87,12 @@ public class MapTest {
 	public void test_add_country_1() throws Exception {
 		Map l_map = new Map();
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		ICountryModel l_canada = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry(3, "USA", l_north_america, 0, 0);
+		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("USA", l_north_america, 0, 0);
 		ArrayList<ICountryModel> l_countries = l_map.getCountries();
 		assertTrue(l_countries.size() == 2);
-		assertTrue(l_countries.get(0).getId() == 2);
-		assertTrue(l_countries.get(1).getId() == 3);
+		assertTrue(l_countries.get(0).getId() == 1);
+		assertTrue(l_countries.get(1).getId() == 2);
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class MapTest {
 	public void test_add_dup_country_1() throws Exception {
 		Map l_map = new Map();
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		ICountryModel l_canada = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry(2, "Canada", l_north_america, 0, 0);
+		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
+		ICountryModel l_usa = l_map.addCountry("Canada", l_north_america, 0, 0);
 	}
 
 }

@@ -37,15 +37,25 @@ public class UserMessageModel extends Observable implements IUserMessageModel, I
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	/**
-	 * @return the last user message 
+	 * @return the last user message
 	 */
 	public UserMessage getLastMessage() {
 		int l_idx = d_user_messages.size() - 1;
-		if(l_idx < 0) {
+		if (l_idx < 0) {
 			return null;
 		}
 		return d_user_messages.get(l_idx);
+	}
+
+	/**
+	 * @return the last user message and clear the message stack. Useful for
+	 *         unit testing.
+	 */
+	public UserMessage getLastMessageAndClear() {
+		UserMessage l_um = getLastMessage();
+		d_user_messages = new ArrayList<UserMessage>();
+		return l_um;
 	}
 }

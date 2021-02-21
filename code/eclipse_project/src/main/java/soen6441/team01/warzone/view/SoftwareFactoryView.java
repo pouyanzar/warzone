@@ -1,12 +1,13 @@
 package soen6441.team01.warzone.view;
 
-import soen6441.team01.warzone.controller.IInteractionDrivenController;
+import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.UserMessageModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
  * This class implements the Software Factory design pattern to manage the set
@@ -45,7 +46,7 @@ public class SoftwareFactoryView {
 	 * @return an IMapEditorView object
 	 * @throws Exception if there is a problem creating the view
 	 */
-	public IMapEditorView getMapEditorConsoleView(IInteractionDrivenController p_controller) throws Exception {
+	public IMapEditorView getMapEditorConsoleView(IMapEditorController p_controller) throws Exception {
 		IUserMessageModelView l_usermsg = (IUserMessageModelView) d_model_factory.getUserMessageModel();
 		return new MapEditorConsoleView(p_controller, l_usermsg);
 	}

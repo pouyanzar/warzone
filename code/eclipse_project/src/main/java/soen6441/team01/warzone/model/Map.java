@@ -91,13 +91,14 @@ public class Map implements IMapModel, IMapModelView {
 	 * @return the created country
 	 * @throws Exception when there is an exception
 	 */
-	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x,
-			int p_y) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+	public ICountryModel addCountry(String p_country_name, IContinentModel p_continent, int p_x, int p_y)
+			throws Exception {
+		ICountryModel l_country = Country.findCountry(p_country_name, d_countries);
 		if (l_country != null) {
-			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
+			throw new Exception("Cannot add country '" + p_country_name + "' since it already exists.");
 		}
-		l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y);
+		int l_id = d_countries.size() + 1;
+		l_country = new Country(l_id, p_country_name, p_continent, p_x, p_y);
 		d_countries.add(l_country);
 		return l_country;
 	}
@@ -110,13 +111,9 @@ public class Map implements IMapModel, IMapModelView {
 	 * @return the created country
 	 * @throws Exception when there is an exception
 	 */
-	public ICountryModel addCountry(int p_country_id, int p_continent_id) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
-		if (l_country != null) {
-			throw new Exception("Cannot add country with id " + p_country_id + " since it already exists.");
-		}
-		l_country = new Country(p_country_id, p_continent_id);
-		d_countries.add(l_country);
+	public ICountryModel addCountry(String p_country_name, int p_continent_id) throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		ICountryModel l_country = addCountry(p_country_name, l_continent, 0, 0);
 		return l_country;
 	}
 
@@ -170,16 +167,16 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * remove the country from the list of existing countries
 	 * 
-	 * @param p_country_id the country id
+	 * @param p_country_name the country id
 	 * @return the deleted country object
 	 * @throws Exception if the country cannot be removed
 	 */
-	public ICountryModel removeCountry(int p_country_id) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+	public ICountryModel removeCountry(String p_country_name) throws Exception {
+		ICountryModel l_country = Country.findCountry(p_country_name, d_countries);
 		if (l_country == null) {
-			throw new Exception("Cannot remove continent with id " + p_country_id + " since it doesn't exist.");
+			throw new Exception("Cannot remove continent with id " + p_country_name + " since it doesn't exist.");
 		}
-		d_continents.remove(l_country);
+		d_countries.remove(l_country);
 		return l_country;
 	}
 
@@ -209,74 +206,6 @@ public class Map implements IMapModel, IMapModelView {
 			}
 		}
 
-	}
-
-	/**
-	 * based on string commands adds or removes continents.
-	 * 
-	 * @param p_commands the string commands
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
-	 */
-	public void editcontinent(String p_commands) throws NumberFormatException, Exception {
-
-		String[] l_commands = p_commands.split("-");
-
-		for (String l_command : l_commands) {
-
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addContinent(l_command_parameter[1], Integer.parseInt(l_command_parameter[2]));
-
-			}
-		}
-	}
-
-	/**
-	 * based on string commands adds or removes countries.
-	 * 
-	 * @param p_commands the string commands
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
-	 */
-	public void editcountry(String p_commands) throws NumberFormatException, Exception {
-		String[] l_commands = p_commands.split("-");
-		for (String l_command : l_commands) {
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addCountry(Integer.parseInt(l_command_parameter[1]), Integer.parseInt(l_command_parameter[2]));
-			} else if (l_command.contains("remove")) {
-				String[] l_command_parameter = l_command.split(" ");
-				removeCountry(Integer.parseInt(l_command_parameter[1]));
-			}
-
-		}
-	}
-
-	/**
-	 * edit adjacency of two countries based on command
-	 * 
-	 * @param p_commands the string command to edit adjacency of two countries
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
-	 * @throws Exception             when there is an exception
-	 */
-	public void editneighbor(String p_commands) throws NumberFormatException, Exception {
-		String[] l_commands = p_commands.split("-");
-		for (String l_command : l_commands) {
-			if (l_command.contains("add")) {
-				String[] l_command_parameter = l_command.split(" ");
-				addNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
-						Integer.parseInt(l_command_parameter[2]));
-			} else if (l_command.contains("remove")) {
-				String[] l_command_parameter = l_command.split(" ");
-				removeNeighborhood(d_neighborhoods, Integer.parseInt(l_command_parameter[1]),
-						Integer.parseInt(l_command_parameter[2]));
-			}
-
-		}
 	}
 
 	/**
