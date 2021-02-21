@@ -2,6 +2,7 @@ package soen6441.team01.warzone.controller;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
@@ -9,16 +10,17 @@ import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.view.contracts.IGamePlayView;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
 /**
- * Warzone game startup controller. Manages the coordination and progression of
- * the game startup phase.
+ * Warzone game play controller. Manages the coordination and progression of the
+ * game play phase.
  */
-public class GameStartupController implements IGameStartupController {
+public class GamePlayController implements IGamePlayController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
-	private IGameStartupView d_view;
+	private IGamePlayView d_view;
 	private IUserMessageModel d_msg_model;
 
 	/**
@@ -28,39 +30,44 @@ public class GameStartupController implements IGameStartupController {
 	 * @param p_view_factory  predefined SoftwareFactoryView.
 	 * @throws Exception unexpected error
 	 */
-	public GameStartupController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory)
+	public GamePlayController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory)
 			throws Exception {
 		d_model_factory = p_model_factory;
 		d_view_factory = p_view_factory;
-		d_view = d_view_factory.getGameStartupConsoleView(this);
+		d_view = d_view_factory.getGamePlayConsoleView(this);
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
 	/**
 	 * Starts executing the game startup dynamics
 	 * 
-	 * @return String one of: exit, startup_complete
+	 * @return String one of: exit, game_over 
 	 */
-	public String processGameStartup() {
+	public String processGamePlay() {
 		String l_cmd = "exit";
 
 		try {
-			d_view.displayGameStartupBanner();
+			d_view.displayGamePlayBanner();
 			l_cmd = processUserCommands();
-			switch (l_cmd) {
+			if (l_cmd == null || Utl.IsEmpty(l_cmd)) {
+				throw new Exception("Internal error 1 processing gameplay.");
+			}
+			String l_cmd_params[] = new String[2];
+			l_cmd_params = Utl.GetFirstWord(l_cmd);
+			switch (l_cmd_params[0]) {
 			case "exit":
 				break;
-			case "startup_complete":
+			case "assigncountries":
 				break;
 			default:
-				throw new Exception("Internal error processing the game startup.");
+				throw new Exception("Internal error 2 processing the gameplay.");
 			}
 		} catch (Exception ex) {
-			System.out.println("Fatal error encountered during game startup.");
+			System.out.println("Fatal error encountered during gameplay.");
 			System.out.println("Exception: " + ex.getMessage());
 		}
 
-		d_msg_model.setMessage(MessageType.Informational, "exiting game startup");
+		d_msg_model.setMessage(MessageType.Informational, "exiting gameplay");
 
 		if (d_view != null) {
 			d_view.shutdown();
@@ -74,65 +81,53 @@ public class GameStartupController implements IGameStartupController {
 	 * processes any commands coming from the view.
 	 * 
 	 * @param p_view the GameStartupView to interact with
-	 * @return String one of; exit, startup_complete
+	 * @return String the last command entered
 	 * @throws Exception general exception processing the map editor
 	 */
 	private String processUserCommands() throws Exception {
-		boolean l_exit_startup = false;
+		boolean l_exit_gameplay = false;
 		String l_cmd = "exit";
-		while (!l_exit_startup) {
+		while (!l_exit_gameplay) {
 			l_cmd = d_view.getCommand();
-			l_cmd = processGameStartupCommand(l_cmd);
-			switch (l_cmd) {
-			case "exit":
-				l_exit_startup = true;
-				break;
-			case "assignedcountries":
-				l_cmd = "startup_complete";
-				l_exit_startup = true;
-				break;
-			}
+			l_exit_gameplay = !processGamePlayCommand(l_cmd);
 		}
 		return l_cmd;
 	}
 
 	/**
-	 * Process the game startup command:
+	 * Process the game play command:
 	 * <ul>
-	 * <li>gameplayer -add playername -remove playername</li>
-	 * <li>assigncountries</li>
+	 * <li>showmap</li>
+	 * <li>deploy countryID num_reinforcements</li>
 	 * <li>exit</li>
 	 * <li>help</li>
 	 * </ul>
 	 * 
 	 * @param l_command the command to process
-	 * @return String one of; exit, assigncountries
+	 * @return true = command processed successfully, false = command to exit
 	 * @throws Exception unexpected error
 	 */
-	public String processGameStartupCommand(String l_command) throws Exception {
-		String l_return_command = "";
+	public boolean processGamePlayCommand(String l_command) throws Exception {
 		String l_cmd_params[] = Utl.GetFirstWord(l_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
 			break;
 		case "exit":
-			l_return_command = "exit";
-			break;
-		case "gameplayer":
+			return false;
+		case "showmap":
 			// processEditContinent(l_cmd_params[1]);
-			d_msg_model.setMessage(MessageType.None, "gameplayer coming soon...");
+			d_msg_model.setMessage(MessageType.None, "showmap coming soon...");
 			break;
-		case "assigncountries":
+		case "deploy":
 			// processEditContinent(l_cmd_params[1]);
-			d_msg_model.setMessage(MessageType.None, "assigncountries coming soon...");
-			l_return_command = "assignedcountries";
+			d_msg_model.setMessage(MessageType.None, "deploy coming soon...");
 			break;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_command + "'");
 			break;
 		}
-		return l_return_command;
+		return true;
 	}
 
 	/**
@@ -142,10 +137,10 @@ public class GameStartupController implements IGameStartupController {
 	 * @param p_view the map editor view being used by the controller
 	 */
 	private void GameStartupHelp() {
-		d_view.displayGameStartupBanner();
-		d_view.processMessage(MessageType.None, "Game startup commands:");
-		d_view.processMessage(MessageType.None, " - gameplayer -add playername -remove playername");
-		d_view.processMessage(MessageType.None, " - assigncountries");
+		d_view.displayGamePlayBanner();
+		d_view.processMessage(MessageType.None, "Gameplay commands:");
+		d_view.processMessage(MessageType.None, " - showmap");
+		d_view.processMessage(MessageType.None, " - deploy countryID num_reinforcements");
 		d_view.processMessage(MessageType.None, " - exit");
 		d_view.processMessage(MessageType.None, " - help");
 	}

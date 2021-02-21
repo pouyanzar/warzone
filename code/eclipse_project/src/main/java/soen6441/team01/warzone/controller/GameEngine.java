@@ -68,6 +68,9 @@ public class GameEngine {
 			if (l_continue_game) {
 				l_continue_game = processGameStartup();
 			}
+			if (l_continue_game) {
+				l_continue_game = processGamePlay();
+			}
 		} catch (Exception ex) {
 			System.out.println("Fatal error processing GameEngine.");
 			System.out.println("Exception: " + ex.getMessage());
@@ -85,13 +88,13 @@ public class GameEngine {
 	 */
 	public boolean processMapEditor() throws Exception {
 		String l_cmd = d_controller_factory.getMapEditorController().startMapEditor();
-		String[] l_cmd_params = Utl.GetFirstWord(l_cmd);
-		if (l_cmd_params == null || Utl.IsEmpty(l_cmd_params[0])) {
-			throw new Exception("Internal error processing GameEngine map editor.");
-		}
-		switch (l_cmd_params[0]) {
+		switch (l_cmd) {
 		case "exit":
 			return false;
+		case "map_loaded":
+			break;
+		default:
+			throw new Exception("Internal error processing map editor.");
 		}
 		return true;
 	}
@@ -104,14 +107,33 @@ public class GameEngine {
 	 */
 	public boolean processGameStartup() throws Exception {
 		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup();
-		String[] l_cmd_params = Utl.GetFirstWord(l_cmd);
-		if (l_cmd_params == null || Utl.IsEmpty(l_cmd_params[0])) {
-			throw new Exception("Internal error processing GameEngine startup.");
-		}
-		switch (l_cmd_params[0]) {
+		switch (l_cmd) {
 		case "exit":
 			return false;
+		case "startup_complete":
+			break;
+		default:
+			throw new Exception("Internal error processing GameEngine startup.");
 		}
 		return true;
 	}
+	
+	/**
+	 * Startup and process the game startup phase of the game
+	 * 
+	 * @return true=continue game; false=exit game
+	 * @throws Exception unexpected errors
+	 */
+	public boolean processGamePlay() throws Exception {
+		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay();
+		switch (l_cmd) {
+		case "exit":
+			return false;
+		case "game_over":
+			break;
+		default:
+			throw new Exception("Internal error processing GameEngine gameplay.");
+		}
+		return true;
+	}	
 }

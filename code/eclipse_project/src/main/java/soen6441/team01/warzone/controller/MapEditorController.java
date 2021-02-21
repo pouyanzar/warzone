@@ -39,8 +39,7 @@ public class MapEditorController implements IMapEditorController {
 	/**
 	 * Starts executing the game dynamics
 	 * 
-	 * @return String = last unprocessed command. Valid commands include: exit,
-	 *         loadmap
+	 * @return String one of: exit, map_loaded
 	 */
 	public String startMapEditor() {
 		String l_cmd = "exit";
@@ -54,8 +53,10 @@ public class MapEditorController implements IMapEditorController {
 			l_cmd_params = Utl.GetFirstWord(l_cmd);
 			switch (l_cmd_params[0]) {
 			case "exit":
+				l_cmd = "exit";
 				break;
 			case "loadmap":
+				l_cmd = "map_loaded";
 				break;
 			default:
 				throw new Exception("Internal error 2 processing the map editor.");
@@ -100,13 +101,15 @@ public class MapEditorController implements IMapEditorController {
 	 * Process the map editor command:
 	 * <ul>
 	 * <li>editcontinent -add continentID continentvalue -remove continentID</li>
-	 * <li>editcountry -add countryID continentID -remove countryID</li>
+	 * <li>editcountry -add countryID continentID -remove countryID (countryID =
+	 * country name)</li>
 	 * <li>editneighbor -add countryID neighborcountryID -remove countryID
-	 * neighborcountryID</li>
+	 * neighborcountryID (countryID = country name, neighborcountryID = country
+	 * name)</li>
 	 * <li>showmap</li>
 	 * <li>savemap filename</li>
 	 * <li>editmap filename</li>
-	 * <li>loadmap filename</li>
+	 * <li>loadmap filename (this command initiates game startup)</li>
 	 * <li>validatemap</li>
 	 * <li>exit</li>
 	 * <li>help</li>
@@ -392,14 +395,15 @@ public class MapEditorController implements IMapEditorController {
 		d_view.displayMapEditorBanner();
 		d_view.processMessage(MessageType.None, "Map editor commands:");
 		d_view.processMessage(MessageType.None, " - editcontinent -add continentID continentvalue -remove continentID");
-		d_view.processMessage(MessageType.None, " - editcountry -add countryID continentID -remove countryID");
 		d_view.processMessage(MessageType.None,
-				" - editneighbor -add countryID neighborcountryID -remove countryID neighborcountryID");
+				" - editcountry -add countryID continentID -remove countryID (countryID = country name)");
+		d_view.processMessage(MessageType.None,
+				" - editneighbor -add countryID neighborcountryID -remove countryID neighborcountryID (countryID = country name, neighborcountryID = country name)");
 		d_view.processMessage(MessageType.None,
 				" - showmap (show all continents and countries and their respective neighbors)");
 		d_view.processMessage(MessageType.None, " - savemap filename");
 		d_view.processMessage(MessageType.None, " - editmap filename");
-		d_view.processMessage(MessageType.None, " - loadmap filename");
+		d_view.processMessage(MessageType.None, " - loadmap filename (this command initiates game startup)");
 		d_view.processMessage(MessageType.None, " - validatemap");
 		d_view.processMessage(MessageType.None, " - exit");
 		d_view.processMessage(MessageType.None, " - help");

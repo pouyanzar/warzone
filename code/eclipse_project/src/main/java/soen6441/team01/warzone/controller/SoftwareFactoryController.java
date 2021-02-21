@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.controller;
 
+import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
@@ -38,10 +39,19 @@ public class SoftwareFactoryController {
 
 	/**
 	 * Create a GameStartupController 
-	 * @return map edit controller
+	 * @return game startup controller
 	 * @throws Exception unexpected error
 	 */
 	public IGameStartupController getGameStartupController() throws Exception {
 		return new GameStartupController(d_model_factory, d_view_factory);
+	}
+
+	/**
+	 * Create a GamePlayController 
+	 * @return game play controller
+	 * @throws Exception unexpected error
+	 */
+	public IGamePlayController getGamePlayController() throws Exception {
+		return new GamePlayController(d_model_factory, d_view_factory);
 	}
 }
