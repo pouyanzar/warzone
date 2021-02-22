@@ -30,14 +30,6 @@ public class Map implements IMapModel, IMapModelView {
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
 	private ArrayList<ArrayList<Integer>> d_neighborhoods = new ArrayList<ArrayList<Integer>>();
 
-	public Map(ArrayList<IContinentModel> d_continents, ArrayList<ICountryModel> d_countries,
-			ArrayList<ArrayList<Integer>> d_neighborhoods) {
-		this.d_continents = (ArrayList<IContinentModel>) d_continents.clone();
-		this.d_countries = (ArrayList<ICountryModel>) d_countries.clone();
-		this.d_neighborhoods = (ArrayList<ArrayList<Integer>>) d_neighborhoods.clone();
-
-	}
-
 	/**
 	 * @return the current list of continents defined on the map
 	 */
@@ -251,15 +243,14 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
-	 * loads the desired map from the map file
+	 * load a map from map file and provides it as a connected directed graph
 	 * 
-	 * @param p_map_name the name of the map file
-	 * @return map the instance of map class
-	 * @throws NumberFormatException when there is no appropriate format in string
-	 *                               to convert into integer
+	 * @param p_map_name file map name
+	 * @throws NumberFormatException when it is not possible to cast string to
+	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public Map loadmap(String p_map_name) throws NumberFormatException, Exception {
+	public void loadmap(String p_map_name) throws NumberFormatException, Exception {
 
 		String l_filename = "src/main/resources" + p_map_name + ".map";
 		Path l_path = Paths.get(l_filename);
@@ -300,25 +291,49 @@ public class Map implements IMapModel, IMapModelView {
 					Integer.parseInt(l_countries[2]));
 			d_countries.add(l_country);
 		}
-        
-		//loop to fill the neighborhoods ArrayList
+
+		// loop to fill the neighborhoods ArrayList
 		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
 			d_neighborhoods.add(new ArrayList<>());
 		}
 		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
 			String[] l_neighbors = l_pattern.get(i).split(" ");
-			for (int j = 0; j<l_neighbors.length ; j++) {
-				d_neighborhoods.get(Integer.parseInt(l_neighbors[0])-1).add(Integer.parseInt(l_neighbors[j]));
+			for (int j = 1; j < l_neighbors.length; j++) {
+				d_neighborhoods.get(Integer.parseInt(l_neighbors[0]) - 1).add(Integer.parseInt(l_neighbors[j]));
+				System.out.println(d_neighborhoods.get(i - l_borders_index - 1));
+
 			}
 		}
 
-		Map map = new Map(d_continents, d_countries, d_neighborhoods);
+		// create ArrayLists to store related continents and countries and neighbors
+		ArrayList<ArrayList<ICountryModel>> l_continent_graph = new ArrayList<ArrayList<ICountryModel>>();
+		;
+		ArrayList<ArrayList<ArrayList<Integer>>> l_country_graph = new ArrayList<ArrayList<ArrayList<Integer>>>();
 
-		return map;
+		// allocate memory to ArrayLists
+		for (int i = 0; i < l_continent_graph.size(); i++) {
+			l_continent_graph.add(new ArrayList<ICountryModel>());
+		}
+		for (int i = 0; i < l_country_graph.size(); i++) {
+			l_country_graph.add(new ArrayList<ArrayList<Integer>>());
+		}
+
+		// add countries to corresponding continent
+		for (int i = 0; i < d_continents.size(); i++) {
+			for (int j = 0; j < d_countries.size(); j++) {
+				if (d_countries.get(j).getContinentId() == (d_continents.get(i).getId())) {
+					l_continent_graph.get(d_continents.get(i).getId()).add(d_countries.get(j));
+				}
+			}
+		}
+
+		// add neighbors to corresponding countries
+		for (int i = 0; i < d_countries.size(); i++) {
+			l_country_graph.get(d_countries.get(i).getId()).add(d_neighborhoods.get(i));
+
+		}
 	}
 }
-
-	
 
 ///**
 //* Loads for editing an existing Warzone map from an existing "domination" style

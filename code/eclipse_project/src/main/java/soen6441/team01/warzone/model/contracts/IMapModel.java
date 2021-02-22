@@ -25,4 +25,9 @@ public interface IMapModel {
 	void addNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception;
 
 	void removeNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception;
+	
+	boolean validatemap();
+
+	
+	void loadmap(String p_map_name)throws NumberFormatException, Exception;
 }
