@@ -188,11 +188,11 @@ public class MapTest {
 	 * 
 	 * @throws Exception when there is an exception
 	 */
-	@Test
-	public void test_editmap() throws Exception {
-		Map l_map = new Map();
-		l_map.editmap(d_MAP_DIR + "germany");
-
-		assertTrue(true);
-	}
+//	@Test
+//	public void test_editmap() throws Exception {
+//		Map l_map = new Map();
+//		l_map.editmap(d_MAP_DIR + "germany");
+//
+//		assertTrue(true);
+//	}
 }
