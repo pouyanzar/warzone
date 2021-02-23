@@ -331,13 +331,18 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public void editmap(String p_filename) throws NumberFormatException, Exception {
 
-		File filename = new File(p_filename + ".map");
-		if (filename.exists()) {
+		File l_filename = new File(p_filename + ".map");
+		if (l_filename.exists()) {
 			loadmap(p_filename);
 		}
 
 		else {
-			filename.createNewFile();
+			try {
+				l_filename.createNewFile();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
 
 		}
 	}
