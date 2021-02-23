@@ -100,6 +100,14 @@ public class Country implements ICountryModel, ICountryModelView {
 	public IContinentModel getContinent() {
 		return d_continent;
 	}
+	
+	/**
+	 * getter for continent id
+	 * @return d_continent_id the continent id
+	 */
+	public int getContinentId() {
+		return d_continent_id;
+	}
 
 	/**
 	 * the continent that this country is associated with. set to null if not

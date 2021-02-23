@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -236,6 +240,98 @@ public class Map implements IMapModel, IMapModelView {
 				continue;
 		}
 		return true;
+	}
+
+	/**
+	 * load a map from map file and provides it as a connected directed graph
+	 * 
+	 * @param p_map_name file map name
+	 * @throws NumberFormatException when it is not possible to cast string to
+	 *                               integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void loadmap(String p_map_name) throws NumberFormatException, Exception {
+
+		String l_filename = "src/main/resources" + p_map_name + ".map";
+		Path l_path = Paths.get(l_filename);
+		Stream<String> l_lines = Files.lines(l_path);
+		ArrayList<String> l_pattern = new ArrayList<>(); // an ArrayList to store the map file
+		int l_continent_index = 0; // index line in continents start
+		int l_country_index = 0; // index line in countries start
+		int l_borders_index = 0; // index line in borders start
+		l_lines.forEach(s -> l_pattern.add(s)); // loop over the map file to add all lines into the ArrayList
+		l_lines.close();
+
+		// loop over ArrayList to find the line indexes for each section of the map file
+		for (int i = 0; i < l_pattern.size(); i++) {
+			switch (l_pattern.get(i)) {
+			case "[continents]":
+				l_continent_index = i;
+				break;
+			case "[countries]":
+				l_country_index = i;
+				break;
+			case "[borders]":
+				l_borders_index = i;
+				break;
+			}
+		}
+
+		// loop to fill the continents on the map inside continents ArrayList
+		for (int i = l_continent_index + 1; i < l_country_index - 1; i++) {
+			String[] l_continents = l_pattern.get(i).split(" ");
+			IContinentModel l_continent = new Continent(i, l_continents[0], Integer.parseInt(l_continents[1]));
+			d_continents.add(l_continent);
+		}
+
+		// loop to fill the countries on the map inside countries ArrayList
+		for (int i = l_country_index + 1; i < l_borders_index - 1; i++) {
+			String[] l_countries = l_pattern.get(i).split(" ");
+			ICountryModel l_country = new Country(Integer.parseInt(l_countries[0]), l_countries[1],
+					Integer.parseInt(l_countries[2]));
+			d_countries.add(l_country);
+		}
+
+		// loop to fill the neighborhoods ArrayList
+		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
+			d_neighborhoods.add(new ArrayList<>());
+		}
+		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
+			String[] l_neighbors = l_pattern.get(i).split(" ");
+			for (int j = 1; j < l_neighbors.length; j++) {
+				d_neighborhoods.get(Integer.parseInt(l_neighbors[0]) - 1).add(Integer.parseInt(l_neighbors[j]));
+				System.out.println(d_neighborhoods.get(i - l_borders_index - 1));
+
+			}
+		}
+
+		// create ArrayLists to store related continents and countries and neighbors
+		ArrayList<ArrayList<ICountryModel>> l_continent_graph = new ArrayList<ArrayList<ICountryModel>>();
+		;
+		ArrayList<ArrayList<ArrayList<Integer>>> l_country_graph = new ArrayList<ArrayList<ArrayList<Integer>>>();
+
+		// allocate memory to ArrayLists
+		for (int i = 0; i < l_continent_graph.size(); i++) {
+			l_continent_graph.add(new ArrayList<ICountryModel>());
+		}
+		for (int i = 0; i < l_country_graph.size(); i++) {
+			l_country_graph.add(new ArrayList<ArrayList<Integer>>());
+		}
+
+		// add countries to corresponding continent
+		for (int i = 0; i < d_continents.size(); i++) {
+			for (int j = 0; j < d_countries.size(); j++) {
+				if (d_countries.get(j).getContinentId() == (d_continents.get(i).getId())) {
+					l_continent_graph.get(d_continents.get(i).getId()).add(d_countries.get(j));
+				}
+			}
+		}
+
+		// add neighbors to corresponding countries
+		for (int i = 0; i < d_countries.size(); i++) {
+			l_country_graph.get(d_countries.get(i).getId()).add(d_neighborhoods.get(i));
+
+		}
 	}
 }
 
