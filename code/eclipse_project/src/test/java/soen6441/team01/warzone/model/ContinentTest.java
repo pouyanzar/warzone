@@ -77,11 +77,11 @@ public class ContinentTest {
 		ArrayList<IContinentModel> l_continents = new ArrayList<IContinentModel>();
 		l_continents.add(new Continent(1, "North-America", 0));
 		l_continents.add(new Continent(2, "Europe", 0));
-		IContinentModel l_result = Continent.FindContinent(2, l_continents);
+		IContinentModel l_result = Continent.findContinent(2, l_continents);
 		if (l_result.getName() != "Europe") {
 			fail("problem finding existing continent");
 		}
-		l_result = Continent.FindContinent(3, l_continents);
+		l_result = Continent.findContinent(3, l_continents);
 		if (l_result != null) {
 			fail("problem finding non-existing continent");
 		}

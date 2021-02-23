@@ -156,4 +156,20 @@ public class Player implements IPlayerModel, IPlayerModelView {
 		return l_first_order;
 	}
 
+	/**
+	 * find a player given a name
+	 * 
+	 * @param p_name    the country id of the neighboring country to find
+	 * @param p_players list of countries to search from
+	 * @return null if not found, otherwise return the first player with the specified name
+	 */
+	public static IPlayerModel FindPlayer(String p_name, ArrayList<IPlayerModel> p_players) {
+		for (IPlayerModel l_xplayer : p_players) {
+			if (l_xplayer.getName().equals(p_name)) {
+				return l_xplayer;
+			}
+		}
+		return null;
+	}
+
 }

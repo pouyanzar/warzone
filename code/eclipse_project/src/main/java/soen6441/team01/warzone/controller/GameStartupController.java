@@ -105,13 +105,13 @@ public class GameStartupController implements IGameStartupController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param l_command the command to process
+	 * @param p_command the command to process
 	 * @return String one of; exit, assigncountries
 	 * @throws Exception unexpected error
 	 */
-	public String processGameStartupCommand(String l_command) throws Exception {
+	public String processGameStartupCommand(String p_command) throws Exception {
 		String l_return_command = "";
-		String l_cmd_params[] = Utl.GetFirstWord(l_command);
+		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
@@ -121,7 +121,7 @@ public class GameStartupController implements IGameStartupController {
 			break;
 		case "gameplayer":
 			// processEditContinent(l_cmd_params[1]);
-			d_msg_model.setMessage(MessageType.None, "gameplayer coming soon...");
+			// d_msg_model.setMessage(MessageType.None, "gameplayer coming soon...");
 			break;
 		case "assigncountries":
 			// processEditContinent(l_cmd_params[1]);
@@ -129,10 +129,73 @@ public class GameStartupController implements IGameStartupController {
 			l_return_command = "assignedcountries";
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_command + "'");
+			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return l_return_command;
+	}
+
+	/**
+	 * process the gameplayer command
+	 * <p>
+	 * syntax: gameplayer -add playername -remove playername
+	 * </p>
+	 * 
+	 * @param p_cmd_params the gameplayer parameters (just the parameters without
+	 *                     the gameplayer command itself)
+	 * @throws Exception unexpected error encountered
+	 */
+	private void processGameplayer(String p_cmd_params) throws Exception {
+		IMapModel l_map = d_model_factory.getMapModel();
+		String l_playerName;
+		String l_neighbor_name;
+		String l_params[] = Utl.getFirstWord(p_cmd_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer, no options specified");
+			return;
+		}
+
+		while (!Utl.isEmpty(l_params[0])) {
+			switch (l_params[0]) {
+			case "-add":
+				try {
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_playerName = l_params[0];
+					if (!Utl.isValidMapName(l_playerName)) {
+						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -add playername '" + l_playerName
+								+ "', expecting a valid player name.");
+						return;
+					}
+					//l_map.addNeighbor(l_countryName, l_neighbor_name);
+				} catch (Exception ex) {
+					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+					return;
+				}
+				break;
+			case "-remove":
+				try {
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_playerName = l_params[0];
+					if (!Utl.isValidMapName(l_playerName)) {
+						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -remove playername '" + l_playerName
+								+ "', expecting a valid player name.");
+						return;
+					}
+					//l_map.removeNeighbor(l_countryName, l_neighbor_name);
+				} catch (Exception ex) {
+					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+					return;
+				}
+				break;
+			default:
+				d_msg_model.setMessage(MessageType.Error,
+						"Invalid editneighbor option '" + l_params[0] + "', expecting: -add, -remove");
+				return;
+			}
+			l_params = Utl.getFirstWord(l_params[1]);
+			d_msg_model.setMessage(MessageType.None, "gameplayer processed successfully");
+		}
 	}
 
 	/**

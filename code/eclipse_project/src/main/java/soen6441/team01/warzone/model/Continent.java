@@ -59,7 +59,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @param p_continent_name the name of the continent to set
 	 */
 	public void setName(String p_continent_name) throws Exception {
-		if (!Utl.IsValidMapName(p_continent_name)) {
+		if (!Utl.isValidMapName(p_continent_name)) {
 			throw new Exception("Invalid continent name: " + p_continent_name);
 		}
 		this.d_continent_name = p_continent_name;
@@ -113,7 +113,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id
 	 */
-	public static IContinentModel FindContinent(int p_continent_id, ArrayList<IContinentModel> p_continents) {
+	public static IContinentModel findContinent(int p_continent_id, ArrayList<IContinentModel> p_continents) {
 		for (IContinentModel l_xcontinent : p_continents) {
 			if (l_xcontinent.getId() == p_continent_id) {
 				return l_xcontinent;
@@ -130,7 +130,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id
 	 */
-	public static IContinentModel FindContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
+	public static IContinentModel findContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
 		for (IContinentModel l_xcontinent : p_continents) {
 			if (l_xcontinent.getName() == p_continent_id) {
 				return l_xcontinent;

@@ -52,7 +52,7 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public IContinentModel addContinent(int p_continent_id, String p_continent_name, int p_extra_army)
 			throws Exception {
-		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
 		if (l_continent != null) {
 			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
 		}
@@ -71,7 +71,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception when there is an exception
 	 */
 	public IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception {
-		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
 		if (l_continent != null) {
 			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
 		}
@@ -92,7 +92,7 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public ICountryModel addCountry(String p_country_name, IContinentModel p_continent, int p_x, int p_y)
 			throws Exception {
-		ICountryModel l_country = Country.FindCountry(p_country_name, d_countries);
+		ICountryModel l_country = Country.findCountry(p_country_name, d_countries);
 		if (l_country != null) {
 			throw new Exception("Cannot add country '" + p_country_name + "' since it already exists.");
 		}
@@ -111,7 +111,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception when there is an exception
 	 */
 	public ICountryModel addCountry(String p_country_name, int p_continent_id) throws Exception {
-		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
 		ICountryModel l_country = addCountry(p_country_name, l_continent, 0, 0);
 		return l_country;
 	}
@@ -137,7 +137,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception if the continent cannot be removed
 	 */
 	public IContinentModel removeContinent(int p_continent_id) throws Exception {
-		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
 		if (l_continent == null) {
 			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
 		}
@@ -154,7 +154,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception if the continent cannot be removed
 	 */
 	public IContinentModel removeContinent(String p_continent_id) throws Exception {
-		IContinentModel l_continent = Continent.FindContinent(p_continent_id, d_continents);
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
 		if (l_continent == null) {
 			throw new Exception("Cannot remove continent with id " + p_continent_id + " since it doesn't exist.");
 		}
@@ -171,7 +171,7 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception if the country cannot be removed
 	 */
 	public ICountryModel removeCountry(String p_country_name) throws Exception {
-		ICountryModel l_country = Country.FindCountry(p_country_name, d_countries);
+		ICountryModel l_country = Country.findCountry(p_country_name, d_countries);
 		if (l_country == null) {
 			throw new Exception("Cannot remove continent with id " + p_country_name + " since it doesn't exist.");
 		}
@@ -187,12 +187,12 @@ public class Map implements IMapModel, IMapModelView {
 	 * @throws Exception unexpected error or if either countries don't exist
 	 */
 	public void addNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception {
-		ICountryModel p_country = Country.FindCountry(p_country_name, d_countries);
+		ICountryModel p_country = Country.findCountry(p_country_name, d_countries);
 		if (p_country == null) {
 			throw new Exception("Cannot add neighbor '" + p_neighboring_country_name + "' to county '" + p_country_name
 					+ "' since country '" + p_country_name + "' doesn't exist.");
 		}
-		ICountryModel p_neighbor = Country.FindCountry(p_neighboring_country_name, d_countries);
+		ICountryModel p_neighbor = Country.findCountry(p_neighboring_country_name, d_countries);
 		if (p_neighbor == null) {
 			throw new Exception("Cannot add neighbor '" + p_neighboring_country_name + "' to county '" + p_country_name
 					+ "' since country '" + p_neighboring_country_name + "' doesn't exist.");
@@ -209,7 +209,7 @@ public class Map implements IMapModel, IMapModelView {
 	 *                   unexpected error
 	 */
 	public void removeNeighbor(String p_country_name, String p_neighboring_country_name) throws Exception {
-		ICountryModel p_country = Country.FindCountry(p_country_name, d_countries);
+		ICountryModel p_country = Country.findCountry(p_country_name, d_countries);
 		if (p_country == null) {
 			throw new Exception("Cannot remove neighbor '" + p_neighboring_country_name + "' from county '"
 					+ p_country_name + "' since country '" + p_country_name + "' doesn't exist.");

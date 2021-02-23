@@ -16,7 +16,7 @@ public class Utl {
 	 * Print the current directory to the console. Useful for debugging a unit test
 	 * that references resources.
 	 */
-	public static void PrintCurrentDirectory() {
+	public static void printCurrentDirectory() {
 		System.out.println("current directory: " + System.getProperty("user.dir"));
 	}
 
@@ -29,7 +29,7 @@ public class Utl {
 	 * 
 	 * @param path the path where to list the directory contents from
 	 */
-	public static void PrintDirectory(String path) {
+	public static void printDirectory(String path) {
 		File root = new File(path);
 		File[] list = root.listFiles();
 
@@ -38,7 +38,7 @@ public class Utl {
 
 		for (File f : list) {
 			if (f.isDirectory()) {
-				PrintDirectory(f.getAbsolutePath());
+				printDirectory(f.getAbsolutePath());
 				System.out.println("Dir:" + f.getAbsoluteFile());
 			} else {
 				System.out.println("File:" + f.getAbsoluteFile());
@@ -53,7 +53,7 @@ public class Utl {
 	 * @param p_map_name the name of the map element to check
 	 * @return true if the name is valid; otherwise false
 	 */
-	public static boolean IsValidMapName(String p_map_name) {
+	public static boolean isValidMapName(String p_map_name) {
 		if (p_map_name == null || p_map_name == "") {
 			return false;
 		}
@@ -72,7 +72,7 @@ public class Utl {
 	 * @param p_string string to check
 	 * @return true = string is null, empty or spaces; otherwise false
 	 */
-	public static boolean IsEmpty(String p_string) {
+	public static boolean isEmpty(String p_string) {
 		if (p_string == null)
 			return true;
 		if (p_string.trim().equals(""))
@@ -86,7 +86,7 @@ public class Utl {
 	 * @param p_sentence the string containing words (ie separated by space(s)
 	 * @return String[0] = 1st word, String[1] = rest of sentence
 	 */
-	public static String[] GetFirstWord(String p_sentence) {
+	public static String[] getFirstWord(String p_sentence) {
 		String[] l_reply = new String[2];
 		if (p_sentence == null) {
 			l_reply[0] = "";
@@ -127,9 +127,9 @@ public class Utl {
 	 * @return the integer value of the string; otherwise Integer.MAX_VALUE if the
 	 *         string is not an integer
 	 */
-	public static int ConvertToInteger(String p_string) {
+	public static int convertToInteger(String p_string) {
 		int result;
-		if (Utl.IsEmpty(p_string)) {
+		if (Utl.isEmpty(p_string)) {
 			return Integer.MAX_VALUE;
 		}
 		p_string = p_string.trim();
@@ -147,7 +147,7 @@ public class Utl {
 	 * @param p_msg_type the type of message to display as defined by the enum
 	 * @param p_message  the message to display to the user
 	 */
-	public static void ConsoleMessage(MessageType p_msg_type, String p_message) {
+	public static void consoleMessage(MessageType p_msg_type, String p_message) {
 		switch (p_msg_type) {
 		case None:
 			System.out.println(p_message);

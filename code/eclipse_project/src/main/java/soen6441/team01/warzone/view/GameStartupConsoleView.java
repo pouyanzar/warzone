@@ -71,7 +71,7 @@ public class GameStartupConsoleView implements Observer, IGameStartupView {
 	 * @param p_message  the message to display to the user
 	 */
 	public void processMessage(MessageType p_msg_type, String p_message) {
-		Utl.ConsoleMessage(p_msg_type, p_message);
+		Utl.consoleMessage(p_msg_type, p_message);
 	}
 
 	/**

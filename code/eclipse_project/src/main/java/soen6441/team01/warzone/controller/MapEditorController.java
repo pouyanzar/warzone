@@ -46,11 +46,11 @@ public class MapEditorController implements IMapEditorController {
 
 		try {
 			l_cmd = processMapEditor();
-			if (l_cmd == null || Utl.IsEmpty(l_cmd)) {
+			if (l_cmd == null || Utl.isEmpty(l_cmd)) {
 				throw new Exception("Internal error 1 processing the map editor.");
 			}
 			String l_cmd_params[] = new String[2];
-			l_cmd_params = Utl.GetFirstWord(l_cmd);
+			l_cmd_params = Utl.getFirstWord(l_cmd);
 			switch (l_cmd_params[0]) {
 			case "exit":
 				l_cmd = "exit";
@@ -115,12 +115,12 @@ public class MapEditorController implements IMapEditorController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param l_command the command to process
+	 * @param p_command the command to process
 	 * @return true = command processed successfully, false = command to exit
 	 * @throws Exception unexpected error
 	 */
-	public boolean processMapEditorCommand(String l_command) throws Exception {
-		String l_cmd_params[] = Utl.GetFirstWord(l_command);
+	public boolean processMapEditorCommand(String p_command) throws Exception {
+		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			mapEditorHelp();
@@ -152,7 +152,7 @@ public class MapEditorController implements IMapEditorController {
 			d_msg_model.setMessage(MessageType.None, "loadmap coming soon...");
 			return false;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_command + "'");
+			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return true;
@@ -161,35 +161,35 @@ public class MapEditorController implements IMapEditorController {
 	/**
 	 * process the editneighbor command
 	 * 
-	 * @param l_editneighbor_params the editneighbor parameters (just the parameters
+	 * @param p_editneighbor_params the editneighbor parameters (just the parameters
 	 *                              without the editneighbor command itself)
 	 * @throws Exception unexpected error encountered
 	 */
-	private void processEditNeighbor(String l_editneighbor_params) throws Exception {
+	private void processEditNeighbor(String p_editneighbor_params) throws Exception {
 		IMapModel l_map = d_model_factory.getMapModel();
 		String l_countryName;
 		String l_neighbor_name;
-		String l_params[] = Utl.GetFirstWord(l_editneighbor_params);
+		String l_params[] = Utl.getFirstWord(p_editneighbor_params);
 
-		if (Utl.IsEmpty(l_params[0])) {
+		if (Utl.isEmpty(l_params[0])) {
 			d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor, no options specified");
 			return;
 		}
 
-		while (!Utl.IsEmpty(l_params[0])) {
+		while (!Utl.isEmpty(l_params[0])) {
 			switch (l_params[0]) {
 			case "-add":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
-					if (!Utl.IsValidMapName(l_countryName)) {
+					if (!Utl.isValidMapName(l_countryName)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -add countryId '"
 								+ l_countryName + "', expecting a valid map name");
 						return;
 					}
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
-					if (!Utl.IsValidMapName(l_neighbor_name)) {
+					if (!Utl.isValidMapName(l_neighbor_name)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -add neighborcountryID '"
 								+ l_countryName + "', expecting a valid map name");
 						return;
@@ -202,16 +202,16 @@ public class MapEditorController implements IMapEditorController {
 				break;
 			case "-remove":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
-					if (!Utl.IsValidMapName(l_countryName)) {
+					if (!Utl.isValidMapName(l_countryName)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -remove countryId '"
 								+ l_countryName + "', expecting a valid map name");
 						return;
 					}
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
-					if (!Utl.IsValidMapName(l_neighbor_name)) {
+					if (!Utl.isValidMapName(l_neighbor_name)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -remove neighborcountryID '"
 								+ l_countryName + "', expecting a valid map name");
 						return;
@@ -227,7 +227,7 @@ public class MapEditorController implements IMapEditorController {
 						"Invalid editneighbor option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
-			l_params = Utl.GetFirstWord(l_params[1]);
+			l_params = Utl.getFirstWord(l_params[1]);
 			d_msg_model.setMessage(MessageType.None, "editneighbor processed successfully");
 		}
 	}
@@ -235,34 +235,34 @@ public class MapEditorController implements IMapEditorController {
 	/**
 	 * process the editcountry command
 	 * 
-	 * @param l_editcountry_params the editcountry parameters (just the parameters
+	 * @param p_editcountry_params the editcountry parameters (just the parameters
 	 *                             without the editcountry command itself)
 	 * @throws Exception unexpected error encountered
 	 */
-	private void processEditCountry(String l_editcountry_params) throws Exception {
+	private void processEditCountry(String p_editcountry_params) throws Exception {
 		IMapModel l_map = d_model_factory.getMapModel();
 		String l_countryName;
 		int l_continentId;
-		String l_params[] = Utl.GetFirstWord(l_editcountry_params);
+		String l_params[] = Utl.getFirstWord(p_editcountry_params);
 
-		if (Utl.IsEmpty(l_params[0])) {
+		if (Utl.isEmpty(l_params[0])) {
 			d_msg_model.setMessage(MessageType.Error, "Invalid editcountry, no options specified");
 			return;
 		}
 
-		while (!Utl.IsEmpty(l_params[0])) {
+		while (!Utl.isEmpty(l_params[0])) {
 			switch (l_params[0]) {
 			case "-add":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
-					if (!Utl.IsValidMapName(l_countryName)) {
+					if (!Utl.isValidMapName(l_countryName)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -add countryId '" + l_countryName
 								+ "', expecting a valid map name");
 						return;
 					}
-					l_params = Utl.GetFirstWord(l_params[1]);
-					l_continentId = Utl.ConvertToInteger(l_params[0]);
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -add continentID '" + l_params[0]
 								+ "', expecting a valid integer value less than 1000");
@@ -280,9 +280,9 @@ public class MapEditorController implements IMapEditorController {
 				break;
 			case "-remove":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
-					if (!Utl.IsValidMapName(l_countryName)) {
+					if (!Utl.isValidMapName(l_countryName)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -remove countryId '"
 								+ l_countryName + "', expecting a valid map name");
 						return;
@@ -303,7 +303,7 @@ public class MapEditorController implements IMapEditorController {
 						"Invalid editcountry option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
-			l_params = Utl.GetFirstWord(l_params[1]);
+			l_params = Utl.getFirstWord(l_params[1]);
 			d_msg_model.setMessage(MessageType.None, "editcountry processed successfully");
 		}
 	}
@@ -311,36 +311,36 @@ public class MapEditorController implements IMapEditorController {
 	/**
 	 * process editcontinent command
 	 * 
-	 * @param l_editcontinent_params the editcontinent parameters (just the
+	 * @param p_editcontinent_params the editcontinent parameters (just the
 	 *                               parameters without the editcontinent command
 	 *                               itself)
 	 * @throws Exception unexpected error encountered
 	 */
-	private void processEditContinent(String l_editcontinent_params) throws Exception {
+	private void processEditContinent(String p_editcontinent_params) throws Exception {
 		IMapModel l_map = d_model_factory.getMapModel();
 		int l_continentId;
 		String l_continentvalue;
-		String l_params[] = Utl.GetFirstWord(l_editcontinent_params);
+		String l_params[] = Utl.getFirstWord(p_editcontinent_params);
 
-		if (Utl.IsEmpty(l_params[0])) {
+		if (Utl.isEmpty(l_params[0])) {
 			d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent, no options specified");
 			return;
 		}
 
-		while (!Utl.IsEmpty(l_params[0])) {
+		while (!Utl.isEmpty(l_params[0])) {
 			switch (l_params[0]) {
 			case "-add":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
-					l_continentId = Utl.ConvertToInteger(l_params[0]);
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -add continentID '"
 								+ l_params[0] + "', expecting a valid integer value less than 1000");
 						return;
 					}
-					l_params = Utl.GetFirstWord(l_params[1]);
+					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentvalue = l_params[0];
-					if (!Utl.IsValidMapName(l_continentvalue)) {
+					if (!Utl.isValidMapName(l_continentvalue)) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -add continentvalue '"
 								+ l_params[0] + "', expecting a valid map name");
 						return;
@@ -357,8 +357,8 @@ public class MapEditorController implements IMapEditorController {
 				break;
 			case "-remove":
 				try {
-					l_params = Utl.GetFirstWord(l_params[1]);
-					l_continentId = Utl.ConvertToInteger(l_params[0]);
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000) {
 						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -remove continentID '"
 								+ l_params[0] + "', expecting a valid integer value less than 1000");
@@ -380,7 +380,7 @@ public class MapEditorController implements IMapEditorController {
 						"Invalid editcontinent option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
-			l_params = Utl.GetFirstWord(l_params[1]);
+			l_params = Utl.getFirstWord(l_params[1]);
 			d_msg_model.setMessage(MessageType.None, "editcontinent processed successfully");
 		}
 	}

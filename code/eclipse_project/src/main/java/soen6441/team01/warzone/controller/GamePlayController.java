@@ -49,11 +49,11 @@ public class GamePlayController implements IGamePlayController {
 		try {
 			d_view.displayGamePlayBanner();
 			l_cmd = processUserCommands();
-			if (l_cmd == null || Utl.IsEmpty(l_cmd)) {
+			if (l_cmd == null || Utl.isEmpty(l_cmd)) {
 				throw new Exception("Internal error 1 processing gameplay.");
 			}
 			String l_cmd_params[] = new String[2];
-			l_cmd_params = Utl.GetFirstWord(l_cmd);
+			l_cmd_params = Utl.getFirstWord(l_cmd);
 			switch (l_cmd_params[0]) {
 			case "exit":
 				break;
@@ -103,12 +103,12 @@ public class GamePlayController implements IGamePlayController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param l_command the command to process
+	 * @param p_command the command to process
 	 * @return true = command processed successfully, false = command to exit
 	 * @throws Exception unexpected error
 	 */
-	public boolean processGamePlayCommand(String l_command) throws Exception {
-		String l_cmd_params[] = Utl.GetFirstWord(l_command);
+	public boolean processGamePlayCommand(String p_command) throws Exception {
+		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
@@ -124,7 +124,7 @@ public class GamePlayController implements IGamePlayController {
 			d_msg_model.setMessage(MessageType.None, "deploy coming soon...");
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_command + "'");
+			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return true;
