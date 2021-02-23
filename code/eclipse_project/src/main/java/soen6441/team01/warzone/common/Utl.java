@@ -48,7 +48,8 @@ public class Utl {
 
 	/**
 	 * Checks that the p_map_name contains valid characters as defined by the
-	 * Country and Continent names, i.e. letters, digits, '_', '-' (e.g. no spaces)
+	 * Country and Continent names, i.e. letters, digits, '_', '-' (e.g. no spaces).
+	 * Must contain at least 1 letter.
 	 * 
 	 * @param p_map_name the name of the map element to check
 	 * @return true if the name is valid; otherwise false
@@ -57,12 +58,23 @@ public class Utl {
 		if (p_map_name == null || p_map_name == "") {
 			return false;
 		}
+		int l_letter_ctr = 0;
 		char[] l_chars = p_map_name.toCharArray();
 		for (char l_ch : l_chars) {
-			if (!Character.isLetter(l_ch) && !Character.isDigit(l_ch) && l_ch != '_' && l_ch != '-') {
+			if (Character.isLetter(l_ch)) {
+				l_letter_ctr++;
+			}
+			if (!Character.isLetter(l_ch) && !Character.isDigit(l_ch) && (l_ch == ' ' || l_ch == '!' || l_ch == '\\' || l_ch == '/'
+					|| l_ch == '[' || l_ch == ']' || l_ch == ';')) {
 				return false;
 			}
 		}
+
+		// must have at least 1 letter in it
+		if (l_letter_ctr < 1) {
+			return false;
+		}
+
 		return true;
 	}
 

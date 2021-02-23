@@ -150,6 +150,10 @@ public class MapEditorControllerTest {
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Can!ada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid editcountry -add countryId"));
+		
+		d_map_editor_controller.processMapEditorCommand("editcountry -add 0001 Canada");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid editcountry -add countryId"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;

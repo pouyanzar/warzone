@@ -26,14 +26,16 @@ public class UtlTest {
 	public void test_IsValidMapName() {
 		assertTrue(Utl.isValidMapName("Canada"));
 		assertTrue(Utl.isValidMapName("North-America"));
-		assertTrue(Utl.isValidMapName("North_America"));
+		assertTrue(Utl.isValidMapName("North_America_1"));
 		assertTrue(Utl.isValidMapName("Planet1"));
 		assertFalse(Utl.isValidMapName(null));
 		assertFalse(Utl.isValidMapName(""));
 		assertFalse(Utl.isValidMapName(" PlantX"));
 		assertFalse(Utl.isValidMapName("PlantX "));
 		assertFalse(Utl.isValidMapName(" Plant X"));
-		assertFalse(Utl.isValidMapName("*PlantX"));
+		assertFalse(Utl.isValidMapName("!PlantX"));
+		assertFalse(Utl.isValidMapName("123"));
+		assertFalse(Utl.isValidMapName("12_3"));
 	}
 
 	/**

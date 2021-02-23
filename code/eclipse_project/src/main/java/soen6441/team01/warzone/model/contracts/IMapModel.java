@@ -29,5 +29,5 @@ public interface IMapModel {
 	boolean validatemap();
 
 	
-	void loadmap(String p_map_name)throws NumberFormatException, Exception;
+	void loadMap(String p_map_name)throws NumberFormatException, Exception;
 }

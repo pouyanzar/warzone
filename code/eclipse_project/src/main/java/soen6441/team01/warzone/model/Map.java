@@ -121,19 +121,6 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
-	 * Loads a Warzone map from an existing "domination" style map file. The
-	 * following link describes the format of the "domination" map file :
-	 * http://domination.sourceforge.net/makemaps.shtml
-	 * 
-	 * @param p_map_filename the filename of the "domination" map file
-	 * @throws IOException when there is a problem processing the map file
-	 */
-	public void loadMap(String p_map_filename) throws IOException {
-		List<String> list = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
-		// todo: parse the map file...
-	}
-
-	/**
 	 * remove the continent from the list of existing continents
 	 * 
 	 * @param p_continent_id the id of the continent
@@ -243,16 +230,17 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
-	 * load a map from map file and provides it as a connected directed graph
+	 * Loads a Warzone map from an existing "domination" style map file. The
+	 * following link describes the format of the "domination" map file :
+	 * http://domination.sourceforge.net/makemaps.shtml.
 	 * 
 	 * @param p_map_name file map name
 	 * @throws NumberFormatException when it is not possible to cast string to
 	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public void loadmap(String p_map_name) throws NumberFormatException, Exception {
-
-		String l_filename = "src/main/resources" + p_map_name + ".map";
+	public void loadMap(String p_map_name) throws NumberFormatException, Exception {
+		String l_filename = p_map_name;
 		Path l_path = Paths.get(l_filename);
 		Stream<String> l_lines = Files.lines(l_path);
 		ArrayList<String> l_pattern = new ArrayList<>(); // an ArrayList to store the map file
@@ -330,7 +318,6 @@ public class Map implements IMapModel, IMapModelView {
 		// add neighbors to corresponding countries
 		for (int i = 0; i < d_countries.size(); i++) {
 			l_country_graph.get(d_countries.get(i).getId()).add(d_neighborhoods.get(i));
-
 		}
 	}
 }
