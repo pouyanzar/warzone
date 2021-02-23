@@ -191,7 +191,7 @@ public class MapTest {
 	@Test
 	public void test_editmap() throws Exception {
 		Map l_map = new Map();
-		l_map.editmap(d_MAP_DIR + "canada");
+		l_map.editmap(d_MAP_DIR + "germany");
 
 		assertTrue(true);
 	}
