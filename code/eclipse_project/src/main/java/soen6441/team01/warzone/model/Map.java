@@ -239,7 +239,7 @@ public class Map implements IMapModel, IMapModelView {
 	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public void loadMap(String p_map_name) throws NumberFormatException, Exception {
+	public void loadmap(String p_map_name) throws NumberFormatException, Exception {
 		String l_filename = p_map_name;
 		Path l_path = Paths.get(l_filename);
 		Stream<String> l_lines = Files.lines(l_path);
@@ -318,6 +318,27 @@ public class Map implements IMapModel, IMapModelView {
 		// add neighbors to corresponding countries
 		for (int i = 0; i < d_countries.size(); i++) {
 			l_country_graph.get(d_countries.get(i).getId()).add(d_neighborhoods.get(i));
+		}
+	}
+
+	/**
+	 * loads an existing map file or create a new one in case file does not exist
+	 * 
+	 * @param p_filename map file name
+	 * @throws NumberFormatException when it is not possible to cast string to
+	 *                               integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editmap(String p_filename) throws NumberFormatException, Exception {
+
+		File filename = new File(p_filename + ".map");
+		if (filename.exists()) {
+			loadmap(p_filename);
+		}
+
+		else {
+			filename.createNewFile();
+
 		}
 	}
 }
