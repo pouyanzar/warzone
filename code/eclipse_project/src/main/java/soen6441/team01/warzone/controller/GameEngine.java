@@ -63,13 +63,14 @@ public class GameEngine {
 	 */
 	public void startNewGame() {
 		try {
+			IGamePlayModel p_gameplay = d_model_factory.getNewGamePlayModel();
 			boolean l_continue_game = false;
 			l_continue_game = processMapEditor();
 			if (l_continue_game) {
-				l_continue_game = processGameStartup();
+				l_continue_game = processGameStartup(p_gameplay);
 			}
 			if (l_continue_game) {
-				l_continue_game = processGamePlay();
+				l_continue_game = processGamePlay(p_gameplay);
 			}
 		} catch (Exception ex) {
 			System.out.println("Fatal error processing GameEngine.");
@@ -87,7 +88,7 @@ public class GameEngine {
 	 * @throws Exception unexpected errors
 	 */
 	public boolean processMapEditor() throws Exception {
-		String l_cmd = d_controller_factory.getMapEditorController().startMapEditor();
+		String l_cmd = d_controller_factory.getNewMapEditorController().startMapEditor();
 		switch (l_cmd) {
 		case "exit":
 			return false;
@@ -101,12 +102,13 @@ public class GameEngine {
 
 	/**
 	 * Startup and process the game startup phase of the game
-	 * 
+	 *
+	 * @param p_gameplay the gameplay model to process
 	 * @return true=continue game; false=exit game
 	 * @throws Exception unexpected errors
 	 */
-	public boolean processGameStartup() throws Exception {
-		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup();
+	public boolean processGameStartup(IGamePlayModel p_gameplay) throws Exception {
+		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup(p_gameplay);
 		switch (l_cmd) {
 		case "exit":
 			return false;
@@ -121,11 +123,12 @@ public class GameEngine {
 	/**
 	 * Startup and process the game startup phase of the game
 	 * 
+	 * @param p_gameplay the gameplay model to process
 	 * @return true=continue game; false=exit game
 	 * @throws Exception unexpected errors
 	 */
-	public boolean processGamePlay() throws Exception {
-		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay();
+	public boolean processGamePlay(IGamePlayModel p_gameplay) throws Exception {
+		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay(p_gameplay);
 		switch (l_cmd) {
 		case "exit":
 			return false;

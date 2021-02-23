@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 
 /**
  * Tests for the Map model class
@@ -22,28 +23,41 @@ public class MapTest {
 	 */
 	@Test
 	public void test_loadmap_command_1() {
-//		Map l_map = new Map();
-//		try {
-//			l_map.loadMap(d_MAP_DIR + "canada/canada.map");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			fail("failure loading an existing valid map");
-//		}
-//		assertTrue(true);
-	}
+		IMapModel l_map = new Map();
+		try {
+			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("failure loading an existing valid map");
+		}
+		
+		ArrayList<IContinentModel> l_continents = l_map.getContinents(); 
+		assertTrue(l_continents.size()==6);
+		assertTrue(l_continents.get(5).getName().equals("Northwestern_Territories"));
+
+		ArrayList<ICountryModel> l_countries = l_map.getCountries(); 
+		assertTrue(l_countries.size()==31);
+		assertTrue(l_countries.get(5).getName().equals("Quebec-North"));
+		assertTrue(l_countries.get(5).getNeighbors().size()==4);
+		
+		assertTrue(l_map.getNeighbors(6).size() == 4);
+}
 
 	/**
 	 * Test the loadmap command. Load a non-existing map file. Should throw an
 	 * exception.
-	 */
+	 */ 
 	@Test
 	public void test_loadmap_command_2() {
 		Boolean l_assert_result = true;
-		Map l_map = new Map();
+		IMapModel l_map = new Map();
 		try {
-			l_map.loadMap(d_MAP_DIR + "canada/quebec.map");
+			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map");
 			l_assert_result = false;
 		} catch (Exception e) {
+			if( !e.getMessage().contains("Error loading map file") ) {
+				l_assert_result = false;
+			}
 		}
 		if( !l_assert_result ) {
 			fail("expecting an exception trying to load a non-existing map file");

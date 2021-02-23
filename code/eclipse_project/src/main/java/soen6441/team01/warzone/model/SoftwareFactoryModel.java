@@ -10,6 +10,7 @@ import soen6441.team01.warzone.model.contracts.*;
 public class SoftwareFactoryModel {
 	private IMapModel d_map_model = null;
 	private IUserMessageModel d_user_message_model = null;
+	private IGamePlayModel d_gameplay = null;
 
 	/**
 	 * Constructor with models defined. Models passed as null will result in the
@@ -47,6 +48,15 @@ public class SoftwareFactoryModel {
 	}
 
 	/**
+	 * set the current map model to the supplied map
+	 * 
+	 * @param p_map the new map model to use
+	 */
+	public void setMapModel(IMapModel p_map) {
+		d_map_model = p_map;
+	}
+
+	/**
 	 * Create a new player model based on the specified name
 	 * 
 	 * @param p_player_name the name of the player
@@ -57,6 +67,30 @@ public class SoftwareFactoryModel {
 		IPlayerModel l_player = new Player(p_player_name);
 		return l_player;
 
+	}
+
+	/**
+	 * Get the existing game play model
+	 * 
+	 * @return an instance of the IGamePlayModel
+	 * @throws Exception unexpected error
+	 */
+	public IGamePlayModel getGamePlayModel() throws Exception {
+		if (d_gameplay == null) {
+			throw new Exception("Internal error, GamePlay model was not previously created.");
+		}
+		return d_gameplay;
+	}
+
+	/**
+	 * Create a new game play model
+	 * 
+	 * @return an instance of the IGamePlayModel
+	 * @throws Exception unexpected error
+	 */
+	public IGamePlayModel getNewGamePlayModel() throws Exception {
+		d_gameplay = new GamePlay();
+		return d_gameplay;
 	}
 
 	/**

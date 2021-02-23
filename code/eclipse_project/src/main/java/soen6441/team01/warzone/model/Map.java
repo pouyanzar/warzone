@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import soen6441.team01.warzone.common.Utl;
+import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.IContinentModelView;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -28,7 +30,6 @@ import soen6441.team01.warzone.model.contracts.IMapModelView;
 public class Map implements IMapModel, IMapModelView {
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
-	private ArrayList<ArrayList<Integer>> d_neighborhoods = new ArrayList<ArrayList<Integer>>();
 
 	/**
 	 * @return the current list of continents defined on the map
@@ -45,8 +46,20 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * @return list of neighboring countries for the specified country. returns null if specified country does not exist or if it doesn't have any neighbors.
+	 */
+	public ArrayList<ICountryModel> getNeighbors(int p_country_id){
+		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
+		if( l_country == null ) {
+			return null;
+		}
+		ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors();
+		return l_neighbors;
+	}
+
+	/**
 	 * Add a continent to the current map
-	 * 
+	 *
 	 * @param p_continent_id   a unique continent identifier
 	 * @param p_continent_name the name of the continent
 	 * @param p_extra_army     the number of extra armies to assign if player has
@@ -67,7 +80,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * Add a continent to the current map
-	 * 
+	 *
 	 * @param p_continent_id    the name of the continent
 	 * @param p_continent_value the number of extra armies to assign if player
 	 *                          controls all countries
@@ -86,7 +99,25 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * Add a country to the current map
-	 * 
+	 *
+	 * @param p_country_id   the id of the country
+	 * @param p_country_name the name of the country
+	 * @param p_continent    the associated continent
+	 * @param p_x            the x coordinate as defined in the map file
+	 * @param p_y            the y coordinate as defined in the map file
+	 * @return the created country
+	 * @throws Exception when there is an exception
+	 */
+	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x,
+			int p_y) throws Exception {
+		ICountryModel l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y);
+		d_countries.add(l_country);
+		return l_country;
+	}
+
+	/**
+	 * Add a country to the current map
+	 *
 	 * @param p_country_name the name of the country
 	 * @param p_continent    the associated continent
 	 * @param p_x            the x coordinate as defined in the map file
@@ -101,14 +132,28 @@ public class Map implements IMapModel, IMapModelView {
 			throw new Exception("Cannot add country '" + p_country_name + "' since it already exists.");
 		}
 		int l_id = d_countries.size() + 1;
-		l_country = new Country(l_id, p_country_name, p_continent, p_x, p_y);
-		d_countries.add(l_country);
+		l_country = addCountry(l_id, p_country_name, p_continent, p_x, p_y);
 		return l_country;
 	}
 
 	/**
 	 * Add a country to the current map
-	 * 
+	 *
+	 * @param p_country_id   the id of the country
+	 * @param p_country_name a unique country identifier
+	 * @param p_continent_id the associated continent
+	 * @return the created country
+	 * @throws Exception when there is an exception
+	 */
+	public ICountryModel addCountry(int p_country_id, String p_country_name, int p_continent_id) throws Exception {
+		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
+		ICountryModel l_country = addCountry(p_country_id, p_country_name, l_continent, 0, 0);
+		return l_country;
+	}
+
+	/**
+	 * Add a country to the current map
+	 *
 	 * @param p_country_name a unique country identifier
 	 * @param p_continent_id the associated continent
 	 * @return the created country
@@ -122,7 +167,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * remove the continent from the list of existing continents
-	 * 
+	 *
 	 * @param p_continent_id the id of the continent
 	 * @return the deleted continent object
 	 * @throws Exception if the continent cannot be removed
@@ -139,7 +184,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * remove the continent from the list of existing continents
-	 * 
+	 *
 	 * @param p_continent_id the continent name
 	 * @return the deleted continent object
 	 * @throws Exception if the continent cannot be removed
@@ -156,7 +201,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * remove the country from the list of existing countries
-	 * 
+	 *
 	 * @param p_country_name the country id
 	 * @return the deleted country object
 	 * @throws Exception if the country cannot be removed
@@ -172,7 +217,7 @@ public class Map implements IMapModel, IMapModelView {
 
 	/**
 	 * Add a neighboring country to an existing country.
-	 * 
+	 *
 	 * @param p_country_name             the source country name
 	 * @param p_neighboring_country_name the neighboring country name
 	 * @throws Exception unexpected error or if either countries don't exist
@@ -192,8 +237,29 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
+	 * Add a neighboring country to an existing country.
+	 *
+	 * @param p_country_id             the source country id
+	 * @param p_neighboring_country_id the neighboring country id
+	 * @throws Exception unexpected error or if either countries don't exist
+	 */
+	public void addNeighbor(int p_country_id, int p_neighboring_country_id) throws Exception {
+		ICountryModel p_country = Country.findCountry(p_country_id, d_countries);
+		if (p_country == null) {
+			throw new Exception("Cannot add neighbor with id of '" + p_neighboring_country_id
+					+ "' to county with id of '" + p_country_id + "' since country doesn't exist.");
+		}
+		ICountryModel p_neighbor = Country.findCountry(p_neighboring_country_id, d_countries);
+		if (p_neighbor == null) {
+			throw new Exception("Cannot add neighbor with id of '" + p_neighboring_country_id
+					+ "' to county with if of '" + p_country_id + "' since neighboring country doesn't exist.");
+		}
+		p_country.addNeighbor(p_neighbor);
+	}
+
+	/**
 	 * Remove a neighboring country
-	 * 
+	 *
 	 * @param p_country_name             the source country name
 	 * @param p_neighboring_country_name the neighboring country name
 	 * @throws Exception if either countries don't exist or if there is an
@@ -211,7 +277,7 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
-	 * 
+	 *
 	 * @return true when the map is valid; false if the map is not valid
 	 */
 	public boolean validatemap() {
@@ -220,13 +286,70 @@ public class Map implements IMapModel, IMapModelView {
 			return false;
 		if (d_countries.size() < 1)
 			return false;
-		for (ArrayList<Integer> l_neighbor : d_neighborhoods) {
-			if (l_neighbor.size() < 1) {
-				return false;
-			} else
-				continue;
-		}
+//		for (ArrayList<Integer> l_neighbor : d_neighborhoods) {
+//			if (l_neighbor.size() < 1) {
+//				return false;
+//			} else
+//				continue;
+//		}
 		return true;
+	}
+
+	/**
+	 * Loads a Warzone map from an array containing records defined by "domination"
+	 * style map file. The following link describes the format of the "domination"
+	 * map file : http://domination.sourceforge.net/makemaps.shtml.
+	 *
+	 * @param p_records a list of map records
+	 * @return instance of new Map model
+	 * @throws Exception error parsing the contents of the map file
+	 */
+	public static IMapModel loadMap(List<String> p_records) throws Exception {
+		IMapModel l_map_model = new Map();
+		int l_line_ctr = 0;
+		String l_rec;
+		String l_header_flag = "None";
+		int l_continent_ctr = 1;
+
+		try {
+			for (l_line_ctr = 0; l_line_ctr < p_records.size(); l_line_ctr++) {
+				l_rec = p_records.get(l_line_ctr);
+				switch (l_rec.toLowerCase()) {
+				case "[continents]":
+					l_rec = "";
+					l_header_flag = "continents";
+					break;
+				case "[countries]":
+					l_rec = "";
+					l_header_flag = "countries";
+					break;
+				case "[borders]":
+					l_rec = "";
+					l_header_flag = "borders";
+					break;
+				}
+
+				if (!Utl.isEmpty(l_rec)) {
+					switch (l_header_flag) {
+					case "continents":
+						parseMapFileContinent(l_continent_ctr++, l_rec, l_map_model);
+						break;
+					case "countries":
+						parseMapFileCountry(l_rec, l_map_model);
+						break;
+					case "borders":
+						parseMapFileBorders(l_rec, l_map_model);
+						break;
+					}
+				}
+			}
+		} catch (Exception ex) {
+			String l_msg = "Encountered the following exception while processing line " + (l_line_ctr + 1)
+					+ ", exception: " + ex.getMessage();
+			throw new Exception(l_msg);
+		}
+
+		return l_map_model;
 	}
 
 	/**
@@ -234,112 +357,133 @@ public class Map implements IMapModel, IMapModelView {
 	 * following link describes the format of the "domination" map file :
 	 * http://domination.sourceforge.net/makemaps.shtml.
 	 * 
-	 * @param p_map_name file map name
-	 * @throws NumberFormatException when it is not possible to cast string to
-	 *                               integer
-	 * @throws Exception             when there is an exception
+	 * @param p_map_filename the filename of the map file
+	 * @return instance of new Map model
+	 * @throws Exception error parsing the contents of the map file
 	 */
-	public void loadMap(String p_map_name) throws NumberFormatException, Exception {
-		String l_filename = p_map_name;
-		Path l_path = Paths.get(l_filename);
-		Stream<String> l_lines = Files.lines(l_path);
-		ArrayList<String> l_pattern = new ArrayList<>(); // an ArrayList to store the map file
-		int l_continent_index = 0; // index line in continents start
-		int l_country_index = 0; // index line in countries start
-		int l_borders_index = 0; // index line in borders start
-		l_lines.forEach(s -> l_pattern.add(s)); // loop over the map file to add all lines into the ArrayList
-		l_lines.close();
+	public static IMapModel loadMapFromFile(String p_map_filename) throws Exception {
+		List<String> l_records = null;
+		IMapModel l_map_model = null;
+		try {
+			l_records = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
+			l_map_model = loadMap(l_records);
+		} catch (Exception ex) {
+			String l_msg = "Error loading map file '" + p_map_filename + "'. " + ex.getMessage();
+			throw new Exception(l_msg);
+		}
+		return l_map_model;
+	}
 
-		// loop over ArrayList to find the line indexes for each section of the map file
-		for (int i = 0; i < l_pattern.size(); i++) {
-			switch (l_pattern.get(i)) {
-			case "[continents]":
-				l_continent_index = i;
-				break;
-			case "[countries]":
-				l_country_index = i;
-				break;
-			case "[borders]":
-				l_borders_index = i;
-				break;
+	/**
+	 * Parse country borders
+	 * 
+	 * @param l_rec       the country record to parse
+	 * @param l_map_model the map model to add the continent to
+	 * @throws Exception error parsing the neighbor record, unexpected error
+	 */
+	private static void parseMapFileBorders(String l_rec, IMapModel l_map_model) throws Exception {
+		String[] l_tokens = Utl.getFirstWord(l_rec);
+
+		String l_country_id_str = l_tokens[0];
+		int l_country_id = Utl.convertToInteger(l_country_id_str);
+		if (l_country_id >= Integer.MAX_VALUE) {
+			throw new Exception("Invalid border country id value '" + l_country_id_str + "' specified");
+		}
+
+		l_tokens = Utl.getFirstWord(l_tokens[1]);
+		while (!Utl.isEmpty(l_tokens[0])) {
+			String l_border_id_str = l_tokens[0];
+			int l_border_id = Utl.convertToInteger(l_border_id_str);
+			if (l_border_id >= Integer.MAX_VALUE) {
+				throw new Exception("Invalid border country id value '" + l_border_id_str
+						+ "' specified for country with id of '" + l_country_id_str + "'");
 			}
-		}
-
-		// loop to fill the continents on the map inside continents ArrayList
-		for (int i = l_continent_index + 1; i < l_country_index - 1; i++) {
-			String[] l_continents = l_pattern.get(i).split(" ");
-			IContinentModel l_continent = new Continent(i, l_continents[0], Integer.parseInt(l_continents[1]));
-			d_continents.add(l_continent);
-		}
-
-		// loop to fill the countries on the map inside countries ArrayList
-		for (int i = l_country_index + 1; i < l_borders_index - 1; i++) {
-			String[] l_countries = l_pattern.get(i).split(" ");
-			ICountryModel l_country = new Country(Integer.parseInt(l_countries[0]), l_countries[1],
-					Integer.parseInt(l_countries[2]));
-			d_countries.add(l_country);
-		}
-
-		// loop to fill the neighborhoods ArrayList
-		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
-			d_neighborhoods.add(new ArrayList<>());
-		}
-		for (int i = l_borders_index + 1; i < l_pattern.size(); i++) {
-			String[] l_neighbors = l_pattern.get(i).split(" ");
-			for (int j = 1; j < l_neighbors.length; j++) {
-				d_neighborhoods.get(Integer.parseInt(l_neighbors[0]) - 1).add(Integer.parseInt(l_neighbors[j]));
-				System.out.println(d_neighborhoods.get(i - l_borders_index - 1));
-
-			}
-		}
-
-		// create ArrayLists to store related continents and countries and neighbors
-		ArrayList<ArrayList<ICountryModel>> l_continent_graph = new ArrayList<ArrayList<ICountryModel>>();
-		;
-		ArrayList<ArrayList<ArrayList<Integer>>> l_country_graph = new ArrayList<ArrayList<ArrayList<Integer>>>();
-
-		// allocate memory to ArrayLists
-		for (int i = 0; i < l_continent_graph.size(); i++) {
-			l_continent_graph.add(new ArrayList<ICountryModel>());
-		}
-		for (int i = 0; i < l_country_graph.size(); i++) {
-			l_country_graph.add(new ArrayList<ArrayList<Integer>>());
-		}
-
-		// add countries to corresponding continent
-		for (int i = 0; i < d_continents.size(); i++) {
-			for (int j = 0; j < d_countries.size(); j++) {
-				if (d_countries.get(j).getContinentId() == (d_continents.get(i).getId())) {
-					l_continent_graph.get(d_continents.get(i).getId()).add(d_countries.get(j));
-				}
-			}
-		}
-
-		// add neighbors to corresponding countries
-		for (int i = 0; i < d_countries.size(); i++) {
-			l_country_graph.get(d_countries.get(i).getId()).add(d_neighborhoods.get(i));
+			l_map_model.addNeighbor(l_country_id, l_border_id);
+			l_tokens = Utl.getFirstWord(l_tokens[1]);
 		}
 	}
-}
 
-///**
-//* Loads for editing an existing Warzone map from an existing "domination" style
-//* map file; or, will create an empty Warzone map if there is no existing map
-//* file.
-//* 
-//* @param p_map_filename the filename of the "domination" map file to load or
-//*                       create
-//* @throws Exception
-//*/
-//public void editMap(String p_map_filename) throws Exception {
-//	File l_map_file = new File(p_map_filename);
-//	if (!l_map_file.exists()) {
-//		// create 'empty' map file
-//		String l_empty_map = "; map: #MAP#.map\n" + "[files]\n" + "[continents]\n" + "[countries]\n"
-//				+ "[borders]\n";
-//		PrintWriter l_pw = new PrintWriter(p_map_filename);
-//		l_pw.println(l_empty_map);
-//		l_pw.close();
-//	}
-//	loadMap(p_map_filename);
-//}
+	/**
+	 * Parse a country specification from the map file
+	 * 
+	 * @param l_rec       the country record to parse
+	 * @param l_map_model the map model to add the continent to
+	 * @throws Exception error parsing the country record, unexpected error
+	 */
+	private static void parseMapFileCountry(String l_rec, IMapModel l_map_model) throws Exception {
+		String[] l_tokens = Utl.getFirstWord(l_rec);
+
+		String l_country_id_str = l_tokens[0];
+		int l_country_id = Utl.convertToInteger(l_country_id_str);
+		if (l_country_id >= Integer.MAX_VALUE) {
+			throw new Exception("Invalid country id value '" + l_country_id_str + "' specified");
+		}
+
+		l_tokens = Utl.getFirstWord(l_tokens[1]);
+
+		String l_country_name = l_tokens[0];
+		if (!Utl.isValidMapName(l_country_name)) {
+			throw new Exception("Invalid country name '" + l_country_name + "'");
+		}
+
+		l_tokens = Utl.getFirstWord(l_tokens[1]);
+
+		String l_continent_id_str = l_tokens[0];
+		int l_continent_id = Utl.convertToInteger(l_continent_id_str);
+		if (l_continent_id >= Integer.MAX_VALUE) {
+			throw new Exception("Invalid continent id value '" + l_continent_id_str + "' specified for country '"
+					+ l_country_name + "'");
+		}
+
+		l_map_model.addCountry(l_country_id, l_country_name, l_continent_id);
+	}
+
+	/**
+	 * Parse a continent specification from the map file
+	 * 
+	 * @param p_id        the continent id
+	 * @param l_rec       the continent record to parse
+	 * @param l_map_model the map model to add the continent to
+	 * @throws Exception error parsing the continent record, unexpected error
+	 */
+	private static void parseMapFileContinent(int p_id, String l_rec, IMapModel l_map_model) throws Exception {
+		String[] l_tokens = Utl.getFirstWord(l_rec);
+
+		String l_continent_name = l_tokens[0];
+		if (!Utl.isValidMapName(l_continent_name)) {
+			throw new Exception("Invalid continent  name '" + l_continent_name + "'");
+		}
+
+		l_tokens = Utl.getFirstWord(l_tokens[1]);
+
+		String l_continent_xtra_army_str = l_tokens[0];
+		int l_continent_xtra_army = Utl.convertToInteger(l_continent_xtra_army_str);
+		if (l_continent_xtra_army >= Integer.MAX_VALUE) {
+			throw new Exception("Invalid extra army value '" + l_continent_xtra_army_str + "' specified for continent '"
+					+ l_continent_name + "'");
+		}
+
+		l_map_model.addContinent(p_id, l_continent_name, l_continent_xtra_army);
+	}
+
+	/**
+	 * parse the loapmap command.
+	 * <p>
+	 * Syntax: loapmap filename
+	 * </p>
+	 *
+	 * @param p_loadmap_params the loapmap parameters (just the parameters without
+	 *                         the loapmap command itself)
+	 * @return map model based on the supplied map file filename.
+	 * @throws Exception any problem parsing or creating the new map
+	 */
+	public static IMapModel processLoadMapCommand(String p_loadmap_params) throws Exception {
+		String l_params[] = Utl.getFirstWord(p_loadmap_params);
+		String l_filename = l_params[0];
+		if (Utl.isEmpty(l_filename)) {
+			throw new Exception("Invalid loapmap command, no options specified");
+		}
+		IMapModel l_map = Map.loadMapFromFile(l_filename);
+		return l_map;
+	}
+}

@@ -3,6 +3,7 @@ package soen6441.team01.warzone.controller;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
+import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -149,13 +150,32 @@ public class MapEditorController implements IMapEditorController {
 			d_msg_model.setMessage(MessageType.None, "validatemap coming soon...");
 			break;
 		case "loadmap":
-			d_msg_model.setMessage(MessageType.None, "loadmap coming soon...");
+			processLoadMap(l_cmd_params[1]);
 			return false;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return true;
+	}
+
+	/**
+	 * process the loadmap command
+	 * 
+	 * @param p_loadmap_params the editneighbor parameters (just the parameters
+	 *                              without the editneighbor command itself)
+	 * @throws Exception unexpected error encountered
+	 */
+	public void processLoadMap(String p_loadmap_params) throws Exception {
+		try {
+			String l_params[] = Utl.getFirstWord(p_loadmap_params);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
+			d_model_factory.setMapModel(l_map_model);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			return;
+		}
+		d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
 	}
 
 	/**

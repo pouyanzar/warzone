@@ -7,6 +7,7 @@ import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
@@ -43,7 +44,7 @@ public class GamePlayController implements IGamePlayController {
 	 * 
 	 * @return String one of: exit, game_over 
 	 */
-	public String processGamePlay() {
+	public String processGamePlay(IGamePlayModel p_gameplay_model) {
 		String l_cmd = "exit";
 
 		try {

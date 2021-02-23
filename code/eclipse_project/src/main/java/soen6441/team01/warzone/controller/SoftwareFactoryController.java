@@ -15,6 +15,8 @@ public class SoftwareFactoryController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
 	
+	private IMapEditorController d_map_editor_controller = null;
+	
 
 	/**
 	 * Constructor with views defined. Views passed as null will result in the
@@ -33,10 +35,20 @@ public class SoftwareFactoryController {
 	 * @return map edit controller
 	 * @throws Exception unexpected error
 	 */
-	public IMapEditorController getMapEditorController() throws Exception {
-		return new MapEditorController(d_model_factory, d_view_factory);
+	public IMapEditorController getNewMapEditorController() throws Exception {
+		d_map_editor_controller = new MapEditorController(d_model_factory, d_view_factory); 
+		return d_map_editor_controller;
 	}
 
+	/**
+	 * return the existing Map Edit controller 
+	 * @return map edit controller
+	 * @throws Exception unexpected error
+	 */
+	public IMapEditorController getMapEditorController() throws Exception {
+		return d_map_editor_controller;
+	}
+	
 	/**
 	 * Create a GameStartupController 
 	 * @return game startup controller

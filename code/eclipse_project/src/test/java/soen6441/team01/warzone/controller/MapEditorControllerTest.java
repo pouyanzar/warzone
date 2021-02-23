@@ -16,6 +16,8 @@ import soen6441.team01.warzone.view.SoftwareFactoryView;
  *
  */
 public class MapEditorControllerTest {
+	private String d_MAP_DIR = "./src/test/resources/maps/";
+	
 	public SoftwareFactoryModel d_model_factory = null;
 	public MapEditorController d_map_editor_controller = null;
 	public SoftwareFactoryView d_view_factory = null;
@@ -316,4 +318,33 @@ public class MapEditorControllerTest {
 		assertTrue(l_msg.contains("editneighbor processed successfully"));
 	}
 
+	/**
+	 * test loadmap invalid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processMapEditorCommand_loadmap_invalid() throws Exception {
+		String l_msg;
+		d_map_editor_controller.processMapEditorCommand("loadmap");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+		
+		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/quebac.map");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Error loading map file"));
+	}
+
+	/**
+	 * test loadmap valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processMapEditorCommand_loadmap_valid() throws Exception {
+		String l_msg;
+		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/canada.map");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("loadmap processed successfully"));
+	}
 }
