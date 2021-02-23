@@ -30,7 +30,7 @@ public class MapEditorControllerTest {
 	 */
 	@Before
 	public void setupMapEditController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.CreateWarzoneBasicConsoleGameModels();
+		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
 		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
 		d_map_editor_controller = new MapEditorController(d_model_factory, d_view_factory);
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();

@@ -4,6 +4,7 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.GamePlay;
+import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -104,11 +105,12 @@ public class GameStartupController implements IGameStartupController {
 	 * <ul>
 	 * <li>gameplayer -add playername -remove playername</li>
 	 * <li>assigncountries</li>
+	 * <li>loadmap filename</li>
 	 * <li>exit</li>
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param p_command the command to process
+	 * @param p_command  the command to process
 	 * @param p_gameplay the gameplay model to process
 	 * @return String one of; exit, assigncountries
 	 * @throws Exception unexpected error
@@ -123,13 +125,13 @@ public class GameStartupController implements IGameStartupController {
 		case "exit":
 			l_return_command = "exit";
 			break;
+		case "loadmap":
+			processLoadMap(l_cmd_params[1]);
+			break;
 		case "gameplayer":
-			// processEditContinent(l_cmd_params[1]);
-			// d_msg_model.setMessage(MessageType.None, "gameplayer coming soon...");
 			processGameplayer(l_cmd_params[1], p_gameplay);
 			break;
 		case "assigncountries":
-			// processEditContinent(l_cmd_params[1]);
 			d_msg_model.setMessage(MessageType.None, "assigncountries coming soon...");
 			l_return_command = "assignedcountries";
 			break;
@@ -170,9 +172,8 @@ public class GameStartupController implements IGameStartupController {
 								+ "', expecting a valid player name.");
 						return;
 					}
-					//l_map.addNeighbor(l_countryName, l_neighbor_name);
 					IPlayerModel l_player = d_model_factory.getPlayerModel(l_playerName);
-					//p_gameplay.
+					p_gameplay.addPlayer(l_player);
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 					return;
@@ -183,11 +184,11 @@ public class GameStartupController implements IGameStartupController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_playerName = l_params[0];
 					if (!Utl.isValidMapName(l_playerName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -remove playername '" + l_playerName
-								+ "', expecting a valid player name.");
+						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -remove playername '"
+								+ l_playerName + "', expecting a valid player name.");
 						return;
 					}
-					//l_map.removeNeighbor(l_countryName, l_neighbor_name);
+					p_gameplay.removePlayer(l_playerName);
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 					return;
@@ -195,12 +196,34 @@ public class GameStartupController implements IGameStartupController {
 				break;
 			default:
 				d_msg_model.setMessage(MessageType.Error,
-						"Invalid editneighbor option '" + l_params[0] + "', expecting: -add, -remove");
+						"Invalid gameplayer option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
 			d_msg_model.setMessage(MessageType.None, "gameplayer processed successfully");
 		}
+	}
+	
+
+	/**
+	 * process the loadmap command
+	 * 
+	 * @param p_loadmap_params the loadmap parameters (just the parameters without
+	 *                         the loadmap command itself)
+	 * @return true if successful
+	 * @throws Exception unexpected error encountered
+	 */
+	public boolean processLoadMap(String p_loadmap_params) throws Exception {
+		try {
+			String l_params[] = Utl.getFirstWord(p_loadmap_params);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
+			d_model_factory.setMapModel(l_map_model);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			return false;
+		}
+		d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+		return true;
 	}
 
 	/**
@@ -214,6 +237,7 @@ public class GameStartupController implements IGameStartupController {
 		d_view.processMessage(MessageType.None, "Game startup commands:");
 		d_view.processMessage(MessageType.None, " - gameplayer -add playername -remove playername");
 		d_view.processMessage(MessageType.None, " - assigncountries");
+		d_view.processMessage(MessageType.None, " - loapmap filename");
 		d_view.processMessage(MessageType.None, " - exit");
 		d_view.processMessage(MessageType.None, " - help");
 	}

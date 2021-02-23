@@ -368,7 +368,7 @@ public class Map implements IMapModel, IMapModelView {
 			l_records = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
 			l_map_model = loadMap(l_records);
 		} catch (Exception ex) {
-			String l_msg = "Error loading map file '" + p_map_filename + "'. " + ex.getMessage();
+			String l_msg = "Error loading map file '" + p_map_filename + "'. " + ex;
 			throw new Exception(l_msg);
 		}
 		return l_map_model;

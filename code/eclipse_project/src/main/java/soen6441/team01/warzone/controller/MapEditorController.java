@@ -150,8 +150,10 @@ public class MapEditorController implements IMapEditorController {
 			d_msg_model.setMessage(MessageType.None, "validatemap coming soon...");
 			break;
 		case "loadmap":
-			processLoadMap(l_cmd_params[1]);
-			return false;
+			if (processLoadMap(l_cmd_params[1])) {
+				return false;
+			}
+			break;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
@@ -162,20 +164,22 @@ public class MapEditorController implements IMapEditorController {
 	/**
 	 * process the loadmap command
 	 * 
-	 * @param p_loadmap_params the editneighbor parameters (just the parameters
-	 *                              without the editneighbor command itself)
+	 * @param p_loadmap_params the loadmap parameters (just the parameters without
+	 *                         the loadmap command itself)
+	 * @return true if successful
 	 * @throws Exception unexpected error encountered
 	 */
-	public void processLoadMap(String p_loadmap_params) throws Exception {
+	public boolean processLoadMap(String p_loadmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
 			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
-			return;
+			return false;
 		}
 		d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+		return true;
 	}
 
 	/**

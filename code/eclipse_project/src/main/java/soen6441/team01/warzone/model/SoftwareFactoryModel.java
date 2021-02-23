@@ -30,13 +30,13 @@ public class SoftwareFactoryModel {
 	 * 
 	 * @return newly create Warzone model software factory
 	 */
-	public static SoftwareFactoryModel CreateWarzoneBasicConsoleGameModels() {
+	public static SoftwareFactoryModel createWarzoneBasicConsoleGameModels() {
 		IMapModel l_map = new Map();
 		IUserMessageModel l_usermsg = new UserMessageModel();
 		SoftwareFactoryModel l_model = new SoftwareFactoryModel(l_map, l_usermsg);
 		return l_model;
 	}
-
+ 
 	/**
 	 * 
 	 * @return an IMapModel object
@@ -105,4 +105,5 @@ public class SoftwareFactoryModel {
 			d_user_message_model = new UserMessageModel();
 		return d_user_message_model;
 	}
+
 }

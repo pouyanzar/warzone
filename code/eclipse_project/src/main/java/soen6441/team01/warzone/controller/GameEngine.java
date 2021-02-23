@@ -44,7 +44,7 @@ public class GameEngine {
 		if (p_model_factory != null) {
 			d_model_factory = p_model_factory;
 		} else {
-			d_model_factory = SoftwareFactoryModel.CreateWarzoneBasicConsoleGameModels();
+			d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
 		}
 		if (p_model_factory != null) {
 			d_view_factory = p_view_factory;

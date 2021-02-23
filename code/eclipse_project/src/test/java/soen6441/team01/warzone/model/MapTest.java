@@ -30,23 +30,23 @@ public class MapTest {
 			e.printStackTrace();
 			fail("failure loading an existing valid map");
 		}
-		
-		ArrayList<IContinentModel> l_continents = l_map.getContinents(); 
-		assertTrue(l_continents.size()==6);
+
+		ArrayList<IContinentModel> l_continents = l_map.getContinents();
+		assertTrue(l_continents.size() == 6);
 		assertTrue(l_continents.get(5).getName().equals("Northwestern_Territories"));
 
-		ArrayList<ICountryModel> l_countries = l_map.getCountries(); 
-		assertTrue(l_countries.size()==31);
+		ArrayList<ICountryModel> l_countries = l_map.getCountries();
+		assertTrue(l_countries.size() == 31);
 		assertTrue(l_countries.get(5).getName().equals("Quebec-North"));
-		assertTrue(l_countries.get(5).getNeighbors().size()==4);
-		
+		assertTrue(l_countries.get(5).getNeighbors().size() == 4);
+
 		assertTrue(l_map.getNeighbors(6).size() == 4);
-}
+	}
 
 	/**
 	 * Test the loadmap command. Load a non-existing map file. Should throw an
 	 * exception.
-	 */ 
+	 */
 	@Test
 	public void test_loadmap_command_2() {
 		Boolean l_assert_result = true;
@@ -55,20 +55,20 @@ public class MapTest {
 			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map");
 			l_assert_result = false;
 		} catch (Exception e) {
-			if( !e.getMessage().contains("Error loading map file") ) {
+			if (!e.getMessage().contains("Error loading map file")) {
 				l_assert_result = false;
 			}
 		}
-		if( !l_assert_result ) {
+		if (!l_assert_result) {
 			fail("expecting an exception trying to load a non-existing map file");
-		}
-		else {
+		} else {
 			assertTrue(true);
 		}
 	}
 
 	/**
 	 * checks that the add continent is working as expected
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -84,6 +84,7 @@ public class MapTest {
 
 	/**
 	 * checks that cannot add duplicate continent
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -95,6 +96,7 @@ public class MapTest {
 
 	/**
 	 * checks that the add country is working as expected
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -111,6 +113,7 @@ public class MapTest {
 
 	/**
 	 * checks that cannot add duplicate continent
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -123,6 +126,7 @@ public class MapTest {
 
 	/**
 	 * checks addNeighbor valid tests
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -138,9 +142,10 @@ public class MapTest {
 		l_neighbors = l_usa.getNeighbors();
 		assertTrue(l_neighbors.size() == 0);
 	}
-	
+
 	/**
 	 * checks addNeighbor invalid test
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -151,6 +156,7 @@ public class MapTest {
 
 	/**
 	 * checks addNeighbor invalid test
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -159,9 +165,10 @@ public class MapTest {
 		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
 		l_map.addNeighbor("Canada", "USA");
 	}
-	
+
 	/**
 	 * checks removeNeighbor valid tests
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
@@ -180,6 +187,7 @@ public class MapTest {
 
 	/**
 	 * checks removeNeighbor invalid tests
+	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test(expected = Exception.class)
@@ -187,7 +195,7 @@ public class MapTest {
 		Map l_map = new Map();
 		l_map.removeNeighbor("Canada", "USA");
 	}
-	
+
 	/**
 	 * checks editmap functionality
 	 * 

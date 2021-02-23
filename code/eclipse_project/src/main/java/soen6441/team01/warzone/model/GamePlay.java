@@ -41,10 +41,11 @@ public class GamePlay implements IGamePlayModel {
 		}
 		d_map = p_map;
 	}
-	
+
 	/**
 	 * Get the current list of players in the game
-	 * @return The list of players currently defined in the game 
+	 * 
+	 * @return The list of players currently defined in the game
 	 */
 	public ArrayList<IPlayerModel> getPlayers() {
 		return (ArrayList<IPlayerModel>) d_players.clone();
@@ -83,7 +84,7 @@ public class GamePlay implements IGamePlayModel {
 		IPlayerModel l_player = Player.FindPlayer(p_name, d_players);
 		if (l_player == null) {
 			throw new Exception(
-					"Cannot remove player '" + p_name + "' from the game, since that player doesn't exists");
+					"Cannot remove player '" + p_name + "' from the game, since that player doesn't exist");
 		}
 		d_players.remove(l_player);
 	}
