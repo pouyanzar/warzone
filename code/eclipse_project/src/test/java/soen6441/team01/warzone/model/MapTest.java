@@ -187,4 +187,17 @@ public class MapTest {
 		Map l_map = new Map();
 		l_map.removeNeighbor("Canada", "USA");
 	}
+	
+	/**
+	 * checks editmap functionality
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+//	@Test
+//	public void test_editmap() throws Exception {
+//		Map l_map = new Map();
+//		l_map.editmap(d_MAP_DIR + "germany");
+//
+//		assertTrue(true);
+//	}
 }

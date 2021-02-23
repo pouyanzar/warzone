@@ -486,4 +486,30 @@ public class Map implements IMapModel, IMapModelView {
 		IMapModel l_map = Map.loadMapFromFile(l_filename);
 		return l_map;
 	}
+
+	/**
+	 * loads an existing map file or create a new one in case file does not exist
+	 * 
+	 * @param p_filename map file name
+	 * @throws NumberFormatException when it is not possible to cast string to
+	 *                               integer
+	 * @throws Exception             when there is an exception
+	 */
+	public void editmap(String p_filename) throws NumberFormatException, Exception {
+
+//		File l_filename = new File(p_filename + ".map");
+//		if (l_filename.exists()) {
+//			loadmap(p_filename);
+//		}
+//
+//		else {
+//			try {
+//				l_filename.createNewFile();
+//			} catch (IOException e) {
+//
+//				e.printStackTrace();
+//			}
+//
+//		}
+	}
 }

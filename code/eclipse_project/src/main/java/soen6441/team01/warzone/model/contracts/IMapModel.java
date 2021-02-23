@@ -39,4 +39,6 @@ public interface IMapModel {
 	ArrayList<ICountryModel> getNeighbors(int p_country_id);
 	
 	boolean validatemap();
+	
+	void editmap(String p_filename) throws NumberFormatException, Exception;
 }
