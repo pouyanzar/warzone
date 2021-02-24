@@ -280,13 +280,14 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
-	 *
+	 * 
+	 * @param p_filename the map file to validate
 	 * @return l_isValid when the map is valid is true otherwise is false.
 	 * @throws Exception when there is an exception
 	 */
-	public boolean validatemap(String filename) throws Exception {
+	public boolean validatemap(String p_filename) throws Exception {
 
-		loadMapFromFile(filename);
+		loadMapFromFile(p_filename);
 		boolean l_isValid = false;
 		ArrayList<Integer> l_passed_countries = new ArrayList<>();
 		if (d_continents.size() < 1)
@@ -307,9 +308,8 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * implementation of DFS algorithm to traverse all nodes of the graph
 	 * 
-	 * @param p_country               the starting point for traverse
-	 * @param p_destination_countries the list of countries visited through the
-	 *                                search
+	 * @param p_country           the starting point for traverse
+	 * @param p_visited_countries the list of countries visited through the search
 	 * @return l_all_countries_visited
 	 */
 	public static boolean mapTraversal(ICountryModel p_country, ArrayList<Integer> p_visited_countries) {
