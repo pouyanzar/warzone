@@ -195,7 +195,20 @@ public class MapTest {
 		Map l_map = new Map();
 		l_map.removeNeighbor("Canada", "USA");
 	}
-
+	
+	/**
+	 * checks if validatemap function works properly
+	 * @throws Exception when there is an exception
+	 */
+	@Test 
+	public void test_validatemap() throws Exception{
+		IMapModel l_map = new Map();
+		 l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map");
+		 l_map.validatemap(d_MAP_DIR + "canada/canada.map");
+		 
+		 assertTrue(l_map.validatemap(d_MAP_DIR + "canada/canada.map"));
+	}
+	
 	/**
 	 * checks editmap functionality
 	 * 

@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,11 +47,13 @@ public class Map implements IMapModel, IMapModelView {
 	}
 
 	/**
-	 * @return list of neighboring countries for the specified country. returns null if specified country does not exist or if it doesn't have any neighbors.
+	 * @return list of neighboring countries for the specified country. returns null
+	 *         if specified country does not exist or if it doesn't have any
+	 *         neighbors.
 	 */
-	public ArrayList<ICountryModel> getNeighbors(int p_country_id){
+	public ArrayList<ICountryModel> getNeighbors(int p_country_id) {
 		ICountryModel l_country = Country.findCountry(p_country_id, d_countries);
-		if( l_country == null ) {
+		if (l_country == null) {
 			return null;
 		}
 		ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors();
@@ -278,21 +281,48 @@ public class Map implements IMapModel, IMapModelView {
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
 	 *
-	 * @return true when the map is valid; false if the map is not valid
+	 * @return l_isValid when the map is valid is true otherwise is false.
+	 * @throws Exception when there is an exception
 	 */
-	public boolean validatemap() {
+	public boolean validatemap(String filename) throws Exception {
 
+		loadMapFromFile(filename);
+		boolean l_isValid = false;
+		ArrayList<Integer> l_passed_countries = new ArrayList<>();
 		if (d_continents.size() < 1)
 			return false;
 		if (d_countries.size() < 1)
 			return false;
-//		for (ArrayList<Integer> l_neighbor : d_neighborhoods) {
-//			if (l_neighbor.size() < 1) {
-//				return false;
-//			} else
-//				continue;
-//		}
-		return true;
+		for (ICountryModel l_country : d_countries) {
+			if (mapTraversal(l_country, l_passed_countries))
+				l_isValid = true;
+			else
+				l_isValid = false;
+
+		}
+
+		return l_isValid;
+	}
+
+	/**
+	 * implementation of DFS algorithm to traverse all nodes of the graph
+	 * 
+	 * @param p_country               the starting point for traverse
+	 * @param p_destination_countries the list of countries visited through the
+	 *                                search
+	 * @return l_all_countries_visited
+	 */
+	public static boolean mapTraversal(ICountryModel p_country, ArrayList<Integer> p_visited_countries) {
+		p_visited_countries.add(p_country.getId());
+		boolean l_all_countries_visited = false;
+		for (ICountryModel l_country : p_country.getNeighbors()) {
+			if (!p_visited_countries.contains(l_country.getId())) {
+				mapTraversal(l_country, p_visited_countries);
+			} else {
+				l_all_countries_visited = true;
+			}
+		}
+		return l_all_countries_visited;
 	}
 
 	/**
