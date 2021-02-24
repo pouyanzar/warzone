@@ -29,4 +29,10 @@ public class Order implements IOrderModel, IOrderModelView {
 		d_order = l_order;
 	}
 
+	/**
+	 * Execute the order
+	 * @throws Exception unexpected error
+	 */
+	public void execute() throws Exception{
+	}
 }

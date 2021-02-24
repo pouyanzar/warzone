@@ -1,5 +1,8 @@
 package soen6441.team01.warzone.controller;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
@@ -9,6 +12,7 @@ import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
@@ -42,33 +46,34 @@ public class GamePlayController implements IGamePlayController {
 	/**
 	 * Starts executing the game startup dynamics
 	 * 
-	 * @return String one of: exit, game_over 
+	 * @return String one of: exit, game_over
 	 */
 	public String processGamePlay(IGamePlayModel p_gameplay_model) {
 		String l_cmd = "exit";
+		boolean l_exit_gameplay = false;
 
 		try {
 			d_view.displayGamePlayBanner();
-			l_cmd = processUserCommands();
-			if (l_cmd == null || Utl.isEmpty(l_cmd)) {
-				throw new Exception("Internal error 1 processing gameplay.");
-			}
-			String l_cmd_params[] = new String[2];
-			l_cmd_params = Utl.getFirstWord(l_cmd);
-			switch (l_cmd_params[0]) {
-			case "exit":
-				break;
-			case "assigncountries":
-				break;
-			default:
-				throw new Exception("Internal error 2 processing the gameplay.");
+
+			while (!l_exit_gameplay) {
+				// assign reinforcements phase
+				p_gameplay_model.assignReinforcements();
+
+				// issue orders phase
+				l_cmd = issueOrders(p_gameplay_model);
+				if (l_cmd.equals("exit") || l_cmd.equals("game_over")) {
+					l_exit_gameplay = true;
+				}
+
+				// execute orders phase
+				if (!l_exit_gameplay) {
+					p_gameplay_model.executeOrders();
+				}
 			}
 		} catch (Exception ex) {
 			System.out.println("Fatal error encountered during gameplay.");
 			System.out.println("Exception: " + ex.getMessage());
 		}
-
-		d_msg_model.setMessage(MessageType.Informational, "exiting gameplay");
 
 		if (d_view != null) {
 			d_view.shutdown();
@@ -85,12 +90,37 @@ public class GamePlayController implements IGamePlayController {
 	 * @return String the last command entered
 	 * @throws Exception general exception processing the map editor
 	 */
-	private String processUserCommands() throws Exception {
-		boolean l_exit_gameplay = false;
+	private String issueOrders(IGamePlayModel p_gameplay_model) throws Exception {
+		boolean l_exit = false;
 		String l_cmd = "exit";
-		while (!l_exit_gameplay) {
-			l_cmd = d_view.getCommand();
-			l_exit_gameplay = !processGamePlayCommand(l_cmd);
+
+		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
+		for (IPlayerModel l_player : p_gameplay_model.getPlayers()) {
+			l_queue.add(l_player);
+		}
+
+		while (!l_exit) {
+			IPlayerModel l_player = l_queue.peek();
+			l_cmd = processGamePlayCommand(l_player);
+			switch (l_cmd) {
+			case "player_again": // player still has work to do
+				l_queue.remove();
+				l_queue.add(l_player);
+				break;
+			case "player_done": // player has no more work to do
+				l_queue.remove();
+				break;
+			case "player_redo": // same player to redo another command
+				break;
+			case "orders_done": // move on to next phase
+				l_exit = true;
+				break;
+			case "exit": // exit game
+				l_exit = true;
+				break;
+			default:
+				throw new Exception("Internal error issuing orders");
+			}
 		}
 		return l_cmd;
 	}
@@ -104,31 +134,44 @@ public class GamePlayController implements IGamePlayController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param p_command the command to process
-	 * @return true = command processed successfully, false = command to exit
+	 * @param p_player the player to get and process commands for
+	 * @return "exit" = exit game play, "player_redo" same player to redo another
+	 *         command, "player_again" = player still has work to do, "player_done"
+	 *         = player has no more work to do, "orders_done" = move on to next
+	 *         phase.
 	 * @throws Exception unexpected error
 	 */
-	public boolean processGamePlayCommand(String p_command) throws Exception {
-		String l_cmd_params[] = Utl.getFirstWord(p_command);
+	public String processGamePlayCommand(IPlayerModel p_player) throws Exception {
+		if (p_player == null) {
+			return "orders_done";
+		}
+
+		String l_return = "exit";
+		String l_cmd = d_view.getCommand("Gameplay " + p_player.getName() + ">");
+		String l_cmd_params[] = Utl.getFirstWord(l_cmd);
+
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
+			l_return = "player_redo";
 			break;
 		case "exit":
-			return false;
+			l_return = "exit";
+			break;
 		case "showmap":
-			// processEditContinent(l_cmd_params[1]);
 			d_msg_model.setMessage(MessageType.None, "showmap coming soon...");
+			l_return = "player_redo";
 			break;
 		case "deploy":
-			// processEditContinent(l_cmd_params[1]);
 			d_msg_model.setMessage(MessageType.None, "deploy coming soon...");
+			l_return = "player_again";
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
+			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_cmd + "'");
+			l_return = "player_redo";
 			break;
 		}
-		return true;
+		return l_return;
 	}
 
 	/**

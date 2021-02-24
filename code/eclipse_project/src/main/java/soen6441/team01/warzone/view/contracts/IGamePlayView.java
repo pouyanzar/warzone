@@ -12,6 +12,8 @@ public interface IGamePlayView {
 
 	String getCommand();
 	
+	String getCommand(String p_prompt);
+	
 	void shutdown();
 
 	void processMessage(MessageType none, String string);

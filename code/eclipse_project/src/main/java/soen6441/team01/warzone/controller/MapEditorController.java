@@ -67,8 +67,6 @@ public class MapEditorController implements IMapEditorController {
 			System.out.println("Exception: " + ex.getMessage());
 		}
 
-		d_msg_model.setMessage(MessageType.Informational, "exiting map editor");
-
 		if (d_view != null) {
 			d_view.shutdown();
 		}

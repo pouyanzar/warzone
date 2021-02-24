@@ -99,27 +99,27 @@ public class GameStartupControllerTest {
 		String l_msg;
 		d_startup_controller.processGameStartupCommand("gameplayer -add Player01", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("gameplayer processed successfully"));
+		assertTrue(l_msg.contains("Player01 added to game"));
 
 		d_startup_controller.processGameStartupCommand("gameplayer -remove Player01", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("gameplayer processed successfully"));
+		assertTrue(l_msg.contains("Player01 removed from game"));
 
 		d_startup_controller.processGameStartupCommand("gameplayer -add Player01 -remove Player01", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("gameplayer processed successfully"));
+		assertTrue(l_msg.contains("Player01 removed from game"));
 
 		d_startup_controller.processGameStartupCommand(
 				"gameplayer -add Player01 -add Player02 -add Player03 -remove Player02 -remove Player03 -remove Player01",
 				d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("gameplayer processed successfully"));
+		assertTrue(l_msg.contains("Player01 removed from game"));
 
 		d_startup_controller.processGameStartupCommand(
 				"gameplayer -add   Player01     -add   Player02      -add Player03       -remove     Player01   -remove Player02    -remove         Player03",
 				d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("gameplayer processed successfully"));
+		assertTrue(l_msg.contains("Player03 removed from game"));
 	}
 
 	/**

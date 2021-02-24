@@ -89,7 +89,7 @@ public class SoftwareFactoryModel {
 	 * @throws Exception unexpected error
 	 */
 	public IGamePlayModel getNewGamePlayModel() throws Exception {
-		d_gameplay = new GamePlay();
+		d_gameplay = new GamePlay(this);
 		return d_gameplay;
 	}
 

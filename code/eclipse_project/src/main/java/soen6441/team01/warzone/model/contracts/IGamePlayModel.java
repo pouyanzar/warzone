@@ -22,7 +22,7 @@ public interface IGamePlayModel {
 
 	void assignCountries();
 
-	void assignReinforcements();
+	void assignReinforcements() throws Exception;
 
 	void executeOrders();
 

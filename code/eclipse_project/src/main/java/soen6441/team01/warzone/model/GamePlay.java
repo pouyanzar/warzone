@@ -2,6 +2,7 @@ package soen6441.team01.warzone.model;
 
 import java.util.ArrayList;
 
+import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.GameState;
 
@@ -13,11 +14,15 @@ public class GamePlay implements IGamePlayModel {
 	private GameState d_game_state = GameState.Startup;
 	private IMapModel d_map = null;
 	private ArrayList<IPlayerModel> d_players = new ArrayList<IPlayerModel>();
-
+	private SoftwareFactoryModel d_model_factory = null;
+	
 	/**
 	 * Constructor
+	 * 
+	 * @param p_model_factory the model software factory
 	 */
-	public GamePlay() {
+	public GamePlay(SoftwareFactoryModel p_model_factory) {
+		d_model_factory = p_model_factory;
 	}
 
 	/**
@@ -42,6 +47,15 @@ public class GamePlay implements IGamePlayModel {
 		d_map = p_map;
 	}
 
+	/**
+	 * Helper function that returns the model that manages system messages
+	 * @return user message model
+	 * @throws Exception unexpected errors
+	 */
+	private IUserMessageModel getMsg() throws Exception {
+		return d_model_factory.getUserMessageModel();		
+	}
+	
 	/**
 	 * Get the current list of players in the game
 	 * 
@@ -83,8 +97,7 @@ public class GamePlay implements IGamePlayModel {
 		}
 		IPlayerModel l_player = Player.FindPlayer(p_name, d_players);
 		if (l_player == null) {
-			throw new Exception(
-					"Cannot remove player '" + p_name + "' from the game, since that player doesn't exist");
+			throw new Exception("Cannot remove player '" + p_name + "' from the game, since that player doesn't exist");
 		}
 		d_players.remove(l_player);
 	}
@@ -104,10 +117,17 @@ public class GamePlay implements IGamePlayModel {
 	/**
 	 * Assign to each player the correct number of reinforcement armies according to
 	 * the Warzone rules. Only available in GameState.GamePlay.
+	 * 
+	 * @throws Exception unexpected error
 	 */
-	public void assignReinforcements() {
+	public void assignReinforcements() throws Exception {
 		if (d_game_state != GameState.GamePlay) {
 			return;
+		}
+		for (IPlayerModel l_player : d_players) {
+			l_player.setReinforcements(5);
+			String l_msg = l_player.getName() + " received " + 5 + " reinforcements";
+			getMsg().setMessage(MessageType.Informational, l_msg);
 		}
 	}
 

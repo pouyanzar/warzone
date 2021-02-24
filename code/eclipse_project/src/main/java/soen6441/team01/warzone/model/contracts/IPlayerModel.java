@@ -8,9 +8,9 @@ public interface IPlayerModel {
 
 	void setName(String p_name) throws Exception;
 
-	int getPlayerArmy();
+	int getReinforcements();
 
-	void setPlayerArmy(int p_number_of_army) throws Exception;
+	void setReinforcements(int p_number_of_army) throws Exception;
 
 	ArrayList<ICountryModel> getPlayerCountries();
 

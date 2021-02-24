@@ -20,9 +20,9 @@ public class PlayerTest {
 	@Test
 	public void test_getter_setter_1() throws Exception {
 		Player l_player = new Player("player");
-		l_player.setPlayerArmy(10);
+		l_player.setReinforcements(10);
 		assertEquals("player", l_player.getName());
-		assertEquals(10, l_player.getPlayerArmy());
+		assertEquals(10, l_player.getReinforcements());
 		assertTrue(l_player.getPlayerContinents().isEmpty());
 		assertTrue(l_player.getPlayerCountries().isEmpty());
 

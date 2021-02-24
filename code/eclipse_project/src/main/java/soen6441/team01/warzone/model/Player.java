@@ -2,6 +2,7 @@ package soen6441.team01.warzone.model;
 
 import java.util.ArrayList;
 
+import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IOrderModel;
@@ -11,13 +12,12 @@ import soen6441.team01.warzone.model.contracts.IPlayerModelView;
 /**
  * The class Player manages the information associated to player
  * 
- * @author pouyan
- *
  */
 public class Player implements IPlayerModel, IPlayerModelView {
 
 	private String d_name;
-	private int d_player_army;
+	private int d_reinforcements = 0;
+	private String d_last_change_msg = "";
 	private IOrderModel d_order;
 	private ArrayList<ICountryModel> d_player_countries;
 	private ArrayList<IContinentModel> d_player_continents;
@@ -32,10 +32,10 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	public Player(String d_name) throws Exception {
 		super();
 		setName(d_name);
-		this.d_player_army = 0;
-		this.d_player_countries = new ArrayList<ICountryModel>();
-		this.d_player_continents = new ArrayList<IContinentModel>();
-		this.d_order_list = new ArrayList<IOrderModel>();
+		d_reinforcements = 0;
+		d_player_countries = new ArrayList<ICountryModel>();
+		d_player_continents = new ArrayList<IContinentModel>();
+		d_order_list = new ArrayList<IOrderModel>();
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * @throws Exception in case of invalid name
 	 */
 	public void setName(String p_name) throws Exception {
-		this.d_name = p_name;
+		d_name = p_name;
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * 
 	 * @return d_player_army the number of player's army
 	 */
-	public int getPlayerArmy() {
-		return d_player_army;
+	public int getReinforcements() {
+		return d_reinforcements;
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * 
 	 * @throws Exception when there is an exception
 	 */
-	public void setPlayerArmy(int p_number_of_army) throws Exception {
-		this.d_player_army = p_number_of_army;
+	public void setReinforcements(int p_number_of_army) throws Exception {
+		d_reinforcements = p_number_of_army;
 	}
 
 	/**

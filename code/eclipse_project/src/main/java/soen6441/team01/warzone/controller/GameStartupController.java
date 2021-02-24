@@ -64,8 +64,6 @@ public class GameStartupController implements IGameStartupController {
 			System.out.println("Exception: " + ex.getMessage());
 		}
 
-		d_msg_model.setMessage(MessageType.Informational, "exiting game startup");
-
 		if (d_view != null) {
 			d_view.shutdown();
 		}
@@ -174,6 +172,7 @@ public class GameStartupController implements IGameStartupController {
 					}
 					IPlayerModel l_player = d_model_factory.getPlayerModel(l_playerName);
 					p_gameplay.addPlayer(l_player);
+					d_msg_model.setMessage(MessageType.None, "player " + l_player.getName() + " added to game.");
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 					return;
@@ -189,6 +188,7 @@ public class GameStartupController implements IGameStartupController {
 						return;
 					}
 					p_gameplay.removePlayer(l_playerName);
+					d_msg_model.setMessage(MessageType.None, "player " + l_playerName + " removed from game.");
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 					return;
@@ -200,7 +200,6 @@ public class GameStartupController implements IGameStartupController {
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
-			d_msg_model.setMessage(MessageType.None, "gameplayer processed successfully");
 		}
 	}
 	

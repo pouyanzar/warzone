@@ -21,7 +21,8 @@ public class GamePlayTest {
 
 	@Before
 	public void class_instance_setup() {
-		d_gameplay = new GamePlay();
+		
+		d_gameplay = new GamePlay(SoftwareFactoryModel.createWarzoneBasicConsoleGameModels());
 	}
 
 	/**

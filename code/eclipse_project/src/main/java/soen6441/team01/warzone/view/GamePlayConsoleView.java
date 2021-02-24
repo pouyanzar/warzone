@@ -60,7 +60,19 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 	 */
 	public String getCommand() {
 		System.out.println("");
-		System.out.print("Game command> ");
+		System.out.print("Gameplay> ");
+		String l_user_command = d_keyboard.nextLine();
+		return l_user_command;
+	}
+
+	/**
+	 * Get the next command typed in on the console from the user
+	 * @param p_prompt the specified prompt
+	 * @return the command text typed in by the user
+	 */
+	public String getCommand(String p_prompt) {
+		System.out.println("");
+		System.out.print(p_prompt + " ");
 		String l_user_command = d_keyboard.nextLine();
 		return l_user_command;
 	}
