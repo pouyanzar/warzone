@@ -521,12 +521,13 @@ public class Map implements IMapModel, IMapModelView {
 	 * loads an existing map file or create a new one in case file does not exist
 	 * 
 	 * @param p_filename map file name
+	 * @return the loaded or created map model
 	 * @throws NumberFormatException when it is not possible to cast string to
 	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public void editmap(String p_filename) throws NumberFormatException, Exception {
-
+	public static IMapModel editmap(String p_filename) throws Exception {
+		return loadMapFromFile(p_filename);
 //		File l_filename = new File(p_filename + ".map");
 //		if (l_filename.exists()) {
 //			loadmap(p_filename);

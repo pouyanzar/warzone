@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.IContinentModelView;
+import soen6441.team01.warzone.model.contracts.ICountryModel;
 
 /**
  * Manages the information associated with a continent
@@ -34,15 +35,27 @@ public class Continent implements IContinentModel, IContinentModelView {
 	/**
 	 * The constructor for the Continent class.
 	 * 
-	 * @param p_continent_id    the name of the continent
+	 * @param p_continent_name  the name of the continent
 	 * @param p_continent_value the number of extra armies to assign if player has
 	 *                          all countries
 	 * @throws Exception when there is an exception
 	 */
-	public Continent(String p_continent_id, int p_continent_value) throws Exception {
+	public Continent(String p_continent_name, int p_continent_value) throws Exception {
 		super();
-		setName(p_continent_id);
+		setName(p_continent_name);
 		setExtraArmy(p_continent_value);
+	}
+
+	/**
+	 * Constructor. Copy from another continent.
+	 * 
+	 * @param l_continent continent object to copy attributes from
+	 * @throws Exception when there is an exception
+	 */
+	public Continent(Continent l_continent) throws Exception {
+		setId(l_continent.getId());
+		setName(l_continent.getName());
+		setExtraArmy(l_continent.getExtraArmy());
 	}
 
 	/**
@@ -159,4 +172,14 @@ public class Continent implements IContinentModel, IContinentModelView {
 		}
 		return true;
 	}
+
+	/**
+	 * @return a deep copy of the current continent.
+	 * @throws Exception unexpected error
+	 */
+	public IContinentModel issueOrderCopy() throws Exception {
+		Continent l_continent = new Continent(this);
+		return l_continent;
+	}
+
 }

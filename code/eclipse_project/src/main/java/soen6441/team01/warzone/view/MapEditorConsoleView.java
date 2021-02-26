@@ -10,6 +10,7 @@ import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
@@ -65,7 +66,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 			d_user_message_model.detach(this);
 		}
 	}
-	
+
 	/**
 	 * Get the next command typed in on the console from the user
 	 * 
@@ -111,25 +112,23 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 
 	}
 
-
 	/**
 	 * show all continents and countries and their respective neighbors
+	 * 
+	 * @param p_map the map to show
 	 */
-	public void showmap(Map p_map){
-		System.out.println("\nShowing All continents ");		
-		//IPlayerModel d_palayer_model;	
-			for(int j=0;j<p_map.getCountries().size();j++){
-				ICountryModel l_country_model=p_map.getCountries().get(j);
-				IContinentModel l_continent_model=l_country_model.getContinent();
-				System.out.println("\ncontinent : " +l_continent_model.getName());				
-				System.out.println("\n\tcontry : " +l_country_model.getName()+"\n");				
-				for(int k=0;k<l_country_model.getNeighbors().size();k++){		
-					ICountryModel l_neighbor=l_country_model.getNeighbors().get(k);
-					System.out.println("\t\tneighbor : " +l_neighbor.getName());
-				}
+	public void showmap(IMapModel p_map) {
+		//System.out.println("\nShowing All continents ");
+		for (int j = 0; j < p_map.getCountries().size(); j++) {
+			ICountryModel l_country_model = p_map.getCountries().get(j);
+			IContinentModel l_continent_model = l_country_model.getContinent();
+			System.out.println("\ncontinent : " + l_continent_model.getName());
+			System.out.println("\n\tcontry : " + l_country_model.getName() + "\n");
+			for (int k = 0; k < l_country_model.getNeighbors().size(); k++) {
+				ICountryModel l_neighbor = l_country_model.getNeighbors().get(k);
+				System.out.println("\t\tneighbor : " + l_neighbor.getName());
 			}
-		
-			
+		}
 	}
 
 }

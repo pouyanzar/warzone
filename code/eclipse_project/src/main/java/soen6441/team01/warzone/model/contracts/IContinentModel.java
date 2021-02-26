@@ -21,4 +21,6 @@ public interface IContinentModel {
 	void deactivate();
 
 	boolean isActive();
+
+	IContinentModel issueOrderCopy() throws Exception;
 }

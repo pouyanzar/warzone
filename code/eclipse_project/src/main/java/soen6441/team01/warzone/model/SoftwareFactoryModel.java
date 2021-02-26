@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.contracts.*;
 
 /**
@@ -60,11 +61,13 @@ public class SoftwareFactoryModel {
 	 * Create a new player model based on the specified name
 	 * 
 	 * @param p_player_name the name of the player
+	 * @param p_order_datasource used to get the player commands during
+	 *                           issue_order()
 	 * @return an instance of the IPlayerModel
 	 * @throws Exception as defined by class Player
 	 */
-	public IPlayerModel getPlayerModel(String p_player_name) throws Exception {
-		IPlayerModel l_player = new Player(p_player_name);
+	public IPlayerModel newHumanPlayerModel(String p_player_name, IGameplayOrderDatasource p_order_datasource) throws Exception {
+		IPlayerModel l_player = new Player(p_player_name, p_order_datasource);
 		return l_player;
 
 	}

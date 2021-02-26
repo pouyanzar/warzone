@@ -26,7 +26,11 @@ public interface IPlayerModel {
 
 	ArrayList<IOrderModel> getOrders();
 
-	void issue_order();
+	void issue_order() throws Exception;
 
 	IOrderModel next_order();
+
+	IPlayerModel issueOrderCopy() throws Exception;
+	
+	String deploy(String p_country_name, int p_number_of_armies) throws Exception;
 }

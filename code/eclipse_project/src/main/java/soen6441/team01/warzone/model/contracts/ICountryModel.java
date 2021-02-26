@@ -29,5 +29,9 @@ public interface ICountryModel {
 
 	void removeNeighbor(String p_neighbor_name);
 
-	int getContinentId();
+	ICountryModel issueOrderCopy() throws Exception;
+	
+	void setArmies(int p_num_armies);
+	
+	int getArmies();
 }

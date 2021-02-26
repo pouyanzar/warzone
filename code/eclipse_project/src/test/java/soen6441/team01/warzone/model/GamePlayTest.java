@@ -34,7 +34,7 @@ public class GamePlayTest {
 	public void test_add_player() throws Exception {
 		Player l_player_1 = new Player("Player_1");
 		Player l_player_2 = new Player("Player_2");
-		;
+		
 		d_gameplay.addPlayer(l_player_1);
 		assertTrue(d_gameplay.getPlayers().size() == 1);
 		d_gameplay.addPlayer(l_player_2);
