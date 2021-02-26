@@ -90,6 +90,22 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	}
 
 	/**
+	 * copies the orders from the speicifed player. used mainly when copying the
+	 * orders from cloned players used during the issue_orders() phase. Note: the
+	 * specified player must have the same name as this player.
+	 * 
+	 * @param p_cloned_player the player to get the orders to copy from.
+	 * @throws Exception unexpected error
+	 */
+	public void copyOrders(IPlayerModel p_cloned_player) throws Exception {
+		ArrayList<IOrderModel> l_clone_orders = p_cloned_player.getOrders();
+		for (IOrderModel l_clone_order : l_clone_orders) {
+			l_clone_order.setPlayer(this);
+			d_order_list.add(l_clone_order);
+		}
+	}
+
+	/**
 	 * add the specified armies (reinforcements) to the specified owned country.
 	 * 
 	 * @param p_country_name     the name of the country to deploy to
@@ -203,12 +219,16 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * finds the first order in order list returns it and removes it from the order
 	 * list
 	 * 
-	 * @return l_first_order the first order in order list
+	 * @return l_first_order the first order in order list, null if there are no
+	 *         more orders
 	 */
 	public IOrderModel next_order() {
-		IOrderModel l_first_order = d_order_list.get(0);
-		d_order_list.remove(d_order_list.get(0));
-		return l_first_order;
+		if( d_order_list.size() < 1) {
+			return null;
+		}
+		IOrderModel l_next_order = d_order_list.get(0);
+		d_order_list.remove(0);
+		return l_next_order;
 	}
 
 	/**

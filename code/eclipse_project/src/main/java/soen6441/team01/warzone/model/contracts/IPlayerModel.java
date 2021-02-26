@@ -33,4 +33,6 @@ public interface IPlayerModel {
 	IPlayerModel issueOrderCopy() throws Exception;
 	
 	String deploy(String p_country_name, int p_number_of_armies) throws Exception;
+	
+	void copyOrders(IPlayerModel p_cloned_player) throws Exception;
 }

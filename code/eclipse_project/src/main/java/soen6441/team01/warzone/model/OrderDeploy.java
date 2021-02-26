@@ -36,17 +36,26 @@ public class OrderDeploy implements IOrderModel {
 	 * @throws Exception unexpected error
 	 */
 	public String execute() throws Exception {
-    	return d_player.deploy(d_country_name, d_reinforcements);
+		return d_player.deploy(d_country_name, d_reinforcements);
 	}
 
-    /**
-     * override the default toString() to describe what this order is
-     * 
-     * @return string describing what this order is
-     */
+	/**
+	 * Change the current player to the specified player
+	 * 
+	 * @param p_player the new player to assign this order to
+	 */
+	public void setPlayer(IPlayerModel p_player) {
+		d_player = p_player;
+	}
+
+	/**
+	 * override the default toString() to describe what this order is
+	 * 
+	 * @return string describing what this order is
+	 */
 	@Override
 	public String toString() {
-    	String l_str = "deploy " + d_reinforcements + " to country " + d_country_name;
+		String l_str = "deploy " + d_reinforcements + " to country " + d_country_name;
 		return l_str;
 	}
 }

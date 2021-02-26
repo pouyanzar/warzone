@@ -1,8 +1,8 @@
-package soen6441.team01.warzone.controller;
+package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.model.*;
+import soen6441.team01.warzone.controller.SoftwareFactoryController;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.*;
 

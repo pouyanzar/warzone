@@ -63,9 +63,11 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			d_view.displayGamePlayBanner();
 			// main game play loop
 			while (!d_exit) {
-				d_msg_model.setMessage(MessageType.None, "\n* round " + l_round++ + " *");
+				d_msg_model.setMessage(MessageType.None, "\n* round " + l_round++ + " *\n\n* assigning reinforcements:");
 				d_gameplay_model.assignReinforcements();
+
 				if (!d_exit) {
+					d_msg_model.setMessage(MessageType.None, "\n* issuing orders:");
 					int l_num_orders = issueOrders();
 					if (l_num_orders < 1) {
 						d_msg_model.setMessage(MessageType.Warning, "no new orders issued - ending game");
@@ -73,6 +75,7 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 					}
 				}
 				if (!d_exit) {
+					d_msg_model.setMessage(MessageType.None, "\n* executing orders:");
 					d_gameplay_model.executeOrders();
 				}
 			}
@@ -98,24 +101,34 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 	private int issueOrders() throws Exception {
 		int l_orders_issued = 0;
 		ArrayList<IPlayerModel> l_player_clones = new ArrayList<IPlayerModel>();
+		ArrayList<IPlayerModel> l_players = d_gameplay_model.getPlayers();
 		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
 
-		for (IPlayerModel l_player : d_gameplay_model.getPlayers()) {
+		// clone the players and their countries to simplify keeping track of
+		// issuing the orders before the execution phase
+		for (IPlayerModel l_player : l_players) {
 			IPlayerModel l_player_clone = l_player.issueOrderCopy();
 			l_player_clones.add(l_player_clone);
 			l_queue.add(l_player_clone);
 		}
 
+		// get player commands/orders
 		IPlayerModel l_player_clone = l_queue.peek();
 		while (!d_exit && l_player_clone != null) {
 			l_queue.remove();
 			if (l_player_clone.getReinforcements() > 0) {
 				l_player_clone.issue_order();
-				l_queue.add(l_player_clone); // add to end of queue for next command
+				l_queue.add(l_player_clone);
 				l_orders_issued++;
 			}
 			l_player_clone = l_queue.peek();
 		}
+
+		// copy orders from cloned players to real players for execution
+		for (int l_idx = 0; l_idx < l_players.size(); l_idx++) {
+			l_players.get(l_idx).copyOrders(l_player_clones.get(l_idx));
+		}
+
 		return l_orders_issued;
 	}
 
@@ -195,11 +208,13 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			return null;
 		}
 		try {
+			// parse the countryID
 			String l_country_name = l_params[0];
 			if (!Utl.isValidMapName(l_country_name)) {
 				d_msg_model.setMessage(MessageType.Error, "Invalid deploy county name '" + l_country_name + "'.");
 				return null;
 			}
+			// parse the num_reinforcements
 			l_params = Utl.getFirstWord(l_params[1]);
 			String l_reinforcements_str = l_params[0];
 			if (Utl.isEmpty(l_reinforcements_str)) {
@@ -217,7 +232,7 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			// execute the order on the cloned player to 1) see if it's valid 2) set the
 			// state of the cloned player for the next command
 			l_order.execute();
-			String l_msg = "Deploy order successful. " + l_player_clone.getReinforcements()
+			String l_msg = "Deploy order successful.\n" + l_player_clone.getReinforcements()
 					+ " reinforcement(s) left for " + l_player_clone.getName() + " to allocate.";
 			d_msg_model.setMessage(MessageType.Informational, l_msg);
 		} catch (Exception ex) {

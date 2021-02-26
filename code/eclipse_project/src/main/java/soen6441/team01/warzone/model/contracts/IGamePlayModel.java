@@ -24,5 +24,5 @@ public interface IGamePlayModel {
 
 	void assignReinforcements() throws Exception;
 
-	void executeOrders();
+	void executeOrders() throws Exception;
 }

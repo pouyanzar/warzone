@@ -91,7 +91,10 @@ public class GamePlayControllerTest {
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Country Canada is not owned by player"));
-		
+
+		// build 1 requirement: Unit testing framework
+		// (4) player cannot deploy more armies that there is in their reinforcement
+		// pool.
 		d_player.addPlayerCountry(d_country);
 		d_player.setReinforcements(3);
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
@@ -109,7 +112,7 @@ public class GamePlayControllerTest {
 		String l_msg;
 		d_gameplay_controller.processGamePlayCommand("exit", d_player);
 		assertTrue(d_msg.getLastMessageAndClear() == null);
-		
+
 		d_player.addPlayerCountry(d_country);
 		d_player.setReinforcements(5);
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);

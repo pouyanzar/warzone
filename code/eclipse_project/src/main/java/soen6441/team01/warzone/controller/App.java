@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.controller;
 
+import soen6441.team01.warzone.model.GameEngine;
+
 /**
  * The main entry for the Warzone game (console version). To run the game from
  * the console command line; 1) build the target jar file (using Maven install)

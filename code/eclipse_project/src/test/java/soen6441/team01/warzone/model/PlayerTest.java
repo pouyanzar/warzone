@@ -88,7 +88,6 @@ public class PlayerTest {
 		l_player.addPlayerCountry(l_canada);
 		l_player.removePlayerCountry(l_canada);
 		assertTrue(!l_player.getPlayerCountries().contains(l_canada));
-
 	}
 
 }

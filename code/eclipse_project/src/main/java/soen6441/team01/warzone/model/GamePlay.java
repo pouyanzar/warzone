@@ -153,11 +153,34 @@ public class GamePlay implements IGamePlayModel {
 	 * execute() method is called, which will enact the order. The effect of a
 	 * deploy order is to place num armies on the country countryID. Only available
 	 * in GameState.GamePlay.
+	 * 
+	 * @throws Exception unexpected error
 	 */
-	public void executeOrders() {
+	public void executeOrders() throws Exception {
 		if (d_game_state != GameState.GamePlay) {
 			return;
 		}
+		int l_orders_executed = 1;
+		while (l_orders_executed > 0) {
+			l_orders_executed = 0;
+			for (IPlayerModel l_player : d_players) {
+				IOrderModel l_order = l_player.next_order();
+				if (l_order != null) {
+					String l_msg = l_order.execute();
+					getMsg().setMessage(MessageType.None, l_msg);
+					l_orders_executed++;
+				}
+			}
+		}
 	}
-
 }
+
+
+
+
+
+
+
+
+
+
