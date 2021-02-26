@@ -149,7 +149,7 @@ public class GameStartupController implements IGameStartupController {
 			processGameplayer(l_cmd_params[1]);
 			break;
 		case "assigncountries":
-			d_msg_model.setMessage(MessageType.None, "assigncountries coming soon...");
+			processAssignCountries(d_gameplay);
 			l_return_command = "assignedcountries";
 			break;
 		default:
@@ -157,6 +157,24 @@ public class GameStartupController implements IGameStartupController {
 			break;
 		}
 		return l_return_command;
+	}
+
+	/**
+	 * process the assigncountries command
+	 * <p>
+	 * syntax: assigncountries
+	 * </p>
+	 * 
+	 * @param p_gameplay the gameplay model containing the countries and players to
+	 *                   use for the assignment.
+	 */
+	private void processAssignCountries(IGamePlayModel p_gameplay) {
+		try {
+			p_gameplay.assignCountries();
+			d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, "assigncountries exception: " + ex.getMessage());
+		}
 	}
 
 	/**
@@ -189,17 +207,12 @@ public class GameStartupController implements IGameStartupController {
 								+ "', expecting a valid player name.");
 						return;
 					}
-
 					// for a human player the player model requires user input during issue_order();
-					// therefore
-					// setup the player datasource (which the Player model will use to retrieve user
-					// input)
-					// as a method in the GamePlayController which will request the command
-					// from the view and pass it back to the Player model. This sort of breaks the
-					// MVC
-					// symmetry but is required in this case in order to keep issue_order() as
-					// generic as
-					// possible (e.g. computer player).
+					// therefore setup the player datasource (which the Player model will use to
+					// retrieve user input) as a method in the GamePlayController which will request
+					// the command from the view and pass it back to the Player model. This sort of
+					// breaks the MVC symmetry but is required in this case in order to keep
+					// issue_order() as generic as possible (e.g. computer player).
 					IPlayerModel l_player = d_model_factory.newHumanPlayerModel(l_playerName,
 							d_controller_factory.getGamePlayOrderDatasource());
 

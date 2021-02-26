@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.GameState;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Manages the state of game play.
@@ -15,7 +16,7 @@ public class GamePlay implements IGamePlayModel {
 	private IMapModel d_map = null;
 	private ArrayList<IPlayerModel> d_players = new ArrayList<IPlayerModel>();
 	private SoftwareFactoryModel d_model_factory = null;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -49,13 +50,14 @@ public class GamePlay implements IGamePlayModel {
 
 	/**
 	 * Helper function that returns the model that manages system messages
+	 * 
 	 * @return user message model
 	 * @throws Exception unexpected errors
 	 */
 	private IUserMessageModel getMsg() throws Exception {
-		return d_model_factory.getUserMessageModel();		
+		return d_model_factory.getUserMessageModel();
 	}
-	
+
 	/**
 	 * Get the current list of players in the game
 	 * 
@@ -106,10 +108,25 @@ public class GamePlay implements IGamePlayModel {
 	 * Assign countries to the players. All countries are randomly assigned to
 	 * players. Only available in GameState.Startup. Upon successfully assigning all
 	 * countries the game state is changed to game play.
+	 * 
+	 * @throws Exception unexpected error
 	 */
-	public void assignCountries() {
+	public void assignCountries() throws Exception {
 		if (d_game_state != GameState.Startup) {
 			return;
+		}
+		ArrayList<ICountryModel> l_countries = d_map.getCountries();
+		while (l_countries.size() > 0) {
+			for (IPlayerModel l_player : d_players) {
+				int randomIdx = ThreadLocalRandom.current().nextInt(0, l_countries.size());
+				ICountryModel l_country = l_countries.get(randomIdx);
+				l_player.addPlayerCountry(l_country);
+				l_countries.remove(randomIdx);
+				getMsg().setMessage(MessageType.Informational, l_player.getName() + " owns " + l_country.getName());
+				if (l_countries.size() < 1) {
+					break;
+				}
+			}
 		}
 		d_game_state = GameState.GamePlay;
 	}

@@ -20,7 +20,7 @@ public interface IGamePlayModel {
 
 	void removePlayer(String p_name) throws Exception;
 
-	void assignCountries();
+	void assignCountries() throws Exception;
 
 	void assignReinforcements() throws Exception;
 

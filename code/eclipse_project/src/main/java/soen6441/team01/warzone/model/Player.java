@@ -104,7 +104,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 		if (l_country == null) {
 			throw new Exception("Country " + p_country_name + " is not owned by player " + d_name);
 		}
-		if (p_number_of_armies >= d_reinforcements) {
+		if (p_number_of_armies > d_reinforcements) {
 			throw new Exception(d_name + " does not have enough reinforcements (" + d_reinforcements + ") to deploy "
 					+ p_number_of_armies + " armies to " + p_country_name);
 		}

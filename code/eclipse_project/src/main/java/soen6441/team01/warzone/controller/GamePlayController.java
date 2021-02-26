@@ -56,12 +56,14 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 		d_view = d_view_factory.getGamePlayConsoleView(this);
 		d_gameplay_model = d_model_factory.getGamePlayModel();
 		d_gameplay_model.setGameState(GameState.GamePlay);
+		int l_round = 1;
 		String l_cmd = "exit";
 
 		try {
 			d_view.displayGamePlayBanner();
-
+			// main game play loop
 			while (!d_exit) {
+				d_msg_model.setMessage(MessageType.None, "\n* round " + l_round++ + " *");
 				d_gameplay_model.assignReinforcements();
 				if (!d_exit) {
 					int l_num_orders = issueOrders();

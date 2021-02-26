@@ -7,10 +7,9 @@ editmap ./src/test/resources/maps/canada/canada.map
 gameplayer -add John -add Pouyan -add Nazanin
 assigncountries
 
-loadmap ./src/test/resources/maps/canada/canada.map
+loadmap ./src/test/resources/maps/usa8/usa8regions.map
 gameplayer -add John -add Pouyan -add Nazanin
 assigncountries
-deploy New_Brunswick 5
 
 
 * In the Domination files, you have both the notion of Country/Continent names and ID (IDs in the map files are most often sequential numbers for countries and implicit sequential numbers for continents). When the user enters the commands, the ID they enter is clearly the name of the Country/Continent that they are going to use in the game. The user does not need to be aware of the IDs that are used internally by the game implementation. In theory, two countries/continents can have the same name (but not IDs). But as the user cannot refer to the internal IDs, the commands must refer to the names, or else the countries would not have names as a result of using the commands as defined.

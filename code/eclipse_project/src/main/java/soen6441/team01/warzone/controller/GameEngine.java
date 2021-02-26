@@ -66,6 +66,7 @@ public class GameEngine {
 			boolean l_continue_game = false;
 			l_continue_game = processMapEditor();
 			IGamePlayModel p_gameplay = d_model_factory.getNewGamePlayModel();
+			p_gameplay.setMap(d_model_factory.getMapModel());
 			if (l_continue_game) {
 				l_continue_game = processGameStartup(); 
 			}

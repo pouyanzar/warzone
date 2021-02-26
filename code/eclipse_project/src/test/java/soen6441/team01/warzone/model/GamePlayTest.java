@@ -17,11 +17,19 @@ import soen6441.team01.warzone.model.contracts.IPlayerModel;
  */
 public class GamePlayTest {
 	public GamePlay d_gameplay = null;
+	public Map d_map = null;
 	public ArrayList<IPlayerModel> d_players = null;
 
+	/**
+	 * setup test classes before each test is executed
+	 * @throws Exception unexpected error
+	 */
 	@Before
-	public void class_instance_setup() {
-		
+	public void class_instance_setup() throws Exception {
+		d_map = new Map();
+		d_map.addContinent(1, "North_America", 3);
+		d_map.addCountry(1, "Canada", 1);
+		d_map.addCountry(2, "USA", 1);
 		d_gameplay = new GamePlay(SoftwareFactoryModel.createWarzoneBasicConsoleGameModels());
 	}
 
@@ -109,4 +117,44 @@ public class GamePlayTest {
 		d_gameplay.addPlayer(l_player_1);
 		d_gameplay.removePlayer("Player_2");
 	}
+
+	/**
+	 * test assigncountries
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assigncountries_1() throws Exception {
+		d_gameplay.setMap(d_map);
+		Player l_player_1 = new Player("Player_1");
+		d_gameplay.addPlayer(l_player_1);
+		d_gameplay.assignCountries();
+		ArrayList<IPlayerModel> l_players = d_gameplay.getPlayers();
+		assertTrue(l_players.get(0).getPlayerCountries().size() == 2);
+		String l_c1 = l_players.get(0).getPlayerCountries().get(0).getName();
+		String l_c2 = l_players.get(0).getPlayerCountries().get(1).getName();
+		assertTrue((l_c1.equals("Canada") && l_c2.equals("USA")) || (l_c1.equals("USA") && l_c2.equals("Canada")));
+		assertTrue(d_map.getCountries().size() == 2);
+	}
+
+	/**
+	 * test assigncountries
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assigncountries_2() throws Exception {
+		d_map.addCountry("Mexico", 1);
+		d_gameplay.setMap(d_map);
+		d_gameplay.addPlayer(new Player("Player_1"));
+		d_gameplay.addPlayer(new Player("Player_2"));
+		d_gameplay.assignCountries();
+		ArrayList<IPlayerModel> l_players = d_gameplay.getPlayers();
+		assertTrue(l_players.get(0).getPlayerCountries().size() == 2);
+		String l_c1 = l_players.get(0).getPlayerCountries().get(0).getName();
+		String l_c2 = l_players.get(0).getPlayerCountries().get(1).getName();
+		assertTrue(l_players.get(0).getPlayerCountries().size() > 0);
+		assertTrue(l_players.get(1).getPlayerCountries().size() > 0);
+	}
+
 }
