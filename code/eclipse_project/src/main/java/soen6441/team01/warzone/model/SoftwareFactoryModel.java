@@ -17,12 +17,23 @@ public class SoftwareFactoryModel {
 	 * Constructor with models defined. Models passed as null will result in the
 	 * default model being passed back.
 	 * 
-	 * @param p_map_model          the map model to use
 	 * @param p_user_message_model the user message model to use
 	 */
-	public SoftwareFactoryModel(IMapModel p_map_model, IUserMessageModel p_user_message_model) {
-		d_map_model = p_map_model;
+	public SoftwareFactoryModel(IUserMessageModel p_user_message_model) {
+		d_map_model = new Map(this);
 		d_user_message_model = p_user_message_model;
+	}
+
+	/**
+	 * Constructor (copy)
+	 * 
+	 * @param p_map_model the map model to use
+	 * @throws Exception unexpected error
+	 */
+	public SoftwareFactoryModel(SoftwareFactoryModel p_map_model) throws Exception {
+		d_map_model = p_map_model.getMapModel();
+		d_user_message_model = p_map_model.getUserMessageModel();
+		d_gameplay = p_map_model.getGamePlayModel();
 	}
 
 	/**
@@ -32,19 +43,18 @@ public class SoftwareFactoryModel {
 	 * @return newly create Warzone model software factory
 	 */
 	public static SoftwareFactoryModel createWarzoneBasicConsoleGameModels() {
-		IMapModel l_map = new Map();
 		IUserMessageModel l_usermsg = new UserMessageModel();
-		SoftwareFactoryModel l_model = new SoftwareFactoryModel(l_map, l_usermsg);
+		SoftwareFactoryModel l_model = new SoftwareFactoryModel(l_usermsg);
 		return l_model;
 	}
- 
+
 	/**
 	 * 
 	 * @return an IMapModel object
 	 */
 	public IMapModel getMapModel() {
 		if (d_map_model == null)
-			d_map_model = new Map();
+			d_map_model = new Map(this);
 		return d_map_model;
 	}
 
@@ -60,14 +70,15 @@ public class SoftwareFactoryModel {
 	/**
 	 * Create a new player model based on the specified name
 	 * 
-	 * @param p_player_name the name of the player
+	 * @param p_player_name      the name of the player
 	 * @param p_order_datasource used to get the player commands during
 	 *                           issue_order()
 	 * @return an instance of the IPlayerModel
 	 * @throws Exception as defined by class Player
 	 */
-	public IPlayerModel newHumanPlayerModel(String p_player_name, IGameplayOrderDatasource p_order_datasource) throws Exception {
-		IPlayerModel l_player = new Player(p_player_name, p_order_datasource);
+	public IPlayerModel newHumanPlayerModel(String p_player_name, IGameplayOrderDatasource p_order_datasource)
+			throws Exception {
+		IPlayerModel l_player = new Player(p_player_name, p_order_datasource, this);
 		return l_player;
 
 	}

@@ -10,8 +10,6 @@ import soen6441.team01.warzone.model.Continent;
  *
  */
 public interface IMapModel {
-	IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception;
-
 	IContinentModel addContinent(int p_continent_id, String p_continent_name, int p_extra_army) throws Exception;
 
 	ICountryModel addCountry(String p_country_name, int p_continent_id) throws Exception;
@@ -39,4 +37,6 @@ public interface IMapModel {
 	ArrayList<ICountryModel> getNeighbors(int p_country_id);
 	
 	boolean validatemap(String filename) throws Exception;
+	
+	ArrayList<ICountryModel> getCountriesOfContinent(IContinentModel p_continents);
 }

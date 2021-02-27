@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.IContinentModelView;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 
 /**
  * Manages the information associated with a continent
  *
  */
-public class Continent implements IContinentModel, IContinentModelView {
+public class Continent implements IContinentModel {
 	private int d_id;
 	private String d_continent_name;
 	private int d_extra_army;
@@ -52,7 +51,7 @@ public class Continent implements IContinentModel, IContinentModelView {
 	 * @param l_continent continent object to copy attributes from
 	 * @throws Exception when there is an exception
 	 */
-	public Continent(Continent l_continent) throws Exception {
+	public Continent(IContinentModel l_continent) throws Exception {
 		setId(l_continent.getId());
 		setName(l_continent.getName());
 		setExtraArmy(l_continent.getExtraArmy());

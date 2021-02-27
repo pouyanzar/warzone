@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import soen6441.team01.warzone.common.Observable;
@@ -8,7 +9,10 @@ import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
@@ -19,21 +23,23 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
 public class GamePlayConsoleView implements Observer, IGamePlayView {
 	private IGamePlayController d_controller = null;
 	private Scanner d_keyboard = null;
-	private IUserMessageModelView d_user_message_model = null;
+	private IUserMessageModel d_user_message_model = null;
+	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_controller         the associated controller object
-	 * @param p_user_message_model the user message model to use. note that this
-	 *                             view gets notifications from the model to display
-	 *                             messages to the user.
+	 * @param p_controller    the associated controller object
+	 * @param p_factory_model model factory
+	 * @throws Exception unexpected error
 	 */
-	public GamePlayConsoleView(IGamePlayController p_controller, IUserMessageModelView p_user_message_model) {
+	public GamePlayConsoleView(IGamePlayController p_controller, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
-		d_user_message_model = p_user_message_model;
-		p_user_message_model.attach(this);
+		d_factory_model = p_factory_model;
+		d_user_message_model = d_factory_model.getUserMessageModel();
+		d_user_message_model.attach(this);
 	}
 
 	/**
@@ -67,6 +73,7 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 
 	/**
 	 * Get the next command typed in on the console from the user
+	 * 
 	 * @param p_prompt the specified prompt
 	 * @return the command text typed in by the user
 	 */
@@ -107,7 +114,59 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 		if (p_obserable == d_user_message_model) {
 			processMessage(d_user_message_model.getLastMessage());
 		}
+	}
 
+	/**
+	 * Display the game play map for specified player
+	 * 
+	 * @param p_country country to show
+	 */
+	public void showCountry(ICountryModel p_country) {
+		ArrayList<String> l_report = new ArrayList<String>();
+
+		// generate basic report
+		l_report.add("* " + printCountrySummary(p_country.getSummary()));
+		for (ICountryModel l_neighbor : p_country.getNeighbors()) {
+			l_report.add("     " + printCountrySummary(l_neighbor.getSummary()));
+		}
+
+		// format columns
+		l_report = Utl.justifyField(l_report, "[", 1);
+		l_report = Utl.justifyField(l_report, "[", 2);
+		l_report = Utl.justifyField(l_report, "]", 2);
+
+		// printout report
+		System.out.println("");
+		for (String l_line : l_report) {
+			System.out.println(l_line);
+		}
+	}
+
+	/**
+	 * Formats the country information into a string
+	 * 
+	 * @param p_summary Country summary information
+	 * @return
+	 */
+	private String printCountrySummary(CountrySummary p_summary) {
+		String l_sum = p_summary.d_country_name + "[" + setNull(p_summary.d_country_owner_name, "!1") + "] ["
+				+ p_summary.d_armies + "] [" + p_summary.d_continent_name + " " + p_summary.d_continent_bonus + " "
+				+ p_summary.d_player_owns_countries_of_continent + "]";
+		return l_sum;
+	}
+
+	/**
+	 * If p_string == null then returns specified string
+	 * 
+	 * @param p_string the string to check for null
+	 * @param p_with   string to replace null values with
+	 * @return the fixed string
+	 */
+	private String setNull(String p_string, String p_with) {
+		if (p_string == null) {
+			return p_with;
+		}
+		return p_string;
 	}
 
 }

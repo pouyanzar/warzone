@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
 import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
@@ -13,7 +12,7 @@ import soen6441.team01.warzone.model.entities.UserMessage;
  * appropriate view)(e.g. command completion messages)
  * 
  */
-public class UserMessageModel extends Observable implements IUserMessageModel, IUserMessageModelView {
+public class UserMessageModel extends Observable implements IUserMessageModel {
 	private ArrayList<UserMessage> d_user_messages = new ArrayList<UserMessage>();
 
 	/**

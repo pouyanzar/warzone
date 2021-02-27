@@ -1,6 +1,7 @@
 package soen6441.team01.warzone.common;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.entities.UserMessage;
@@ -64,8 +65,8 @@ public class Utl {
 			if (Character.isLetter(l_ch)) {
 				l_letter_ctr++;
 			}
-			if (!Character.isLetter(l_ch) && !Character.isDigit(l_ch) && (l_ch == ' ' || l_ch == '!' || l_ch == '\\' || l_ch == '/'
-					|| l_ch == '[' || l_ch == ']' || l_ch == ';')) {
+			if (!Character.isLetter(l_ch) && !Character.isDigit(l_ch) && (l_ch == ' ' || l_ch == '!' || l_ch == '\\'
+					|| l_ch == '/' || l_ch == '[' || l_ch == ']' || l_ch == ';')) {
 				return false;
 			}
 		}
@@ -174,5 +175,77 @@ public class Utl {
 			System.out.println("error: " + p_message);
 			break;
 		}
+	}
+
+	/**
+	 * find the position of the nth occurrence of a substring
+	 * 
+	 * @param p_str    the string to check for substrings
+	 * @param p_substr the substring to check for
+	 * @param p_occ    the nth occurrence
+	 * @return the position (zero-based) of the nth occurance of the specified
+	 *         substring. -1 if substring doesn't exist.
+	 */
+	public static int nthIndexOf(String p_str, String p_substr, int p_occ) {
+		int l_pos = -1;
+		try {
+			l_pos = p_str.indexOf(p_substr);
+			while (--p_occ > 0 && l_pos != -1) {
+				l_pos = p_str.indexOf(p_substr, l_pos + 1);
+			}
+		} catch (Exception ex) {
+		}
+		return l_pos;
+	}
+
+	/**
+	 * Insert spaces at position l_pos to specified l_to_pos, shifting the rest fo
+	 * the string as needed
+	 * 
+	 * @param l_line   the sting to shift
+	 * @param l_pos    the position to start inserting spaces (zero-based)
+	 * @param l_to_pos the ending position of the inserted spaces (zero-based)
+	 * @return the string shifted as requested
+	 */
+	public static String shiftSubstring(String l_line, int l_pos, int l_to_pos) {
+		StringBuilder l_str = new StringBuilder(l_line);
+		try {
+			int i = l_to_pos - l_pos;
+			for (; i > 0; i--) {
+				l_str.insert(l_pos, ' ');
+			}
+		} catch (Exception ex) {
+		}
+		return l_str.toString();
+	}
+	
+	/**
+	 * Justify the fields on the report
+	 * 
+	 * @param l_report  the report with the fields justified
+	 * @param l_fld     the field identifier
+	 * @param l_fld_num the nth field indicated by the identifier
+	 * @return the justified report
+	 */
+	public static ArrayList<String> justifyField(ArrayList<String> l_report, String l_fld, int l_fld_num) {
+		ArrayList<String> l_xreport = new ArrayList<String>();
+
+		// figure out the position of the farthest field
+		int l_max_fld_pos = 0;
+		for (String l_line : l_report) {
+			int l_pos = Utl.nthIndexOf(l_line, l_fld, l_fld_num);
+			if (l_pos > l_max_fld_pos) {
+				l_max_fld_pos = l_pos;
+			}
+		}
+
+		// justify the field to the farthest position
+		for (String l_line : l_report) {
+			int l_pos = Utl.nthIndexOf(l_line, l_fld, l_fld_num);
+			String l_xline = Utl.shiftSubstring(l_line, l_pos, l_max_fld_pos);
+			l_xreport.add(l_xline);
+		}
+
+		return l_xreport;
 	}
 }

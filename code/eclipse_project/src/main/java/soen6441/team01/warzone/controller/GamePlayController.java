@@ -10,11 +10,14 @@ import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrderModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.GameState;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
@@ -63,7 +66,8 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			d_view.displayGamePlayBanner();
 			// main game play loop
 			while (!d_exit) {
-				d_msg_model.setMessage(MessageType.None, "\n* round " + l_round++ + " *\n\n* assigning reinforcements:");
+				d_msg_model.setMessage(MessageType.None,
+						"\n* round " + l_round++ + " *\n\n* assigning reinforcements:");
 				d_gameplay_model.assignReinforcements();
 
 				if (!d_exit) {
@@ -105,9 +109,12 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
 
 		// clone the players and their countries to simplify keeping track of
-		// issuing the orders before the execution phase
+		// issuing orders before the execution phase and to isolate each players map
+		// from one another
 		for (IPlayerModel l_player : l_players) {
-			IPlayerModel l_player_clone = l_player.issueOrderCopy();
+			SoftwareFactoryModel l_cloned_sf_model = new SoftwareFactoryModel(d_model_factory);
+			IMapModel l_cloned_map = Map.deepCloneMap(d_model_factory.getMapModel(), l_cloned_sf_model);
+			IPlayerModel l_player_clone = l_player.deepClonePlayer(l_cloned_map);
 			l_player_clones.add(l_player_clone);
 			l_queue.add(l_player_clone);
 		}
@@ -175,7 +182,7 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			d_exit = true;
 			break;
 		case "showmap":
-			d_msg_model.setMessage(MessageType.None, "showmap coming soon...");
+			showMap(l_player_clone);
 			break;
 		case "deploy":
 			l_order = processDeployCommand(l_cmd_params[1], l_player_clone);
@@ -240,6 +247,19 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			return null;
 		}
 		return l_order;
+	}
+
+	/**
+	 * Show a map of the specified player
+	 * 
+	 * @param p_player the play of whom wants to see a map of their owned countries
+	 *                 and their neighbors.
+	 */
+	private void showMap(IPlayerModel p_player) {
+		ArrayList<ICountryModel> l_countries = p_player.getPlayerCountries();
+		for (ICountryModel l_country : l_countries) {
+			d_view.showCountry(l_country);
+		}
 	}
 
 	/**

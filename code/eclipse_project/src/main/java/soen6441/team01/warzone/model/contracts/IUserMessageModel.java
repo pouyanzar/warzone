@@ -2,6 +2,7 @@ package soen6441.team01.warzone.model.contracts;
 
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
  * defines the model interface for user messages. Used mainly by the controller
@@ -10,4 +11,10 @@ import soen6441.team01.warzone.common.entities.MessageType;
  */
 public interface IUserMessageModel {
 	void setMessage(MessageType p_message_type, String p_message);
+
+	void attach(Observer observer);
+
+	void detach(Observer observer);
+
+	UserMessage getLastMessage();
 }

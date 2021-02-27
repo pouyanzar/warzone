@@ -5,34 +5,35 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrderModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IPlayerModelView;
+import soen6441.team01.warzone.model.entities.*;
 
 /**
  * The class Player provides the implementation of a Warzone human player
  * 
  */
-public class Player implements IPlayerModel, IPlayerModelView {
+public class Player implements IPlayerModel {
 
 	private String d_name;
 	private int d_reinforcements = 0;
 	private IGameplayOrderDatasource d_order_datasource;
-
 	private ArrayList<ICountryModel> d_player_countries;
-	private ArrayList<IContinentModel> d_player_continents;
 	private ArrayList<IOrderModel> d_order_list;
+	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
 	 * Constructor for class Player. Don't use issue_order if using this constructor
 	 * as there is no way to get an order without specifying
 	 * IGameplayOrderDatasource.
 	 * 
-	 * @param p_name the name of player
+	 * @param p_name          the name of player
+	 * @param p_factory_model the model factory to use when needed
 	 * @throws Exception general exceptions
 	 */
-	public Player(String p_name) throws Exception {
-		this(p_name, null);
+	public Player(String p_name, SoftwareFactoryModel p_factory_model) throws Exception {
+		this(p_name, null, p_factory_model);
 	}
 
 	/**
@@ -41,16 +42,18 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 * @param p_name             the name of player
 	 * @param p_order_datasource used to get the player commands during
 	 *                           issue_order()
+	 * @param p_factory_model    the model software factory
 	 * @throws Exception general exceptions
 	 */
-	public Player(String p_name, IGameplayOrderDatasource p_order_datasource) throws Exception {
+	public Player(String p_name, IGameplayOrderDatasource p_order_datasource, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		super();
 		setName(p_name);
 		d_reinforcements = 0;
 		d_order_datasource = p_order_datasource;
 		d_player_countries = new ArrayList<ICountryModel>();
-		d_player_continents = new ArrayList<IContinentModel>();
 		d_order_list = new ArrayList<IOrderModel>();
+		d_factory_model = p_factory_model;
 	}
 
 	/**
@@ -156,6 +159,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 */
 	public void addPlayerCountry(ICountryModel p_country) throws Exception {
 		d_player_countries.add(p_country);
+		p_country.setOwner(this);
 	}
 
 	/**
@@ -165,33 +169,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 */
 	public void removePlayerCountry(ICountryModel p_country) throws Exception {
 		d_player_countries.remove(p_country);
-	}
-
-	/**
-	 * gets the list of continents the player controls
-	 * 
-	 * @return d_player_continents the list of continents player controls
-	 */
-	public ArrayList<IContinentModel> getPlayerContinents() {
-		return d_player_continents;
-	}
-
-	/**
-	 * adds the appropriate continent to the list of continent player controls
-	 * 
-	 * @throws Exception when there is an exception
-	 */
-	public void addPlayerContinent(IContinentModel p_continent) throws Exception {
-		d_player_continents.add(p_continent);
-	}
-
-	/**
-	 * removes the appropriate continent from the list of continents player controls
-	 * 
-	 * @throws Exception when there is an exception
-	 */
-	public void removePlayerContinent(IContinentModel p_continent) throws Exception {
-		d_player_continents.remove(p_continent);
+		p_country.setOwner(null);
 	}
 
 	/**
@@ -223,7 +201,7 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	 *         more orders
 	 */
 	public IOrderModel next_order() {
-		if( d_order_list.size() < 1) {
+		if (d_order_list.size() < 1) {
 			return null;
 		}
 		IOrderModel l_next_order = d_order_list.get(0);
@@ -249,19 +227,22 @@ public class Player implements IPlayerModel, IPlayerModelView {
 	}
 
 	/**
+	 * Create a new player cloned from the existing player.
+	 * 
+	 * @param l_map the map to relate owned countries to
 	 * @return a deep copy of the current player.
 	 * @throws Exception unexpected errors
 	 */
-	public IPlayerModel issueOrderCopy() throws Exception {
-		Player l_player = new Player(d_name, d_order_datasource);
+	public IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception {
+		Player l_player = new Player(d_name, d_order_datasource, d_factory_model);
 		l_player.setReinforcements(d_reinforcements);
-		for (IContinentModel l_continent : d_player_continents) {
-			l_player.addPlayerContinent(l_continent.issueOrderCopy());
-		}
-		for (ICountryModel l_country : d_player_countries) {
-			l_player.addPlayerCountry(l_country.issueOrderCopy());
+		for (ICountryModel l_src_country : d_player_countries) {
+			ICountryModel l_country = Country.findCountry(l_src_country.getId(), l_map.getCountries());
+			if (l_country == null) {
+				throw new Exception("Internal error cloning player");
+			}
+			l_player.addPlayerCountry(l_country);
 		}
 		return l_player;
 	}
-
 }

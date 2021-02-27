@@ -7,7 +7,8 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
@@ -18,21 +19,23 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
 public class GameStartupConsoleView implements Observer, IGameStartupView {
 	private IGameStartupController d_controller = null;
 	private Scanner d_keyboard = null;
-	private IUserMessageModelView d_user_message_model = null;
+	private IUserMessageModel d_user_message_model = null;
+	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_controller         the associated controller object
-	 * @param p_user_message_model the user message model to use. note that this
-	 *                             view gets notifications from the model to display
-	 *                             messages to the user.
+	 * @param p_controller    the associated controller object
+	 * @param p_factory_model model factory
+	 * @throws Exception unexpected error
 	 */
-	public GameStartupConsoleView(IGameStartupController p_controller, IUserMessageModelView p_user_message_model) {
+	public GameStartupConsoleView(IGameStartupController p_controller, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
-		d_user_message_model = p_user_message_model;
-		p_user_message_model.attach(this);
+		d_factory_model = p_factory_model;
+		d_user_message_model = d_factory_model.getUserMessageModel();
+		d_user_message_model.attach(this);
 	}
 
 	/**
@@ -43,7 +46,7 @@ public class GameStartupConsoleView implements Observer, IGameStartupView {
 			d_user_message_model.detach(this);
 		}
 	}
-	
+
 	/**
 	 * Displays the startup banner
 	 */

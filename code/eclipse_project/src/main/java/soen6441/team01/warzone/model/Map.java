@@ -18,19 +18,28 @@ import java.util.HashMap;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.IContinentModelView;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IMapModelView;
 
 /**
  * Manages Warzone Maps. Maps are basically composed of continents, countries
  * and the links (ie neighbors) between countries.
  *
  */
-public class Map implements IMapModel, IMapModelView {
+public class Map implements IMapModel {
+
+	private SoftwareFactoryModel d_factory_model = null;
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
+
+	/**
+	 * Constructor
+	 * 
+	 * @param p_factory_model the model software factory
+	 */
+	public Map(SoftwareFactoryModel p_factory_model) {
+		d_factory_model = p_factory_model;
+	}
 
 	/**
 	 * @return the current list of continents defined on the map
@@ -84,20 +93,21 @@ public class Map implements IMapModel, IMapModelView {
 	/**
 	 * Add a continent to the current map
 	 *
-	 * @param p_continent_id    the name of the continent
-	 * @param p_continent_value the number of extra armies to assign if player
-	 *                          controls all countries
-	 * @return the created continent
+	 * @param l_continent continent to add
+	 * @throws Exception unexpected error
+	 */
+	public void addContinent(IContinentModel l_continent) throws Exception {
+		d_continents.add(l_continent);
+	}
+
+	/**
+	 * Add a country to the current map
+	 *
+	 * @param p_country the country object to add
 	 * @throws Exception when there is an exception
 	 */
-	public IContinentModel addContinent(String p_continent_id, int p_continent_value) throws Exception {
-		IContinentModel l_continent = Continent.findContinent(p_continent_id, d_continents);
-		if (l_continent != null) {
-			throw new Exception("Cannot add continent with id " + p_continent_id + " since it already exists.");
-		}
-		l_continent = new Continent(p_continent_id, p_continent_value);
-		d_continents.add(l_continent);
-		return l_continent;
+	public void addCountry(ICountryModel p_country) throws Exception {
+		d_countries.add(p_country);
 	}
 
 	/**
@@ -113,8 +123,8 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public ICountryModel addCountry(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x,
 			int p_y) throws Exception {
-		ICountryModel l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y);
-		d_countries.add(l_country);
+		ICountryModel l_country = new Country(p_country_id, p_country_name, p_continent, p_x, p_y, d_factory_model);
+		addCountry(l_country);
 		return l_country;
 	}
 
@@ -287,7 +297,7 @@ public class Map implements IMapModel, IMapModelView {
 	 */
 	public boolean validatemap(String p_filename) throws Exception {
 
-		loadMapFromFile(p_filename);
+		loadMapFromFile(p_filename, d_factory_model);
 		boolean l_isValid = false;
 		ArrayList<Integer> l_passed_countries = new ArrayList<>();
 		if (d_continents.size() < 1)
@@ -330,12 +340,13 @@ public class Map implements IMapModel, IMapModelView {
 	 * style map file. The following link describes the format of the "domination"
 	 * map file : http://domination.sourceforge.net/makemaps.shtml.
 	 *
-	 * @param p_records a list of map records
+	 * @param p_records       a list of map records
+	 * @param p_factory_model the required factory model
 	 * @return instance of new Map model
 	 * @throws Exception error parsing the contents of the map file
 	 */
-	public static IMapModel loadMap(List<String> p_records) throws Exception {
-		IMapModel l_map_model = new Map();
+	public static IMapModel loadMap(List<String> p_records, SoftwareFactoryModel p_factory_model) throws Exception {
+		IMapModel l_map_model = new Map(p_factory_model);
 		int l_line_ctr = 0;
 		String l_rec;
 		String l_header_flag = "None";
@@ -387,16 +398,18 @@ public class Map implements IMapModel, IMapModelView {
 	 * following link describes the format of the "domination" map file :
 	 * http://domination.sourceforge.net/makemaps.shtml.
 	 * 
-	 * @param p_map_filename the filename of the map file
+	 * @param p_map_filename  the filename of the map file
+	 * @param p_factory_model the model factory to use when needed
 	 * @return instance of new Map model
 	 * @throws Exception error parsing the contents of the map file
 	 */
-	public static IMapModel loadMapFromFile(String p_map_filename) throws Exception {
+	public static IMapModel loadMapFromFile(String p_map_filename, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		List<String> l_records = null;
 		IMapModel l_map_model = null;
 		try {
 			l_records = Files.readAllLines(new File(p_map_filename).toPath(), Charset.defaultCharset());
-			l_map_model = loadMap(l_records);
+			l_map_model = loadMap(l_records, p_factory_model);
 		} catch (Exception ex) {
 			String l_msg = "Error loading map file '" + p_map_filename + "'. " + ex;
 			throw new Exception(l_msg);
@@ -504,30 +517,33 @@ public class Map implements IMapModel, IMapModelView {
 	 *
 	 * @param p_loadmap_params the loapmap parameters (just the parameters without
 	 *                         the loapmap command itself)
+	 * @param p_factory_model  the model factory to use when needed
 	 * @return map model based on the supplied map file filename.
 	 * @throws Exception any problem parsing or creating the new map
 	 */
-	public static IMapModel processLoadMapCommand(String p_loadmap_params) throws Exception {
+	public static IMapModel processLoadMapCommand(String p_loadmap_params, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		String l_params[] = Utl.getFirstWord(p_loadmap_params);
 		String l_filename = l_params[0];
 		if (Utl.isEmpty(l_filename)) {
 			throw new Exception("Invalid loapmap command, no options specified");
 		}
-		IMapModel l_map = Map.loadMapFromFile(l_filename);
+		IMapModel l_map = Map.loadMapFromFile(l_filename, p_factory_model);
 		return l_map;
 	}
 
 	/**
 	 * loads an existing map file or create a new one in case file does not exist
 	 * 
-	 * @param p_filename map file name
+	 * @param p_filename      map file name
+	 * @param p_factory_model the model factory to use when needed
 	 * @return the loaded or created map model
 	 * @throws NumberFormatException when it is not possible to cast string to
 	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public static IMapModel editmap(String p_filename) throws Exception {
-		return loadMapFromFile(p_filename);
+	public static IMapModel editmap(String p_filename, SoftwareFactoryModel p_factory_model) throws Exception {
+		return loadMapFromFile(p_filename, p_factory_model);
 //		File l_filename = new File(p_filename + ".map");
 //		if (l_filename.exists()) {
 //			loadmap(p_filename);
@@ -543,4 +559,66 @@ public class Map implements IMapModel, IMapModelView {
 //
 //		}
 	}
+
+	/**
+	 * retrieves the list of countries for a specified continent
+	 * 
+	 * @param p_continents the continent to get the countries of
+	 * @return the list of countries for the specified continent
+	 */
+	public ArrayList<ICountryModel> getCountriesOfContinent(IContinentModel p_continents) {
+		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
+		int l_continent_id = p_continents.getId();
+		for (ICountryModel l_country : d_countries) {
+			if (l_country.getContinent().getId() == l_continent_id) {
+				l_countries.add(l_country);
+			}
+		}
+		return l_countries;
+	}
+
+	/**
+	 * Create a new isolated map that contains a copy of all counties and
+	 * continents.
+	 * 
+	 * @param p_src_map              the source map to copy from
+	 * @param p_cloned_factory_model the factory model to base the copy on (modifies
+	 *                               respective references)
+	 * @return newly created isolated copy of the map
+	 * @throws Exception unexpected error
+	 */
+	public static IMapModel deepCloneMap(IMapModel p_src_map, SoftwareFactoryModel p_cloned_factory_model)
+			throws Exception {
+		Map l_map = new Map(p_cloned_factory_model);
+		p_cloned_factory_model.setMapModel(l_map);
+		// clone continents
+		for (IContinentModel l_continent : p_src_map.getContinents()) {
+			l_map.addContinent(new Continent(l_continent));
+		}
+		// clone countries (note: neighbors not set yet)
+		for (ICountryModel l_country : p_src_map.getCountries()) {
+			ICountryModel l_country_clone = new Country(l_country.getId(), l_country.getName(),
+					l_country.getContinent(), 0, 0, p_cloned_factory_model);
+			l_country_clone.setArmies(l_country.getArmies());
+			l_country_clone.setOwner(l_country.getOwner());
+			l_map.addCountry(l_country_clone);
+		}
+		// set countries neighbors
+		for (ICountryModel l_src_country : p_src_map.getCountries()) {
+			ICountryModel l_country = Country.findCountry(l_src_country.getId(), l_map.getCountries());
+			if (l_country == null) {
+				throw new Exception("Internal error cloning map countries");
+			}
+			for (ICountryModel l_src_neighbors : l_src_country.getNeighbors()) {
+				ICountryModel l_neighbor = Country.findCountry(l_src_neighbors.getId(), l_map.getCountries());
+				if (l_neighbor == null) {
+					throw new Exception("Internal error cloning country neighbors");
+				}
+				l_country.addNeighbor(l_neighbor);
+			}
+		}
+
+		return l_map;
+	}
+
 }

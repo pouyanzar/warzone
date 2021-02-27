@@ -47,8 +47,8 @@ public class GamePlayControllerTest {
 		d_gameplay_controller = (GamePlayController) d_controller_factory.getGamePlayController();
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
-		d_country = new Country(1, "Canada", d_continent, 0, 0);
-		d_player = new Player("John");
+		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
+		d_player = new Player("John", d_model_factory);
 	}
 
 	/**

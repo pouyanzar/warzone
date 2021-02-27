@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.ICountryModelView;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
+import soen6441.team01.warzone.model.entities.CountrySummary;
 
 /**
  * Manages the information associated with a country
  *
  */
-public class Country implements ICountryModel, ICountryModelView {
+public class Country implements ICountryModel {
 	private int d_country_id;
 	private String d_country_name;
 	private IContinentModel d_continent;
@@ -20,24 +20,29 @@ public class Country implements ICountryModel, ICountryModelView {
 	private int d_y;
 	private ArrayList<ICountryModel> d_neighbors = new ArrayList<ICountryModel>();
 	private int d_armies = 0;
+	private IPlayerModel d_owner = null;
+	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
 	 * The constructor for the Country class.
 	 * 
-	 * @param p_country_id           a unique country identifier
-	 * @param p_country_name the name of the country
-	 * @param p_continent    the continent this country belongs to countries
-	 * @param p_x            x coordinate on the map
-	 * @param p_y            x coordinate on the map
+	 * @param p_country_id    a unique country identifier
+	 * @param p_country_name  the name of the country
+	 * @param p_continent     the continent this country belongs to countries
+	 * @param p_x             x coordinate on the map
+	 * @param p_y             x coordinate on the map
+	 * @param p_factory_model the model factory to use when needed
 	 * @throws Exception when there is an exception
 	 */
-	public Country(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y) throws Exception {
+	public Country(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y,
+			SoftwareFactoryModel p_factory_model) throws Exception {
 		super();
 		setId(p_country_id);
 		setName(p_country_name);
 		setContinent(p_continent);
 		d_x = p_x;
 		d_y = p_y;
+		d_factory_model = p_factory_model;
 	}
 
 	/**
@@ -79,9 +84,10 @@ public class Country implements ICountryModel, ICountryModelView {
 		}
 		this.d_country_id = p_id;
 	}
-	
+
 	/**
-	 * set the number of armies on this country. 
+	 * set the number of armies on this country.
+	 * 
 	 * @param p_num_armies the number of armies stationed at country
 	 */
 	public void setArmies(int p_num_armies) {
@@ -95,7 +101,7 @@ public class Country implements ICountryModel, ICountryModelView {
 	public int getArmies() {
 		return d_armies;
 	}
-	
+
 	/**
 	 * @return the d_continent
 	 */
@@ -111,6 +117,23 @@ public class Country implements ICountryModel, ICountryModelView {
 	 */
 	public void setContinent(IContinentModel p_continent) {
 		this.d_continent = p_continent;
+	}
+
+	/**
+	 * set the player owns owns this country
+	 * 
+	 * @param p_player player to make the owner of this country
+	 */
+	public void setOwner(IPlayerModel p_player) {
+		d_owner = p_player;
+	}
+
+	/**
+	 * 
+	 * @return The player who owns this country. Null if there is no owner.
+	 */
+	public IPlayerModel getOwner() {
+		return d_owner;
 	}
 
 	/**
@@ -181,22 +204,28 @@ public class Country implements ICountryModel, ICountryModelView {
 	}
 
 	/**
-	 * @return a deep copy of the current country. note that the neighboring
-	 *         countries are deep copied except the neighbors of the neighboring
-	 *         countries are not copied.
-	 * @throws Exception unexpected error
+	 * Gathers summary information about this country
+	 * 
+	 * @return summary information about the current country
 	 */
-	public ICountryModel issueOrderCopy() throws Exception {
-		Country l_country = new Country(d_country_id, d_country_name, d_continent, d_x, d_y);
-
-		// don't copy the neighbors of the neighbors - we don't need that info for
-		// issuing orders
-		for (ICountryModel l_xcountry1 : d_neighbors) {
-			Country l_xcountry2 = new Country(l_xcountry1.getId(), l_xcountry1.getName(), l_xcountry1.getContinent(), 0,
-					0);
-			l_country.addNeighbor(l_xcountry2);
+	public CountrySummary getSummary() {
+		CountrySummary l_sum = new CountrySummary();
+		l_sum.d_country_name = getName();
+		if (d_owner != null) {
+			l_sum.d_country_owner_name = d_owner.getName();
 		}
-		return l_country;
+		l_sum.d_armies = getArmies();
+		l_sum.d_continent_name = getContinent().getName();
+		l_sum.d_continent_bonus = "+" + getContinent().getExtraArmy();
+		ArrayList<ICountryModel> l_continent_countries = d_factory_model.getMapModel()
+				.getCountriesOfContinent(getContinent());
+		int l_owns_ctr = 0;
+		for (ICountryModel l_xcountry : l_continent_countries) {
+			if (l_xcountry.getOwner() != null && l_xcountry.getOwner().getName().equals(getOwner().getName())) {
+				l_owns_ctr++;
+			}
+		}
+		l_sum.d_player_owns_countries_of_continent = l_owns_ctr + "/" + l_continent_countries.size();
+		return l_sum;
 	}
-
 }

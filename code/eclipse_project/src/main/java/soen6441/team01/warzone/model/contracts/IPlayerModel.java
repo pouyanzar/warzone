@@ -18,19 +18,13 @@ public interface IPlayerModel {
 
 	void removePlayerCountry(ICountryModel p_country) throws Exception;
 
-	ArrayList<IContinentModel> getPlayerContinents();
-
-	void addPlayerContinent(IContinentModel p_continent) throws Exception;
-
-	void removePlayerContinent(IContinentModel p_continent) throws Exception;
-
 	ArrayList<IOrderModel> getOrders();
 
 	void issue_order() throws Exception;
 
 	IOrderModel next_order();
 
-	IPlayerModel issueOrderCopy() throws Exception;
+	IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception;
 	
 	String deploy(String p_country_name, int p_number_of_armies) throws Exception;
 	

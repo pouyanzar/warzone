@@ -39,7 +39,7 @@ public class GameStartupController implements IGameStartupController {
 			SoftwareFactoryController p_controller_factory) throws Exception {
 		d_model_factory = p_model_factory;
 		d_view_factory = p_view_factory;
-		d_view = d_view_factory.getGameStartupConsoleView(this);
+		d_view = d_view_factory.getGameStartupConsoleView(this); 
 		d_controller_factory = p_controller_factory;
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
@@ -259,7 +259,7 @@ public class GameStartupController implements IGameStartupController {
 	public boolean processLoadMap(String p_loadmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
-			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());

@@ -11,7 +11,7 @@ loadmap ./src/test/resources/maps/usa8/usa8regions.map
 gameplayer -add John -add Pouyan -add Nazanin
 assigncountries
 
-
+-----------------------------------------------------
 * In the Domination files, you have both the notion of Country/Continent names and ID (IDs in the map files are most often sequential numbers for countries and implicit sequential numbers for continents). When the user enters the commands, the ID they enter is clearly the name of the Country/Continent that they are going to use in the game. The user does not need to be aware of the IDs that are used internally by the game implementation. In theory, two countries/continents can have the same name (but not IDs). But as the user cannot refer to the internal IDs, the commands must refer to the names, or else the countries would not have names as a result of using the commands as defined.
 
 * For the sake of simplicity, let us just assume that the country/continent names are unique
@@ -26,7 +26,7 @@ This is the number of armies that a player gets as reinforcement at the beginnin
 
 q: We are using the MVC pattern, and our view is console based. In the requirements it states that the Player class will wait for the following command (ie deploy) when invoking the issue_order() method.  My question is, how should the Player class which is a Model based class get input from the user when user input is managed by the view/controller? Shouldn't the controller get the user's input, generate the Order and ask the Player class to add the order to their list of Orders? To do that requires that the controller be able to pass in the Order to the Player, but that contradicts the requirements which state that the issue_order have to parameters or return value.
 
-
+-----------------------------------------------------
 * suggestion for showmap:
 continent : Atlantic_Provinces
 
@@ -49,3 +49,26 @@ continent : Atlantic_Provinces
   New_Brunswick [Quebec-South, Prince_Edward_Island, Nova_Scotia]
   Prince_Edward_Island [New_Brunswick, Nova_Scotia]
 ...
+
+-----------------------------------------------------
+
+* New_Brunswick ------------ [John]    [  5] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [  0] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [ 30] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [  0] [North_America 1/5 +3]
+  
+* Prince_Edward_Island ----- [Pouyan]  [  5] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [  5] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [  5] [North_America 1/5 +3]
+
+
+
+
+
+  
+  
+  
+  
+  

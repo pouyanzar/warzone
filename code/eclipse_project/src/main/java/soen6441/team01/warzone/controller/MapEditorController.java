@@ -136,14 +136,12 @@ public class MapEditorController implements IMapEditorController {
 			processEditNeighbor(l_cmd_params[1]);
 			break;
 		case "showmap":
-			// d_msg_model.setMessage(MessageType.None, "showmap coming soon...");
 			d_view.showmap(d_model_factory.getMapModel());
 			break;
 		case "savemap":
 			d_msg_model.setMessage(MessageType.None, "savemap coming soon...");
 			break;
 		case "editmap":
-			//d_msg_model.setMessage(MessageType.None, "editmap coming soon...");
 			processEditMap(l_cmd_params[1]);
 			break;
 		case "validatemap":
@@ -172,7 +170,7 @@ public class MapEditorController implements IMapEditorController {
 	public boolean processEditMap(String p_editmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_editmap_params);
-			IMapModel l_map_model = Map.editmap(l_params[0]);
+			IMapModel l_map_model = Map.editmap(l_params[0], d_model_factory);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
@@ -193,7 +191,7 @@ public class MapEditorController implements IMapEditorController {
 	public boolean processLoadMap(String p_loadmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
-			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
