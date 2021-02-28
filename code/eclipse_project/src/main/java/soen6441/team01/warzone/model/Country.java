@@ -50,7 +50,7 @@ public class Country implements ICountryModel {
 	 * 
 	 * @param p_id           a unique country identifier
 	 * @param p_name         country name
-	 * @param p_continent_id the continent id this country belongs to countries
+	 * @param p_continent the continent this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
 	public Country(int p_id, String p_name, IContinentModel p_continent) throws Exception {

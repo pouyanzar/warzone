@@ -78,7 +78,7 @@ public class Continent implements IContinentModel {
 	}
 
 	/**
-	 * @return the continent id
+	 * @return d_id the continent id
 	 */
 	public int getId() {
 		return d_id;
@@ -137,7 +137,7 @@ public class Continent implements IContinentModel {
 	/**
 	 * find a given continent by name
 	 * 
-	 * @param p_continent_id the continent name to find
+	 * @param p_continent_name the continent name to find
 	 * @param p_continents   an array of continents to search from
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id

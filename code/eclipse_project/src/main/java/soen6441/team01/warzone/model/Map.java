@@ -297,7 +297,7 @@ public class Map implements IMapModel {
 	 */
 	public boolean validatemap(String p_filename) throws Exception {
 
-		loadMapFromFile(p_filename,d_factory_model); // load map to validate
+		loadMapFromFile(p_filename, d_factory_model); // load map to validate
 		ArrayList<ICountryModel> l_passed_countries = new ArrayList<>(); // list of visited countries from start point
 																			// country
 		ArrayList<ICountryModel> l_continent_countries = new ArrayList<>(); // list of continent's countries
@@ -363,7 +363,7 @@ public class Map implements IMapModel {
 	 * 
 	 * @param p_country           the starting point for traverse
 	 * @param p_visited_countries the list of countries visited through the search
-	 * @return l_all_countries_visited
+	 * 
 	 */
 	public static void mapTraversal(ICountryModel p_country, ArrayList<ICountryModel> p_visited_countries) {
 		p_visited_countries.add(p_country);
@@ -574,6 +574,7 @@ public class Map implements IMapModel {
 	 *
 	 * @param p_loadmap_params the loapmap parameters (just the parameters without
 	 *                         the loapmap command itself)
+	 * @param p_factory_model  the model factory to use when needed
 	 * @return map model based on the supplied map file filename.
 	 * @throws Exception any problem parsing or creating the new map
 	 */
