@@ -125,6 +125,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 			
 			ICountryModel l_country_model=p_map.getCountries().get(j);				
 			IContinentModel l_continent_model=l_country_model.getContinent();
+
 			System.out.println("\n" +l_continent_model.getName());				
 			System.out.println("\n\t" +l_country_model.getName()+"[\n");				
 			for(int k=0;k<l_country_model.getNeighbors().size();k++){		
