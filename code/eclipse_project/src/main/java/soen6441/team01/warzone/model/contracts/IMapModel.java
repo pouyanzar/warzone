@@ -37,6 +37,4 @@ public interface IMapModel {
 	ArrayList<ICountryModel> getNeighbors(int p_country_id);
 	
 	boolean validatemap(String filename) throws Exception;
-	
-	ArrayList<ICountryModel> getCountriesOfContinent(IContinentModel p_continents);
 }

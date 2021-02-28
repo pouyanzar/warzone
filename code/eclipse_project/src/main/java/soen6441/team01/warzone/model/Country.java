@@ -217,8 +217,9 @@ public class Country implements ICountryModel {
 		l_sum.d_armies = getArmies();
 		l_sum.d_continent_name = getContinent().getName();
 		l_sum.d_continent_bonus = "+" + getContinent().getExtraArmy();
-		ArrayList<ICountryModel> l_continent_countries = d_factory_model.getMapModel()
-				.getCountriesOfContinent(getContinent());
+//		ArrayList<ICountryModel> l_continent_countries = d_factory_model.getMapModel()
+//				.getCountriesOfContinent(getContinent());
+		ArrayList<ICountryModel> l_continent_countries = getContinent().getCountries();
 		int l_owns_ctr = 0;
 		for (ICountryModel l_xcountry : l_continent_countries) {
 			if (l_xcountry.getOwner() != null && l_xcountry.getOwner().getName().equals(getOwner().getName())) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 
 /**
  * Manages the information associated with a continent
@@ -14,6 +15,7 @@ public class Continent implements IContinentModel {
 	private int d_id;
 	private String d_continent_name;
 	private int d_extra_army;
+	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
 
 	/**
 	 * The constructor for the Continent class.
@@ -173,12 +175,23 @@ public class Continent implements IContinentModel {
 	}
 
 	/**
-	 * @return a deep copy of the current continent.
-	 * @throws Exception unexpected error
+	 * Refresh or build the list of countries belonging to this continent. Invoke
+	 * after doing a loadmap.
 	 */
-	public IContinentModel issueOrderCopy() throws Exception {
-		Continent l_continent = new Continent(this);
-		return l_continent;
+	public void refreshCountriesOfContinent(IMapModel p_map) {
+		d_countries = new ArrayList<ICountryModel>();
+		ArrayList<ICountryModel> l_countries = p_map.getCountries();
+		for (ICountryModel l_country : l_countries) {
+			if (l_country.getContinent().getId() == d_id) {
+				d_countries.add(l_country);
+			}
+		}
 	}
 
+	/**
+	 * @return the list of countries belonging to this continent
+	 */
+	public ArrayList<ICountryModel> getCountries() {
+		return d_countries;
+	}
 }

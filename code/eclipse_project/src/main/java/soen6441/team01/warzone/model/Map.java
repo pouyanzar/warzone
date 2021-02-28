@@ -390,7 +390,22 @@ public class Map implements IMapModel {
 			throw new Exception(l_msg);
 		}
 
+		// ask the continent objects to build their list of countries
+		refreshCountriesOfAllContinents(l_map_model);
+
 		return l_map_model;
+	}
+
+	/**
+	 * ask the continent objects to build their list of countries
+	 * 
+	 * @param p_map_model the map model containing the continents to refresh
+	 */
+	public static void refreshCountriesOfAllContinents(IMapModel p_map_model) {
+		ArrayList<IContinentModel> l_continents = p_map_model.getContinents();
+		for (IContinentModel l_continent : l_continents) {
+			l_continent.refreshCountriesOfContinent(p_map_model);
+		}
 	}
 
 	/**
@@ -558,23 +573,6 @@ public class Map implements IMapModel {
 //			}
 //
 //		}
-	}
-
-	/**
-	 * retrieves the list of countries for a specified continent
-	 * 
-	 * @param p_continents the continent to get the countries of
-	 * @return the list of countries for the specified continent
-	 */
-	public ArrayList<ICountryModel> getCountriesOfContinent(IContinentModel p_continents) {
-		ArrayList<ICountryModel> l_countries = new ArrayList<ICountryModel>();
-		int l_continent_id = p_continents.getId();
-		for (ICountryModel l_country : d_countries) {
-			if (l_country.getContinent().getId() == l_continent_id) {
-				l_countries.add(l_country);
-			}
-		}
-		return l_countries;
 	}
 
 	/**

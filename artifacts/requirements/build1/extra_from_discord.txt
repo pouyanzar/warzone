@@ -11,6 +11,11 @@ loadmap ./src/test/resources/maps/usa8/usa8regions.map
 gameplayer -add John -add Pouyan -add Nazanin
 assigncountries
 
+loadmap d:\tmp\warzone\maps\Can1\canada.map
+gameplayer -add John -add Sue
+assigncountries
+
+
 -----------------------------------------------------
 * In the Domination files, you have both the notion of Country/Continent names and ID (IDs in the map files are most often sequential numbers for countries and implicit sequential numbers for continents). When the user enters the commands, the ID they enter is clearly the name of the Country/Continent that they are going to use in the game. The user does not need to be aware of the IDs that are used internally by the game implementation. In theory, two countries/continents can have the same name (but not IDs). But as the user cannot refer to the internal IDs, the commands must refer to the names, or else the countries would not have names as a result of using the commands as defined.
 
@@ -25,6 +30,19 @@ This is the number of armies that a player gets as reinforcement at the beginnin
 * I agree with what you say, but an additional rule is that every country in a continent should be reacheable to every other only through territories of this continent.
 
 q: We are using the MVC pattern, and our view is console based. In the requirements it states that the Player class will wait for the following command (ie deploy) when invoking the issue_order() method.  My question is, how should the Player class which is a Model based class get input from the user when user input is managed by the view/controller? Shouldn't the controller get the user's input, generate the Order and ask the Player class to add the order to their list of Orders? To do that requires that the controller be able to pass in the Order to the Player, but that contradicts the requirements which state that the issue_order have to parameters or return value.
+
+
+-----------------------------------------------------
+unit test requirements: 
+
+GamePlayTest:
+        // build 1 requirement: Unit testing framework
+        // (3) calculation of number of reinforcement armies;
+
+GamePlayControllerTest.java:
+                // build 1 requirement: Unit testing framework
+                // (4) player cannot deploy more armies that there is in their reinforcement
+                // pool.
 
 -----------------------------------------------------
 * suggestion for showmap:
@@ -63,11 +81,6 @@ continent : Atlantic_Provinces
       New_Brunswick -------- [John]    [  5] [North_America 2/5 +3]
       Nova_Scotia ---------- [Nazanin] [  5] [North_America 1/5 +3]
 
-
-
-
-
-  
   
   
   

@@ -131,9 +131,12 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 		}
 
 		// format columns
-		l_report = Utl.justifyField(l_report, "[", 1);
-		l_report = Utl.justifyField(l_report, "[", 2);
-		l_report = Utl.justifyField(l_report, "]", 2);
+		int l_col = Utl.farthestReportField(l_report, "[", 1) + 2;
+		l_report = Utl.justifyReportyField(l_report, "[", 1, l_col, '-');
+		l_col = Utl.farthestReportField(l_report, "[", 2) + 1;
+		l_report = Utl.justifyReportyField(l_report, "[", 2, l_col, ' ');
+		l_col = Utl.farthestReportField(l_report, "]", 2);
+		l_report = Utl.justifyReportyField(l_report, "]", 2, l_col, ' ');
 
 		// printout report
 		System.out.println("");
