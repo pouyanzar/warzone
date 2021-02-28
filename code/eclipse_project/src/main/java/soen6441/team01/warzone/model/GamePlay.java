@@ -24,6 +24,7 @@ public class GamePlay implements IGamePlayModel {
 	 */
 	public GamePlay(SoftwareFactoryModel p_model_factory) {
 		d_model_factory = p_model_factory;
+		d_map = d_model_factory.getMapModel();
 	}
 
 	/**
@@ -141,9 +142,49 @@ public class GamePlay implements IGamePlayModel {
 		if (d_game_state != GameState.GamePlay) {
 			return;
 		}
+
+		// startoff every player with 5 reinforcement armies to place
 		for (IPlayerModel l_player : d_players) {
 			l_player.setReinforcements(5);
-			String l_msg = l_player.getName() + " received " + 5 + " reinforcements";
+		}
+
+		// scan all the countries for every continent, and if all the countries owner
+		// are the same player then add the continent extra army to the players
+		// reinforcements.
+		ArrayList<IContinentModel> l_continents = d_map.getContinents();
+		ArrayList<ICountryModel> l_continent_countries;
+		IPlayerModel l_xplayer1;
+		IPlayerModel l_xplayer2;
+		for (IContinentModel l_continent : l_continents) {
+			l_continent_countries = l_continent.getCountries();
+			l_xplayer1 = null;
+			boolean l_owns_all = false;
+			for (ICountryModel l_country : l_continent_countries) {
+				l_xplayer2 = l_country.getOwner();
+				if (l_xplayer2 == null) {
+					l_owns_all = false;
+					break;
+				}
+				if (l_xplayer1 == null) {
+					l_xplayer1 = l_xplayer2;
+					l_owns_all = true;
+				}
+				if (l_xplayer1 != l_xplayer2) {
+					l_owns_all = false;
+					break;
+				}
+			}
+			if (l_owns_all) {
+				// all countries in continent are owned by player - add extra reinforcements.
+				int l_rein = l_xplayer1.getReinforcements();
+				l_rein += l_continent.getExtraArmy();
+				l_xplayer1.setReinforcements(l_rein);
+			}
+		}
+
+		// status update notification
+		for (IPlayerModel l_player : d_players) {
+			String l_msg = l_player.getName() + " received " + l_player.getReinforcements() + " reinforcements.";
 			getMsg().setMessage(MessageType.Informational, l_msg);
 		}
 	}
@@ -174,13 +215,3 @@ public class GamePlay implements IGamePlayModel {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
+import soen6441.team01.warzone.model.entities.GameState;
 
 /**
  * Tests for the Country model class
@@ -20,19 +22,65 @@ public class GamePlayTest {
 	public Map d_map = null;
 	public ArrayList<IPlayerModel> d_players = null;
 	public SoftwareFactoryModel d_factory_model = null;
-	
+
 	/**
 	 * setup test classes before each test is executed
+	 * 
 	 * @throws Exception unexpected error
 	 */
 	@Before
 	public void class_instance_setup() throws Exception {
 		d_factory_model = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
-		d_map = new Map(d_factory_model);
+		d_map = (Map) d_factory_model.getMapModel();
 		d_map.addContinent(1, "North_America", 3);
 		d_map.addCountry(1, "Canada", 1);
 		d_map.addCountry(2, "USA", 1);
 		d_gameplay = new GamePlay(d_factory_model);
+	}
+
+	/**
+	 * test assignReinforcements. build 1 requirement: Unit testing framework. (3)
+	 * calculation of number of reinforcement armies;
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assignReinforcements_1() throws Exception {
+		IPlayerModel l_p1 = new Player("Player_1", d_factory_model);
+		IPlayerModel l_p2 = new Player("Player_2", d_factory_model);
+		d_gameplay.addPlayer(l_p1);
+		d_gameplay.addPlayer(l_p2);
+		d_gameplay.setGameState(GameState.GamePlay);
+		Map.refreshCountriesOfAllContinents(d_map);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 5);
+		assertTrue(l_p2.getReinforcements() == 5);
+		
+		ICountryModel l_country = Country.findCountry("Canada", d_map.getCountries());
+		l_country.setOwner(l_p1);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 5);
+		assertTrue(l_p2.getReinforcements() == 5);
+
+		l_country = Country.findCountry("USA", d_map.getCountries());
+		l_country.setOwner(l_p2);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 5);
+		assertTrue(l_p2.getReinforcements() == 5);
+		
+		l_country = Country.findCountry("USA", d_map.getCountries());
+		l_country.setOwner(l_p1);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 8);
+		assertTrue(l_p2.getReinforcements() == 5);
+		
+		l_country = Country.findCountry("Canada", d_map.getCountries());
+		l_country.setOwner(l_p2);
+		l_country = Country.findCountry("USA", d_map.getCountries());
+		l_country.setOwner(l_p2);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 5);
+		assertTrue(l_p2.getReinforcements() == 8);
 	}
 
 	/**
@@ -44,7 +92,7 @@ public class GamePlayTest {
 	public void test_add_player() throws Exception {
 		Player l_player_1 = new Player("Player_1", d_factory_model);
 		Player l_player_2 = new Player("Player_2", d_factory_model);
-		
+
 		d_gameplay.addPlayer(l_player_1);
 		assertTrue(d_gameplay.getPlayers().size() == 1);
 		d_gameplay.addPlayer(l_player_2);
@@ -158,5 +206,4 @@ public class GamePlayTest {
 		assertTrue(l_players.get(0).getPlayerCountries().size() > 0);
 		assertTrue(l_players.get(1).getPlayerCountries().size() > 0);
 	}
-
 }

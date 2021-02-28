@@ -261,32 +261,6 @@ public class MapTest {
 	}
 	
 	/**
-	 * checks that the getCountriesOfContinent is working as expected
-	 * 
-	 * @throws Exception when there is an exception
-	 */
-	@Test
-	public void test_getCountriesOfContinent_1() throws Exception {
-		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		IContinentModel l_europe = l_map.addContinent(2, "Europe", 3);
-		l_map.addCountry("Canada", l_north_america, 0, 0);
-		l_map.addCountry("USA", l_north_america, 0, 0);
-		l_map.addCountry("Italy", l_europe, 0, 0);
-		l_map.addCountry("Spain", l_europe, 0, 0);
-		l_map.addCountry("France", l_europe, 0, 0);
-
-		ArrayList<ICountryModel> l_x = l_map.getCountriesOfContinent(l_europe);
-		assertTrue(l_x.size() == 3);
-		assertTrue(l_x.get(1).getName().equals("Spain"));
-
-		l_x = l_map.getCountriesOfContinent(l_north_america);
-		assertTrue(l_x.size() == 2);
-		assertTrue(l_x.get(0).getName().equals("Canada"));
-	}
-
-	
-	/**
 	 * checks editmap functionality
 	 * 
 	 * @throws Exception when there is an exception

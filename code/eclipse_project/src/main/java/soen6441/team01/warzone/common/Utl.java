@@ -183,7 +183,7 @@ public class Utl {
 	 * @param p_str    the string to check for substrings
 	 * @param p_substr the substring to check for
 	 * @param p_occ    the nth occurrence
-	 * @return the position (zero-based) of the nth occurance of the specified
+	 * @return the position (zero-based) of the nth occurrence of the specified
 	 *         substring. -1 if substring doesn't exist.
 	 */
 	public static int nthIndexOf(String p_str, String p_substr, int p_occ) {
@@ -202,35 +202,33 @@ public class Utl {
 	 * Insert spaces at position l_pos to specified l_to_pos, shifting the rest fo
 	 * the string as needed
 	 * 
-	 * @param l_line   the sting to shift
-	 * @param l_pos    the position to start inserting spaces (zero-based)
-	 * @param l_to_pos the ending position of the inserted spaces (zero-based)
+	 * @param l_line      the sting to shift
+	 * @param l_pos       the position to start inserting spaces (zero-based)
+	 * @param l_to_pos    the ending position of the inserted spaces (zero-based)
+	 * @param l_fill_char the fill character to use as the inserted character
 	 * @return the string shifted as requested
 	 */
-	public static String shiftSubstring(String l_line, int l_pos, int l_to_pos) {
+	public static String shiftSubstring(String l_line, int l_pos, int l_to_pos, char l_fill_char) {
 		StringBuilder l_str = new StringBuilder(l_line);
 		try {
 			int i = l_to_pos - l_pos;
 			for (; i > 0; i--) {
-				l_str.insert(l_pos, ' ');
+				l_str.insert(l_pos, l_fill_char);
 			}
 		} catch (Exception ex) {
 		}
 		return l_str.toString();
 	}
-	
-	/**
-	 * Justify the fields on the report
-	 * 
-	 * @param l_report  the report with the fields justified
-	 * @param l_fld     the field identifier
-	 * @param l_fld_num the nth field indicated by the identifier
-	 * @return the justified report
-	 */
-	public static ArrayList<String> justifyField(ArrayList<String> l_report, String l_fld, int l_fld_num) {
-		ArrayList<String> l_xreport = new ArrayList<String>();
 
-		// figure out the position of the farthest field
+	/**
+	 * Figure out the position of the farthest field
+	 * 
+	 * @param l_report  the report with the fields
+	 * @param l_fld     the field identifier
+	 * @param l_fld_num the nth field indicated by the identifier position
+	 * @return the position of the nth field identifier from supplied string array
+	 */
+	public static int farthestReportField(ArrayList<String> l_report, String l_fld, int l_fld_num) {
 		int l_max_fld_pos = 0;
 		for (String l_line : l_report) {
 			int l_pos = Utl.nthIndexOf(l_line, l_fld, l_fld_num);
@@ -238,14 +236,27 @@ public class Utl {
 				l_max_fld_pos = l_pos;
 			}
 		}
+		return l_max_fld_pos;
+	}
 
-		// justify the field to the farthest position
+	/**
+	 * Justify the fields on the report
+	 * 
+	 * @param l_report    the report with the fields justified
+	 * @param l_fld       the field identifier
+	 * @param l_fld_num   the nth field indicated by the identifier
+	 * @param l_to_pos    the position (column) to justify the field to position
+	 * @param l_fill_char the fill character to use as the inserted character
+	 * @return the justified report
+	 */
+	public static ArrayList<String> justifyReportyField(ArrayList<String> l_report, String l_fld, int l_fld_num,
+			int l_to_pos, char l_fill_char) {
+		ArrayList<String> l_xreport = new ArrayList<String>();
 		for (String l_line : l_report) {
 			int l_pos = Utl.nthIndexOf(l_line, l_fld, l_fld_num);
-			String l_xline = Utl.shiftSubstring(l_line, l_pos, l_max_fld_pos);
+			String l_xline = Utl.shiftSubstring(l_line, l_pos, l_to_pos, l_fill_char);
 			l_xreport.add(l_xline);
 		}
-
 		return l_xreport;
 	}
 }

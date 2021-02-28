@@ -93,7 +93,7 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
-	 * copies the orders from the speicifed player. used mainly when copying the
+	 * copies the orders from the specified player. used mainly when copying the
 	 * orders from cloned players used during the issue_orders() phase. Note: the
 	 * specified player must have the same name as this player.
 	 * 

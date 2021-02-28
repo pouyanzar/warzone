@@ -66,10 +66,13 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			d_view.displayGamePlayBanner();
 			// main game play loop
 			while (!d_exit) {
+				
+				// assigning reinforcements phase
 				d_msg_model.setMessage(MessageType.None,
 						"\n* round " + l_round++ + " *\n\n* assigning reinforcements:");
 				d_gameplay_model.assignReinforcements();
 
+				// issue_order phase
 				if (!d_exit) {
 					d_msg_model.setMessage(MessageType.None, "\n* issuing orders:");
 					int l_num_orders = issueOrders();
@@ -78,6 +81,8 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 						break;
 					}
 				}
+
+				// execute phase
 				if (!d_exit) {
 					d_msg_model.setMessage(MessageType.None, "\n* executing orders:");
 					d_gameplay_model.executeOrders();
