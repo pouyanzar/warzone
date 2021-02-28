@@ -17,7 +17,6 @@ public class Country implements ICountryModel, ICountryModelView {
 	private IContinentModel d_continent;
 	private int d_x;
 	private int d_y;
-	private int d_continent_id;
 	private ArrayList<ICountryModel> d_neighbors = new ArrayList<ICountryModel>();
 
 	/**
@@ -47,11 +46,11 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * @param p_continent_id the continent id this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
-	public Country(int p_id, String p_name, int p_continent_id) throws Exception {
+	public Country(int p_id, String p_name, IContinentModel p_continent) throws Exception {
 		super();
 		setId(p_id);
 		setName(p_name);
-		setContinentId(p_continent_id);
+		setContinentId(p_continent);
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * @return d_continent_id the continent id
 	 */
 	public int getContinentId() {
-		return d_continent_id;
+		return d_continent.getId();
 	}
 
 	/**
@@ -124,9 +123,10 @@ public class Country implements ICountryModel, ICountryModelView {
 	 * associated with a continent
 	 * 
 	 * @param p_continent_id the continent id associated with this country to set
+	 * @throws Exception 
 	 */
-	public void setContinentId(int p_continent_id) {
-		this.d_continent_id = p_continent_id;
+	public void setContinentId(IContinentModel p_continent) throws Exception {
+		this.d_continent.setId(p_continent.getId());
 	}
 
 	/**
