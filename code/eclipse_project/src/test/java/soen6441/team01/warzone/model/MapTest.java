@@ -207,18 +207,57 @@ public class MapTest {
 		Map l_map = new Map(d_model_factory);
 		l_map.removeNeighbor("Canada", "USA");
 	}
-	
+
 	/**
-	 * checks if validatemap function works properly
+	 * checks if validatemap function works properly for valid map
+	 * 
 	 * @throws Exception when there is an exception
 	 */
-	@Test 
-	public void test_validatemap() throws Exception{
+	@Test
+	public void test_validatemap_true() throws Exception {
 		IMapModel l_map = new Map(d_model_factory);
-		 l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		 l_map.validatemap(d_MAP_DIR + "canada/canada.map");
-		 
-		 assertTrue(l_map.validatemap(d_MAP_DIR + "canada/canada.map"));
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+
+		assertTrue(l_map.validatemap(d_MAP_DIR + "canada/canada.map"));
+	}
+
+	/**
+	 * checks if validatemap function works properly for invalid map
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_validatemap_false() throws Exception {
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete/canada_incomplete.map", d_model_factory);
+
+		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete/canada_incomplete.map"));
+	}
+
+	/**
+	 * checks if validatemap function works properly for invalid map
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_validatemap_false2() throws Exception {
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map", d_model_factory);
+
+		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map"));
+	}
+	
+	/**
+	 * checks if validatemap function works properly for invalid map
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_validatemap_false3() throws Exception {
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete3/canada.map", d_model_factory);
+
+		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete3/canada.map"));
 	}
 	
 	/**

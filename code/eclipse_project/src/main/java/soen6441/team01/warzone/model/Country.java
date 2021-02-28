@@ -7,7 +7,7 @@ import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.CountrySummary;
-
+/**
 /**
  * Manages the information associated with a country
  *
@@ -43,6 +43,21 @@ public class Country implements ICountryModel {
 		d_x = p_x;
 		d_y = p_y;
 		d_factory_model = p_factory_model;
+	}
+
+	/**
+	 * The constructor for the Country class.
+	 * 
+	 * @param p_id           a unique country identifier
+	 * @param p_name         country name
+	 * @param p_continent the continent this country belongs to countries
+	 * @throws Exception when there is an exception
+	 */
+	public Country(int p_id, String p_name, IContinentModel p_continent) throws Exception {
+		super();
+		setId(p_id);
+		setName(p_name);
+		setContinent(p_continent);
 	}
 
 	/**
@@ -108,6 +123,14 @@ public class Country implements ICountryModel {
 	public IContinentModel getContinent() {
 		return d_continent;
 	}
+	
+	/**
+	 * getter for continent id
+	 * @return d_continent_id the continent id
+	 */
+	public int getContinentId() {
+		return d_continent.getId();
+	}
 
 	/**
 	 * the continent that this country is associated with. set to null if not
@@ -131,7 +154,7 @@ public class Country implements ICountryModel {
 	/**
 	 * 
 	 * @return The player who owns this country. Null if there is no owner.
-	 */
+	 */	
 	public IPlayerModel getOwner() {
 		return d_owner;
 	}

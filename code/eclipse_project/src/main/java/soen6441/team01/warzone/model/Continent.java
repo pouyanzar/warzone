@@ -80,7 +80,7 @@ public class Continent implements IContinentModel {
 	}
 
 	/**
-	 * @return the continent id
+	 * @return d_id the continent id
 	 */
 	public int getId() {
 		return d_id;
@@ -139,14 +139,14 @@ public class Continent implements IContinentModel {
 	/**
 	 * find a given continent by name
 	 * 
-	 * @param p_continent_id the continent name to find
+	 * @param p_continent_name the continent name to find
 	 * @param p_continents   an array of continents to search from
 	 * @return null if not found, otherwise return the continent with the specified
 	 *         id
 	 */
-	public static IContinentModel findContinent(String p_continent_id, ArrayList<IContinentModel> p_continents) {
+	public static IContinentModel findContinent(String p_continent_name, ArrayList<IContinentModel> p_continents) {
 		for (IContinentModel l_xcontinent : p_continents) {
-			if (l_xcontinent.getName() == p_continent_id) {
+			if (l_xcontinent.getName().equals(p_continent_name)) {
 				return l_xcontinent;
 			}
 		}

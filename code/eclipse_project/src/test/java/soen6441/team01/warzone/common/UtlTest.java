@@ -192,9 +192,17 @@ public class UtlTest {
 	 */
 	@Test
 	public void test_shiftSubstring_1() {
+<<<<<<< HEAD
 		assertTrue(Utl.shiftSubstring("0123456789", 4, 4, ' ').equals("0123456789"));
 		assertTrue(Utl.shiftSubstring("0123456789", 4, 3, ' ').equals("0123456789"));
 		assertTrue(Utl.shiftSubstring("0123456789", 3, 4, ' ').equals("012 3456789"));
 		assertTrue(Utl.shiftSubstring("0123456789", 3, 7, ' ').equals("012    3456789"));
 		assertTrue(Utl.shiftSubstring("0123456789", 3, 7, '-').equals("012----3456789"));
 	}}
+=======
+		assertTrue(Utl.shiftSubstring("0123456789", 4, 4).equals("0123456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 4, 3).equals("0123456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 3, 4).equals("012 3456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 3, 7).equals("012    3456789"));
+	}}
+>>>>>>> 39fde7334b40c80a6df75dfd0c49bf218bf7e829

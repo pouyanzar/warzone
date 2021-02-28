@@ -297,22 +297,65 @@ public class Map implements IMapModel {
 	 */
 	public boolean validatemap(String p_filename) throws Exception {
 
-		loadMapFromFile(p_filename, d_factory_model);
-		boolean l_isValid = false;
-		ArrayList<Integer> l_passed_countries = new ArrayList<>();
+		loadMapFromFile(p_filename, d_factory_model); // load map to validate
+		ArrayList<ICountryModel> l_passed_countries = new ArrayList<>(); // list of visited countries from start point
+																			// country
+		ArrayList<ICountryModel> l_continent_countries = new ArrayList<>(); // list of continent's countries
+		// Checks if there is at least one continent on the map
 		if (d_continents.size() < 1)
 			return false;
+
+		// Checks if there is at least one country on the map
 		if (d_countries.size() < 1)
 			return false;
-		for (ICountryModel l_country : d_countries) {
-			if (mapTraversal(l_country, l_passed_countries))
-				l_isValid = true;
-			else
-				l_isValid = false;
 
+		// Checks if it is possible to reach to all countries on the map from any
+		// country
+		for (ICountryModel l_country : d_countries) {
+			l_passed_countries.removeAll(l_passed_countries);
+			if (l_country.getNeighbors().size() < 1) // Checks if the country have at least one neighbor
+				return false;
+			mapTraversal(l_country, l_passed_countries);
+
+			for (ICountryModel l_country1 : d_countries) {
+				if (!l_passed_countries.contains(l_country1))
+					return false;
+			}
 		}
 
-		return l_isValid;
+		// Checks if it is possible to reach to all countries of a continent from any
+		// country of that continent without exiting the continent
+		for (IContinentModel l_continent : d_continents) {
+			l_continent_countries = getContinentCountries(l_continent);
+			for (ICountryModel l_country : l_continent_countries) {
+				l_passed_countries.removeAll(l_passed_countries);
+				if (l_country.getNeighbors().size() < 1)// Checks if the country have at least one neighbor
+					return false;
+				mapContinentTraversal(l_continent, l_country, l_passed_countries);
+				for (ICountryModel l_country1 : l_continent_countries) {
+					if (!l_passed_countries.contains(l_country1))
+						return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Takes a continent and returns the list of its countries
+	 * 
+	 * @param p_continent an instance of Continent class
+	 * @return l_continent_countries an ArrayList of the continent's countries
+	 */
+	public ArrayList<ICountryModel> getContinentCountries(IContinentModel p_continent) {
+		ArrayList<ICountryModel> l_continent_countries = new ArrayList<>();
+		for (ICountryModel l_country : d_countries) {
+			if (l_country.getContinent().getId() == p_continent.getId()) {
+				l_continent_countries.add(l_country);
+			}
+		}
+		return l_continent_countries;
 	}
 
 	/**
@@ -320,19 +363,33 @@ public class Map implements IMapModel {
 	 * 
 	 * @param p_country           the starting point for traverse
 	 * @param p_visited_countries the list of countries visited through the search
-	 * @return l_all_countries_visited
+	 * 
 	 */
-	public static boolean mapTraversal(ICountryModel p_country, ArrayList<Integer> p_visited_countries) {
-		p_visited_countries.add(p_country.getId());
-		boolean l_all_countries_visited = false;
+	public static void mapTraversal(ICountryModel p_country, ArrayList<ICountryModel> p_visited_countries) {
+		p_visited_countries.add(p_country);
 		for (ICountryModel l_country : p_country.getNeighbors()) {
-			if (!p_visited_countries.contains(l_country.getId())) {
+			if (!p_visited_countries.contains(l_country)) {
 				mapTraversal(l_country, p_visited_countries);
-			} else {
-				l_all_countries_visited = true;
 			}
 		}
-		return l_all_countries_visited;
+	}
+
+	/**
+	 * implements a DFS algorithm to traverse all the countries of a continent
+	 * 
+	 * @param p_continent         the desired continent
+	 * @param p_country           the start point country
+	 * @param p_visited_countries list of all countries visited
+	 */
+	public static void mapContinentTraversal(IContinentModel p_continent, ICountryModel p_country,
+			ArrayList<ICountryModel> p_visited_countries) {
+		p_visited_countries.add(p_country);
+		for (ICountryModel l_country : p_country.getNeighbors()) {
+			if (!p_visited_countries.contains(l_country)) {
+				if (l_country.getContinent().getId() == p_continent.getId())
+					mapContinentTraversal(p_continent, l_country, p_visited_countries);
+			}
+		}
 	}
 
 	/**
