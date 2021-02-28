@@ -121,16 +121,17 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_map the map to show
 	 */
 	public void showmap(IMapModel p_map) {
-		// System.out.println("\nShowing All continents ");
-		for (int j = 0; j < p_map.getCountries().size(); j++) {
-			ICountryModel l_country_model = p_map.getCountries().get(j);
-			IContinentModel l_continent_model = l_country_model.getContinent();
-			System.out.println("\ncontinent : " + l_continent_model.getName());
-			System.out.println("\n\tcontry : " + l_country_model.getName() + "\n");
-			for (int k = 0; k < l_country_model.getNeighbors().size(); k++) {
-				ICountryModel l_neighbor = l_country_model.getNeighbors().get(k);
-				System.out.println("\t\tneighbor : " + l_neighbor.getName());
+		for(int j=0;j<p_map.getCountries().size();j++){
+			
+			ICountryModel l_country_model=p_map.getCountries().get(j);				
+			IContinentModel l_continent_model=l_country_model.getContinent();
+			System.out.println("\n" +l_continent_model.getName());				
+			System.out.println("\n\t" +l_country_model.getName()+"[\n");				
+			for(int k=0;k<l_country_model.getNeighbors().size();k++){		
+				ICountryModel l_neighbor=l_country_model.getNeighbors().get(k);
+				System.out.println(l_neighbor.getName()+", ");
 			}
+			System.out.println("\n\t" +l_country_model.getName()+"]\n");
 		}
 	}
 
