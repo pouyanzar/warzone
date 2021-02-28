@@ -24,6 +24,7 @@ public class GameStartupControllerTest {
 	public IGamePlayModel d_gameplay = null;
 	public SoftwareFactoryView d_view_factory = null;
 	public UserMessageModel d_msg = null;
+	public SoftwareFactoryController d_controller_factory = null;
 
 	/**
 	 * setup the environment for testing of GameStartupController
@@ -35,7 +36,8 @@ public class GameStartupControllerTest {
 		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
 		d_gameplay = d_model_factory.getNewGamePlayModel();
 		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
-		d_startup_controller = new GameStartupController(d_model_factory, d_view_factory);
+		d_controller_factory = new SoftwareFactoryController(d_model_factory, d_view_factory);
+		d_startup_controller = (GameStartupController) d_controller_factory.getGameStartupController();
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
 	}
 

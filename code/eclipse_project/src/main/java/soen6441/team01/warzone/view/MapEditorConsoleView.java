@@ -7,7 +7,12 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
-import soen6441.team01.warzone.model.contracts.IUserMessageModelView;
+import soen6441.team01.warzone.model.Map;
+import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.contracts.IContinentModel;
+import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
@@ -18,21 +23,23 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
 public class MapEditorConsoleView implements Observer, IMapEditorView {
 	private IMapEditorController d_controller = null;
 	private Scanner d_keyboard = null;
-	private IUserMessageModelView d_user_message_model = null;
+	private IUserMessageModel d_user_message_model = null;
+	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param p_controller         the associated controller object
-	 * @param p_user_message_model the user message model to use. note that this
-	 *                             view gets notifications from the model to display
-	 *                             messages to the user.
+	 * @param p_controller    the associated controller object
+	 * @param p_factory_model model factory
+	 * @throws Exception unexpected error
 	 */
-	public MapEditorConsoleView(IMapEditorController p_controller, IUserMessageModelView p_user_message_model) {
+	public MapEditorConsoleView(IMapEditorController p_controller, SoftwareFactoryModel p_factory_model)
+			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
-		d_user_message_model = p_user_message_model;
-		p_user_message_model.attach(this);
+		d_factory_model = p_factory_model;
+		d_user_message_model = d_factory_model.getUserMessageModel();
+		d_user_message_model.attach(this);
 	}
 
 	/**
@@ -62,7 +69,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 			d_user_message_model.detach(this);
 		}
 	}
-	
+
 	/**
 	 * Get the next command typed in on the console from the user
 	 * 
@@ -106,6 +113,25 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 			processMessage(d_user_message_model.getLastMessage());
 		}
 
+	}
+
+	/**
+	 * show all continents and countries and their respective neighbors
+	 * 
+	 * @param p_map the map to show
+	 */
+	public void showmap(IMapModel p_map) {
+		// System.out.println("\nShowing All continents ");
+		for (int j = 0; j < p_map.getCountries().size(); j++) {
+			ICountryModel l_country_model = p_map.getCountries().get(j);
+			IContinentModel l_continent_model = l_country_model.getContinent();
+			System.out.println("\ncontinent : " + l_continent_model.getName());
+			System.out.println("\n\tcontry : " + l_country_model.getName() + "\n");
+			for (int k = 0; k < l_country_model.getNeighbors().size(); k++) {
+				ICountryModel l_neighbor = l_country_model.getNeighbors().get(k);
+				System.out.println("\t\tneighbor : " + l_neighbor.getName());
+			}
+		}
 	}
 
 }

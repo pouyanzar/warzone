@@ -1,8 +1,11 @@
 package soen6441.team01.warzone.model.contracts;
 
+/**
+ * defines the interface of a Warzone Order
+ *
+ */
 public interface IOrderModel {
+	String execute() throws Exception;
 	
-	String getOrder();
-	
-	void setOrder(String l_order) throws Exception;
+	void setPlayer(IPlayerModel p_player);
 }

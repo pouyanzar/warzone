@@ -1,0 +1,165 @@
+continent : Atlantic_Provinces
+
+        contry : New_Brunswick
+
+                neighbor : Quebec-South
+                neighbor : Prince_Edward_Island
+                neighbor : Nova_Scotia
+
+continent : Atlantic_Provinces
+
+        contry : Prince_Edward_Island
+
+                neighbor : New_Brunswick
+                neighbor : Nova_Scotia
+
+
+
+* Atlantic_Provinces
+  New_Brunswick [Quebec-South, Prince_Edward_Island, Nova_Scotia]
+  Prince_Edward_Island [New_Brunswick, Nova_Scotia]
+...
+
+
+
+
+
+GameEngine complete, added deployments, added editmap+showmap to command processor
+
+completed issue_orders and execute phases
+
+
+New_Brunswick -------------- [owner: John]    [armies: 5] [North_America 3/5 +3]
+   neighbors: 
+      Quebec-South --------- [owner: John]    [armies: 5] [North_America 2/5 +3]
+      Prince_Edward_Island - [owner: Pouyan]  [armies: 3] [North_America 1/5 +3]
+      Nova_Scotia ---------- [owner: Nazanin] [armies: 0] [North_America 1/5 +3]
+  
+Prince_Edward_Island ------- [owner: Pouyan]  [armies: 5] [continent: North_America +3]
+   neighbors: 
+      New_Brunswick -------- [owner: John]    [armies: 5] [continent: North_America +3]
+      Nova_Scotia ---------- [owner: Nazanin] [armies: 5] [continent: North_America +3]
+
+  
+  
+  
+  
+New_Brunswick -------------- [John]    [armies: 5] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [armies: 0] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [armies: 3] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [armies: 0] [North_America 1/5 +3]
+  
+Prince_Edward_Island ------- [Pouyan]  [armies: 5] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [armies: 5] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [armies: 5] [North_America 1/5 +3]
+
+
+
+New_Brunswick -------------- [John]    [army: 5] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [army: 0] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [army: 3] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [army: 0] [North_America 1/5 +3]
+  
+Prince_Edward_Island ------- [Pouyan]  [army: 5] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [army: 5] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [army: 5] [North_America 1/5 +3]
+
+
+  
+  
+New_Brunswick -------------- [John]    [5  ] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [0  ] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [3  ] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [0  ] [North_America 1/5 +3]
+  
+Prince_Edward_Island ------- [Pouyan]  [5  ] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [5  ] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [5  ] [North_America 1/5 +3]
+  
+  
+
+* New_Brunswick ------------ [John]    [army:  5] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [army:  0] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [army: 30] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [army:  0] [North_America 1/5 +3]
+  
+* Prince_Edward_Island ----- [Pouyan]  [army:  5] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [army:  5] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [army:  5] [North_America 1/5 +3]
+
+
+  
+
+* New_Brunswick ------------ [John]    [  5] [North_America 2/5 +3]
+   neighbors: 
+      Quebec-South --------- [*******] [  0] [North_America +3]
+      Prince_Edward_Island - [Pouyan]  [ 30] [North_America 1/5 +3]
+      Nova_Scotia ---------- [Nazanin] [  0] [North_America 1/5 +3]
+  
+* Prince_Edward_Island ----- [Pouyan]  [  5] [North_America 1/5 +3]
+   neighbors: 
+      New_Brunswick -------- [John]    [  5] [North_America 2/5 +3]
+      Nova_Scotia ---------- [Nazanin] [  5] [North_America 1/5 +3]
+
+
+
+
+
+* New_Mexico[John] [0] [Southwest +2 0/4]
+   neighbors:
+      Colorado[!1] [0] [Mountain +3 0/6]
+      Arizona[!1] [0] [Southwest +2 0/4]
+      Texas[!1] [0] [Southwest +2 0/4]
+      Oklahoma[!1] [0] [Southwest +2 0/4]
+
+* Tennessee[John] [0] [South +6 0/11]
+   neighbors:
+      Missouri[!1] [0] [Plains +4 0/7]
+      Kentucky[!1] [0] [South +6 0/11]
+      Arkansas[!1] [0] [South +6 0/11]
+      Mississippi[!1] [0] [South +6 0/11]
+      Alabama[!1] [0] [South +6 0/11]
+      Georgia[!1] [0] [South +6 0/11]
+      North_Carolina[!1] [0] [South +6 0/11]
+      Virginia[!1] [0] [South +6 0/11]
+      
+      
+        private SoftwareFactoryModel d_factory_model = null;
+        private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
+        private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
+
+        /**
+         * Constructor
+         * 
+         * @param p_factory_model the model software factory
+         */
+        public Map(SoftwareFactoryModel p_factory_model) {
+                d_factory_model = p_factory_model;
+        }
+      
+      
+        /**
+         * COnstructor (copy)
+         * @param l_country the country to copy from
+         * @param p_factory_model the new model factory to use
+         * @throws Exception unexpected error
+         */
+        public Country(ICountryModel l_country, SoftwareFactoryModel p_factory_model) throws Exception {
+                setId(l_country.getId());
+                setName(l_country.getName());
+                setContinent(l_country.getContinent());
+                d_x = 0;
+                d_y = 0;
+                d_factory_model = p_factory_model;
+        }
+
+
+      

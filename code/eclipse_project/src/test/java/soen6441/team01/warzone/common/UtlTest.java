@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import soen6441.team01.warzone.controller.GameEngine;
+import soen6441.team01.warzone.model.GameEngine;
 
 public class UtlTest {
 
@@ -175,5 +175,25 @@ public class UtlTest {
 		assertTrue(Utl.convertToInteger("John")==Integer.MAX_VALUE);
 	}
 	
+	/**
+	 * Test nthIndexOf with multiple values
+	 */
+	@Test
+	public void test_nthIndexOf_1() {
+		assertTrue(Utl.nthIndexOf("0123456789", "x", 1)==-1);
+		assertTrue(Utl.nthIndexOf("123[567[90", "x", 1)==-1);
+		assertTrue(Utl.nthIndexOf("123[567[90", "[", 1)==3);
+		assertTrue(Utl.nthIndexOf(" xa[ y [z ", "[", 1)==3);
+		assertTrue(Utl.nthIndexOf(" xa[ y [z ", "[", 2)==7);
+	}
 	
-}
+	/**
+	 * Test shiftSubstring with multiple values
+	 */
+	@Test
+	public void test_shiftSubstring_1() {
+		assertTrue(Utl.shiftSubstring("0123456789", 4, 4).equals("0123456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 4, 3).equals("0123456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 3, 4).equals("012 3456789"));
+		assertTrue(Utl.shiftSubstring("0123456789", 3, 7).equals("012    3456789"));
+	}}

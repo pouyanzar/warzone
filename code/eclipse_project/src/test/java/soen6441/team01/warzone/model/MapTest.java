@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.model.contracts.IContinentModel;
@@ -17,15 +18,26 @@ import soen6441.team01.warzone.model.contracts.IMapModel;
  */
 public class MapTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
+	public SoftwareFactoryModel d_model_factory = null;
+
+	/**
+	 * setup the environment for testing
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Before
+	public void setupGameStartupController() throws Exception {
+		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+	}
 
 	/**
 	 * Test the loadmap command. Simple test to load an existing valid map file
 	 */
 	@Test
 	public void test_loadmap_command_1() {
-		IMapModel l_map = new Map();
+		IMapModel l_map = new Map(d_model_factory);
 		try {
-			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map");
+			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("failure loading an existing valid map");
@@ -50,9 +62,9 @@ public class MapTest {
 	@Test
 	public void test_loadmap_command_2() {
 		Boolean l_assert_result = true;
-		IMapModel l_map = new Map();
+		IMapModel l_map = new Map(d_model_factory);
 		try {
-			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map");
+			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map", d_model_factory);
 			l_assert_result = false;
 		} catch (Exception e) {
 			if (!e.getMessage().contains("Error loading map file")) {
@@ -73,7 +85,7 @@ public class MapTest {
 	 */
 	@Test
 	public void test_add_continent_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
 		IContinentModel l_europe = l_map.addContinent(2, "Europe", 4);
 		ArrayList<IContinentModel> l_continents = l_map.getContinents();
@@ -89,7 +101,7 @@ public class MapTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_dup_continent_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
 		IContinentModel l_europe = l_map.addContinent(1, "Europe", 4);
 	}
@@ -101,7 +113,7 @@ public class MapTest {
 	 */
 	@Test
 	public void test_add_country_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
 		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("USA", l_north_america, 0, 0);
@@ -118,7 +130,7 @@ public class MapTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_dup_country_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
 		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("Canada", l_north_america, 0, 0);
@@ -131,7 +143,7 @@ public class MapTest {
 	 */
 	@Test
 	public void test_add_neighbor_valid() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("USA", null, 0, 0);
 		l_canada.addNeighbor(l_usa);
@@ -150,7 +162,7 @@ public class MapTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_neighbor_invalid_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		l_map.addNeighbor("Canada", "USA");
 	}
 
@@ -161,7 +173,7 @@ public class MapTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_neighbor_invalid_2() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
 		l_map.addNeighbor("Canada", "USA");
 	}
@@ -173,7 +185,7 @@ public class MapTest {
 	 */
 	@Test
 	public void test_remove_neighbor_valid() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("USA", null, 0, 0);
 		l_canada.addNeighbor(l_usa);
@@ -192,7 +204,7 @@ public class MapTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_remove_neighbor_invalid_1() throws Exception {
-		Map l_map = new Map();
+		Map l_map = new Map(d_model_factory);
 		l_map.removeNeighbor("Canada", "USA");
 	}
 
@@ -203,8 +215,8 @@ public class MapTest {
 	 */
 	@Test
 	public void test_validatemap_true() throws Exception {
-		IMapModel l_map = new Map();
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map");
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
 
 		assertTrue(l_map.validatemap(d_MAP_DIR + "canada/canada.map"));
 	}
@@ -216,8 +228,8 @@ public class MapTest {
 	 */
 	@Test
 	public void test_validatemap_false() throws Exception {
-		IMapModel l_map = new Map();
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete/canada_incomplete.map");
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete/canada_incomplete.map", d_model_factory);
 
 		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete/canada_incomplete.map"));
 	}
@@ -229,8 +241,8 @@ public class MapTest {
 	 */
 	@Test
 	public void test_validatemap_false2() throws Exception {
-		IMapModel l_map = new Map();
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map");
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map", d_model_factory);
 
 		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map"));
 	}
@@ -242,11 +254,37 @@ public class MapTest {
 	 */
 	@Test
 	public void test_validatemap_false3() throws Exception {
-		IMapModel l_map = new Map();
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete3/canada.map");
+		IMapModel l_map = new Map(d_model_factory);
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete3/canada.map", d_model_factory);
 
 		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete3/canada.map"));
 	}
+	
+	/**
+	 * checks that the getCountriesOfContinent is working as expected
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_getCountriesOfContinent_1() throws Exception {
+		Map l_map = new Map(d_model_factory);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
+		IContinentModel l_europe = l_map.addContinent(2, "Europe", 3);
+		l_map.addCountry("Canada", l_north_america, 0, 0);
+		l_map.addCountry("USA", l_north_america, 0, 0);
+		l_map.addCountry("Italy", l_europe, 0, 0);
+		l_map.addCountry("Spain", l_europe, 0, 0);
+		l_map.addCountry("France", l_europe, 0, 0);
+
+		ArrayList<ICountryModel> l_x = l_map.getCountriesOfContinent(l_europe);
+		assertTrue(l_x.size() == 3);
+		assertTrue(l_x.get(1).getName().equals("Spain"));
+
+		l_x = l_map.getCountriesOfContinent(l_north_america);
+		assertTrue(l_x.size() == 2);
+		assertTrue(l_x.get(0).getName().equals("Canada"));
+	}
+
 	
 	/**
 	 * checks editmap functionality

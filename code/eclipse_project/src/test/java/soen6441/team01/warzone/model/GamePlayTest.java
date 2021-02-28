@@ -17,12 +17,22 @@ import soen6441.team01.warzone.model.contracts.IPlayerModel;
  */
 public class GamePlayTest {
 	public GamePlay d_gameplay = null;
+	public Map d_map = null;
 	public ArrayList<IPlayerModel> d_players = null;
-
+	public SoftwareFactoryModel d_factory_model = null;
+	
+	/**
+	 * setup test classes before each test is executed
+	 * @throws Exception unexpected error
+	 */
 	@Before
-	public void class_instance_setup() {
-		
-		d_gameplay = new GamePlay(SoftwareFactoryModel.createWarzoneBasicConsoleGameModels());
+	public void class_instance_setup() throws Exception {
+		d_factory_model = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_map = new Map(d_factory_model);
+		d_map.addContinent(1, "North_America", 3);
+		d_map.addCountry(1, "Canada", 1);
+		d_map.addCountry(2, "USA", 1);
+		d_gameplay = new GamePlay(d_factory_model);
 	}
 
 	/**
@@ -32,9 +42,9 @@ public class GamePlayTest {
 	 */
 	@Test
 	public void test_add_player() throws Exception {
-		Player l_player_1 = new Player("Player_1");
-		Player l_player_2 = new Player("Player_2");
-		;
+		Player l_player_1 = new Player("Player_1", d_factory_model);
+		Player l_player_2 = new Player("Player_2", d_factory_model);
+		
 		d_gameplay.addPlayer(l_player_1);
 		assertTrue(d_gameplay.getPlayers().size() == 1);
 		d_gameplay.addPlayer(l_player_2);
@@ -48,8 +58,8 @@ public class GamePlayTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_dup_player_1() throws Exception {
-		Player l_player_1 = new Player("Player_1");
-		Player l_player_2 = new Player("Player_1");
+		Player l_player_1 = new Player("Player_1", d_factory_model);
+		Player l_player_2 = new Player("Player_1", d_factory_model);
 		;
 		d_gameplay.addPlayer(l_player_1);
 		d_gameplay.addPlayer(l_player_2); // exception
@@ -62,7 +72,7 @@ public class GamePlayTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_add_dup_player_2() throws Exception {
-		Player l_player_1 = new Player("Player_1");
+		Player l_player_1 = new Player("Player_1", d_factory_model);
 		d_gameplay.addPlayer(l_player_1);
 		d_gameplay.addPlayer(l_player_1); // exception
 	}
@@ -74,8 +84,8 @@ public class GamePlayTest {
 	 */
 	@Test
 	public void test_remove_player() throws Exception {
-		Player l_player_1 = new Player("Player_1");
-		Player l_player_2 = new Player("Player_2");
+		Player l_player_1 = new Player("Player_1", d_factory_model);
+		Player l_player_2 = new Player("Player_2", d_factory_model);
 		;
 		d_gameplay.addPlayer(l_player_1);
 		assertTrue(d_gameplay.getPlayers().size() == 1);
@@ -105,8 +115,48 @@ public class GamePlayTest {
 	 */
 	@Test(expected = Exception.class)
 	public void test_remove_player_2() throws Exception {
-		Player l_player_1 = new Player("Player_1");
+		Player l_player_1 = new Player("Player_1", d_factory_model);
 		d_gameplay.addPlayer(l_player_1);
 		d_gameplay.removePlayer("Player_2");
 	}
+
+	/**
+	 * test assigncountries
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assigncountries_1() throws Exception {
+		d_gameplay.setMap(d_map);
+		Player l_player_1 = new Player("Player_1", d_factory_model);
+		d_gameplay.addPlayer(l_player_1);
+		d_gameplay.assignCountries();
+		ArrayList<IPlayerModel> l_players = d_gameplay.getPlayers();
+		assertTrue(l_players.get(0).getPlayerCountries().size() == 2);
+		String l_c1 = l_players.get(0).getPlayerCountries().get(0).getName();
+		String l_c2 = l_players.get(0).getPlayerCountries().get(1).getName();
+		assertTrue((l_c1.equals("Canada") && l_c2.equals("USA")) || (l_c1.equals("USA") && l_c2.equals("Canada")));
+		assertTrue(d_map.getCountries().size() == 2);
+	}
+
+	/**
+	 * test assigncountries
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assigncountries_2() throws Exception {
+		d_map.addCountry("Mexico", 1);
+		d_gameplay.setMap(d_map);
+		d_gameplay.addPlayer(new Player("Player_1", d_factory_model));
+		d_gameplay.addPlayer(new Player("Player_2", d_factory_model));
+		d_gameplay.assignCountries();
+		ArrayList<IPlayerModel> l_players = d_gameplay.getPlayers();
+		assertTrue(l_players.get(0).getPlayerCountries().size() == 2);
+		String l_c1 = l_players.get(0).getPlayerCountries().get(0).getName();
+		String l_c2 = l_players.get(0).getPlayerCountries().get(1).getName();
+		assertTrue(l_players.get(0).getPlayerCountries().size() > 0);
+		assertTrue(l_players.get(1).getPlayerCountries().size() > 0);
+	}
+
 }

@@ -1,8 +1,8 @@
-package soen6441.team01.warzone.controller;
+package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.model.*;
+import soen6441.team01.warzone.controller.SoftwareFactoryController;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.*;
 
@@ -63,14 +63,15 @@ public class GameEngine {
 	 */
 	public void startNewGame() {
 		try {
-			IGamePlayModel p_gameplay = d_model_factory.getNewGamePlayModel();
 			boolean l_continue_game = false;
 			l_continue_game = processMapEditor();
+			IGamePlayModel p_gameplay = d_model_factory.getNewGamePlayModel();
+			p_gameplay.setMap(d_model_factory.getMapModel());
 			if (l_continue_game) {
-				l_continue_game = processGameStartup(p_gameplay);
+				l_continue_game = processGameStartup(); 
 			}
 			if (l_continue_game) {
-				l_continue_game = processGamePlay(p_gameplay);
+				l_continue_game = processGamePlay();
 			}
 		} catch (Exception ex) {
 			System.out.println("Fatal error processing GameEngine.");
@@ -103,12 +104,11 @@ public class GameEngine {
 	/**
 	 * Startup and process the game startup phase of the game
 	 *
-	 * @param p_gameplay the gameplay model to process
 	 * @return true=continue game; false=exit game
 	 * @throws Exception unexpected errors
 	 */
-	public boolean processGameStartup(IGamePlayModel p_gameplay) throws Exception {
-		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup(p_gameplay);
+	public boolean processGameStartup() throws Exception {
+		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup();
 		switch (l_cmd) {
 		case "exit":
 			return false;
@@ -123,12 +123,11 @@ public class GameEngine {
 	/**
 	 * Startup and process the game startup phase of the game
 	 * 
-	 * @param p_gameplay the gameplay model to process
 	 * @return true=continue game; false=exit game
 	 * @throws Exception unexpected errors
 	 */
-	public boolean processGamePlay(IGamePlayModel p_gameplay) throws Exception {
-		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay(p_gameplay);
+	public boolean processGamePlay() throws Exception {
+		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay();
 		switch (l_cmd) {
 		case "exit":
 			return false;

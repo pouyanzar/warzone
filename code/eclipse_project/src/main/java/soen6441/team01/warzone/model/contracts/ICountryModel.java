@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.Country;
+import soen6441.team01.warzone.model.entities.CountrySummary;
 
 /**
  * Defines the Country model interface used to define the methods available to
@@ -29,5 +30,13 @@ public interface ICountryModel {
 
 	void removeNeighbor(String p_neighbor_name);
 
-	int getContinentId();
+	void setArmies(int p_num_armies);
+	
+	int getArmies();
+	
+	void setOwner(IPlayerModel p_player);
+	
+	public IPlayerModel getOwner();
+	
+	CountrySummary getSummary();
 }

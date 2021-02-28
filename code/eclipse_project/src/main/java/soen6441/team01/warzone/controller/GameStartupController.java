@@ -22,21 +22,25 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
 public class GameStartupController implements IGameStartupController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
+	private SoftwareFactoryController d_controller_factory;
 	private IGameStartupView d_view;
 	private IUserMessageModel d_msg_model;
+	private IGamePlayModel d_gameplay;
 
 	/**
 	 * Constructor with view and models defined.
 	 * 
-	 * @param p_model_factory predefined SoftwareFactoryModel.
-	 * @param p_view_factory  predefined SoftwareFactoryView.
+	 * @param p_model_factory      predefined SoftwareFactoryModel.
+	 * @param p_view_factory       predefined SoftwareFactoryView.
+	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GameStartupController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory)
-			throws Exception {
+	public GameStartupController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory,
+			SoftwareFactoryController p_controller_factory) throws Exception {
 		d_model_factory = p_model_factory;
 		d_view_factory = p_view_factory;
-		d_view = d_view_factory.getGameStartupConsoleView(this);
+		d_view = d_view_factory.getGameStartupConsoleView(this); 
+		d_controller_factory = p_controller_factory;
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
@@ -44,13 +48,15 @@ public class GameStartupController implements IGameStartupController {
 	 * Starts executing the game startup dynamics
 	 * 
 	 * @return String one of: exit, startup_complete
+	 * @throws Exception unexpected error
 	 */
-	public String processGameStartup(IGamePlayModel p_gameplay) {
+	public String processGameStartup() throws Exception {
 		String l_cmd = "exit";
+		d_gameplay = d_model_factory.getGamePlayModel();
 
 		try {
 			d_view.displayGameStartupBanner();
-			l_cmd = processUserCommands(p_gameplay);
+			l_cmd = processUserCommands();
 			switch (l_cmd) {
 			case "exit":
 				break;
@@ -79,12 +85,12 @@ public class GameStartupController implements IGameStartupController {
 	 * @return String one of; exit, startup_complete
 	 * @throws Exception general exception processing the map editor
 	 */
-	private String processUserCommands(IGamePlayModel p_gameplay) throws Exception {
+	private String processUserCommands() throws Exception {
 		boolean l_exit_startup = false;
 		String l_cmd = "exit";
 		while (!l_exit_startup) {
 			l_cmd = d_view.getCommand();
-			l_cmd = processGameStartupCommand(l_cmd, p_gameplay);
+			l_cmd = processGameStartupCommand(l_cmd);
 			switch (l_cmd) {
 			case "exit":
 				l_exit_startup = true;
@@ -99,6 +105,20 @@ public class GameStartupController implements IGameStartupController {
 	}
 
 	/**
+	 * mirror of method processGameStartupCommand(String p_command). this method is
+	 * used mainly to test processGameStartupCommand.
+	 * 
+	 * @param p_command  the command to process
+	 * @param p_gameplay the gameplay model to process
+	 * @return String one of; exit, assigncountries
+	 * @throws Exception unexpected error
+	 */
+	public String processGameStartupCommand(String p_command, IGamePlayModel p_gameplay) throws Exception {
+		d_gameplay = p_gameplay;
+		return processGameStartupCommand(p_command);
+	}
+
+	/**
 	 * Process the game startup command:
 	 * <ul>
 	 * <li>gameplayer -add playername -remove playername</li>
@@ -108,12 +128,11 @@ public class GameStartupController implements IGameStartupController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param p_command  the command to process
-	 * @param p_gameplay the gameplay model to process
+	 * @param p_command the command to process
 	 * @return String one of; exit, assigncountries
 	 * @throws Exception unexpected error
 	 */
-	public String processGameStartupCommand(String p_command, IGamePlayModel p_gameplay) throws Exception {
+	public String processGameStartupCommand(String p_command) throws Exception {
 		String l_return_command = "";
 		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
@@ -127,10 +146,10 @@ public class GameStartupController implements IGameStartupController {
 			processLoadMap(l_cmd_params[1]);
 			break;
 		case "gameplayer":
-			processGameplayer(l_cmd_params[1], p_gameplay);
+			processGameplayer(l_cmd_params[1]);
 			break;
 		case "assigncountries":
-			d_msg_model.setMessage(MessageType.None, "assigncountries coming soon...");
+			processAssignCountries(d_gameplay);
 			l_return_command = "assignedcountries";
 			break;
 		default:
@@ -138,6 +157,24 @@ public class GameStartupController implements IGameStartupController {
 			break;
 		}
 		return l_return_command;
+	}
+
+	/**
+	 * process the assigncountries command
+	 * <p>
+	 * syntax: assigncountries
+	 * </p>
+	 * 
+	 * @param p_gameplay the gameplay model containing the countries and players to
+	 *                   use for the assignment.
+	 */
+	private void processAssignCountries(IGamePlayModel p_gameplay) {
+		try {
+			p_gameplay.assignCountries();
+			d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, "assigncountries exception: " + ex.getMessage());
+		}
 	}
 
 	/**
@@ -150,7 +187,7 @@ public class GameStartupController implements IGameStartupController {
 	 *                     the gameplayer command itself)
 	 * @throws Exception unexpected error encountered
 	 */
-	private void processGameplayer(String p_cmd_params, IGamePlayModel p_gameplay) throws Exception {
+	private void processGameplayer(String p_cmd_params) throws Exception {
 		String l_playerName;
 		String l_params[] = Utl.getFirstWord(p_cmd_params);
 
@@ -170,8 +207,16 @@ public class GameStartupController implements IGameStartupController {
 								+ "', expecting a valid player name.");
 						return;
 					}
-					IPlayerModel l_player = d_model_factory.getPlayerModel(l_playerName);
-					p_gameplay.addPlayer(l_player);
+					// for a human player the player model requires user input during issue_order();
+					// therefore setup the player datasource (which the Player model will use to
+					// retrieve user input) as a method in the GamePlayController which will request
+					// the command from the view and pass it back to the Player model. This sort of
+					// breaks the MVC symmetry but is required in this case in order to keep
+					// issue_order() as generic as possible (e.g. computer player).
+					IPlayerModel l_player = d_model_factory.newHumanPlayerModel(l_playerName,
+							d_controller_factory.getGamePlayOrderDatasource());
+
+					d_gameplay.addPlayer(l_player);
 					d_msg_model.setMessage(MessageType.None, "player " + l_player.getName() + " added to game.");
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
@@ -187,7 +232,7 @@ public class GameStartupController implements IGameStartupController {
 								+ l_playerName + "', expecting a valid player name.");
 						return;
 					}
-					p_gameplay.removePlayer(l_playerName);
+					d_gameplay.removePlayer(l_playerName);
 					d_msg_model.setMessage(MessageType.None, "player " + l_playerName + " removed from game.");
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
@@ -202,7 +247,6 @@ public class GameStartupController implements IGameStartupController {
 			l_params = Utl.getFirstWord(l_params[1]);
 		}
 	}
-	
 
 	/**
 	 * process the loadmap command
@@ -215,7 +259,7 @@ public class GameStartupController implements IGameStartupController {
 	public boolean processLoadMap(String p_loadmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
-			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0]);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());

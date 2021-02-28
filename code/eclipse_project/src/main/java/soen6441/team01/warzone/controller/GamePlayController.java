@@ -1,32 +1,39 @@
 package soen6441.team01.warzone.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
-import soen6441.team01.warzone.controller.contracts.IGameStartupController;
+import soen6441.team01.warzone.model.Map;
+import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
+import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IOrderModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.entities.CountrySummary;
+import soen6441.team01.warzone.model.entities.GameState;
 import soen6441.team01.warzone.view.SoftwareFactoryView;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
-import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
 /**
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class GamePlayController implements IGamePlayController {
+public class GamePlayController implements IGamePlayController, IGameplayOrderDatasource {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
 	private IGamePlayView d_view;
 	private IUserMessageModel d_msg_model;
+	private IGamePlayModel d_gameplay_model;
+	private boolean d_exit = false;
+	private boolean d_game_over = false;
 
 	/**
 	 * Constructor with view and models defined.
@@ -39,7 +46,6 @@ public class GamePlayController implements IGamePlayController {
 			throws Exception {
 		d_model_factory = p_model_factory;
 		d_view_factory = p_view_factory;
-		d_view = d_view_factory.getGamePlayConsoleView(this);
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
@@ -47,27 +53,34 @@ public class GamePlayController implements IGamePlayController {
 	 * Starts executing the game startup dynamics
 	 * 
 	 * @return String one of: exit, game_over
+	 * @throws Exception unexpected error
 	 */
-	public String processGamePlay(IGamePlayModel p_gameplay_model) {
+	public String processGamePlay() throws Exception {
+		d_view = d_view_factory.getGamePlayConsoleView(this);
+		d_gameplay_model = d_model_factory.getGamePlayModel();
+		d_gameplay_model.setGameState(GameState.GamePlay);
+		int l_round = 1;
 		String l_cmd = "exit";
-		boolean l_exit_gameplay = false;
 
 		try {
 			d_view.displayGamePlayBanner();
+			// main game play loop
+			while (!d_exit) {
+				d_msg_model.setMessage(MessageType.None,
+						"\n* round " + l_round++ + " *\n\n* assigning reinforcements:");
+				d_gameplay_model.assignReinforcements();
 
-			while (!l_exit_gameplay) {
-				// assign reinforcements phase
-				p_gameplay_model.assignReinforcements();
-
-				// issue orders phase
-				l_cmd = issueOrders(p_gameplay_model);
-				if (l_cmd.equals("exit") || l_cmd.equals("game_over")) {
-					l_exit_gameplay = true;
+				if (!d_exit) {
+					d_msg_model.setMessage(MessageType.None, "\n* issuing orders:");
+					int l_num_orders = issueOrders();
+					if (l_num_orders < 1) {
+						d_msg_model.setMessage(MessageType.Warning, "no new orders issued - ending game");
+						break;
+					}
 				}
-
-				// execute orders phase
-				if (!l_exit_gameplay) {
-					p_gameplay_model.executeOrders();
+				if (!d_exit) {
+					d_msg_model.setMessage(MessageType.None, "\n* executing orders:");
+					d_gameplay_model.executeOrders();
 				}
 			}
 		} catch (Exception ex) {
@@ -86,43 +99,61 @@ public class GamePlayController implements IGamePlayController {
 	 * Manages the map editor's interactions with the game startup view, and
 	 * processes any commands coming from the view.
 	 * 
-	 * @param p_view the GameStartupView to interact with
-	 * @return String the last command entered
+	 * @return the number of orders issued - if there are none then the game ends
 	 * @throws Exception general exception processing the map editor
 	 */
-	private String issueOrders(IGamePlayModel p_gameplay_model) throws Exception {
-		boolean l_exit = false;
-		String l_cmd = "exit";
-
+	private int issueOrders() throws Exception {
+		int l_orders_issued = 0;
+		ArrayList<IPlayerModel> l_player_clones = new ArrayList<IPlayerModel>();
+		ArrayList<IPlayerModel> l_players = d_gameplay_model.getPlayers();
 		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
-		for (IPlayerModel l_player : p_gameplay_model.getPlayers()) {
-			l_queue.add(l_player);
+
+		// clone the players and their countries to simplify keeping track of
+		// issuing orders before the execution phase and to isolate each players map
+		// from one another
+		for (IPlayerModel l_player : l_players) {
+			SoftwareFactoryModel l_cloned_sf_model = new SoftwareFactoryModel(d_model_factory);
+			IMapModel l_cloned_map = Map.deepCloneMap(d_model_factory.getMapModel(), l_cloned_sf_model);
+			IPlayerModel l_player_clone = l_player.deepClonePlayer(l_cloned_map);
+			l_player_clones.add(l_player_clone);
+			l_queue.add(l_player_clone);
 		}
 
-		while (!l_exit) {
-			IPlayerModel l_player = l_queue.peek();
-			l_cmd = processGamePlayCommand(l_player);
-			switch (l_cmd) {
-			case "player_again": // player still has work to do
-				l_queue.remove();
-				l_queue.add(l_player);
-				break;
-			case "player_done": // player has no more work to do
-				l_queue.remove();
-				break;
-			case "player_redo": // same player to redo another command
-				break;
-			case "orders_done": // move on to next phase
-				l_exit = true;
-				break;
-			case "exit": // exit game
-				l_exit = true;
-				break;
-			default:
-				throw new Exception("Internal error issuing orders");
+		// get player commands/orders
+		IPlayerModel l_player_clone = l_queue.peek();
+		while (!d_exit && l_player_clone != null) {
+			l_queue.remove();
+			if (l_player_clone.getReinforcements() > 0) {
+				l_player_clone.issue_order();
+				l_queue.add(l_player_clone);
+				l_orders_issued++;
 			}
+			l_player_clone = l_queue.peek();
 		}
-		return l_cmd;
+
+		// copy orders from cloned players to real players for execution
+		for (int l_idx = 0; l_idx < l_players.size(); l_idx++) {
+			l_players.get(l_idx).copyOrders(l_player_clones.get(l_idx));
+		}
+
+		return l_orders_issued;
+	}
+
+	/**
+	 * This method acts as a datasource for those Player (model) classes that
+	 * require the user to provide an order.
+	 * 
+	 * @return the next order, or null if the player is done with this round
+	 * @throws Exception invalid command or unexpected error
+	 */
+	public IOrderModel getOrder(IPlayerModel l_player_clone) throws Exception {
+		IOrderModel l_order = null;
+
+		while (!d_exit && l_order == null) {
+			String l_cmd = d_view.getCommand("Gameplay " + l_player_clone.getName() + ">");
+			l_order = processGamePlayCommand(l_cmd, l_player_clone);
+		}
+		return l_order;
 	}
 
 	/**
@@ -134,44 +165,101 @@ public class GamePlayController implements IGamePlayController {
 	 * <li>help</li>
 	 * </ul>
 	 * 
-	 * @param p_player the player to get and process commands for
-	 * @return "exit" = exit game play, "player_redo" same player to redo another
-	 *         command, "player_again" = player still has work to do, "player_done"
-	 *         = player has no more work to do, "orders_done" = move on to next
-	 *         phase.
+	 * @param p_cmd          user full command
+	 * @param l_player_clone the player to get and process commands for
+	 * @return the order, null = order not fulfilled - try again
 	 * @throws Exception unexpected error
 	 */
-	public String processGamePlayCommand(IPlayerModel p_player) throws Exception {
-		if (p_player == null) {
-			return "orders_done";
-		}
-
-		String l_return = "exit";
-		String l_cmd = d_view.getCommand("Gameplay " + p_player.getName() + ">");
-		String l_cmd_params[] = Utl.getFirstWord(l_cmd);
+	public IOrderModel processGamePlayCommand(String p_cmd, IPlayerModel l_player_clone) throws Exception {
+		IOrderModel l_order = null;
+		String l_cmd_params[] = Utl.getFirstWord(p_cmd);
 
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
-			l_return = "player_redo";
 			break;
 		case "exit":
-			l_return = "exit";
+			d_exit = true;
 			break;
 		case "showmap":
-			d_msg_model.setMessage(MessageType.None, "showmap coming soon...");
-			l_return = "player_redo";
+			showMap(l_player_clone);
 			break;
 		case "deploy":
-			d_msg_model.setMessage(MessageType.None, "deploy coming soon...");
-			l_return = "player_again";
+			l_order = processDeployCommand(l_cmd_params[1], l_player_clone);
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + l_cmd + "'");
-			l_return = "player_redo";
+			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_cmd + "'");
 			break;
 		}
-		return l_return;
+		return l_order;
+	}
+
+	/**
+	 * process the deploy command.
+	 * <ul>
+	 * <li>deploy countryID num_reinforcements</li>
+	 * </ul>
+	 * 
+	 * @param p_deploy_params the loadmap parameters (just the parameters without
+	 *                        the loadmap command itself)
+	 * @param l_player_clone  the player object who wishes to deploy
+	 * @return the player's order or null if there was a problem creating the order
+	 * @throws Exception unexpected error encountered
+	 */
+	private IOrderModel processDeployCommand(String p_deploy_params, IPlayerModel l_player_clone) throws Exception {
+		IOrderModel l_order = null;
+		String l_params[] = Utl.getFirstWord(p_deploy_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MessageType.Error, "Invalid deploy command, no options specified");
+			return null;
+		}
+		try {
+			// parse the countryID
+			String l_country_name = l_params[0];
+			if (!Utl.isValidMapName(l_country_name)) {
+				d_msg_model.setMessage(MessageType.Error, "Invalid deploy county name '" + l_country_name + "'.");
+				return null;
+			}
+			// parse the num_reinforcements
+			l_params = Utl.getFirstWord(l_params[1]);
+			String l_reinforcements_str = l_params[0];
+			if (Utl.isEmpty(l_reinforcements_str)) {
+				d_msg_model.setMessage(MessageType.Error,
+						"Invalid deploy command, number of reinforcements not specified.");
+				return null;
+			}
+			int l_reinforcements = Utl.convertToInteger(l_reinforcements_str);
+			if (l_reinforcements >= Integer.MAX_VALUE) {
+				d_msg_model.setMessage(MessageType.Error,
+						"Invalid number of deploy reinforcements '" + l_reinforcements_str + "'.");
+				return null;
+			}
+			l_order = new OrderDeploy(l_country_name, l_reinforcements, l_player_clone);
+			// execute the order on the cloned player to 1) see if it's valid 2) set the
+			// state of the cloned player for the next command
+			l_order.execute();
+			String l_msg = "Deploy order successful.\n" + l_player_clone.getReinforcements()
+					+ " reinforcement(s) left for " + l_player_clone.getName() + " to allocate.";
+			d_msg_model.setMessage(MessageType.Informational, l_msg);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			return null;
+		}
+		return l_order;
+	}
+
+	/**
+	 * Show a map of the specified player
+	 * 
+	 * @param p_player the play of whom wants to see a map of their owned countries
+	 *                 and their neighbors.
+	 */
+	private void showMap(IPlayerModel p_player) {
+		ArrayList<ICountryModel> l_countries = p_player.getPlayerCountries();
+		for (ICountryModel l_country : l_countries) {
+			d_view.showCountry(l_country);
+		}
 	}
 
 	/**
