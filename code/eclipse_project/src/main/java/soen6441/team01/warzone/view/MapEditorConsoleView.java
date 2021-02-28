@@ -132,7 +132,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 				ICountryModel l_neighbor=l_country_model.getNeighbors().get(k);
 				System.out.println(l_neighbor.getName()+", ");
 			}
-			System.out.println("\n\t" +l_country_model.getName()+"]\n");
+			System.out.println("]\n");
 		}
 	}
 
