@@ -206,4 +206,15 @@ public class GamePlayTest {
 		assertTrue(l_players.get(0).getPlayerCountries().size() > 0);
 		assertTrue(l_players.get(1).getPlayerCountries().size() > 0);
 	}
+
+	/**
+	 * test assigncountries no players
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test(expected = Exception.class)
+	public void test_assigncountries_3() throws Exception {
+		d_gameplay.setMap(d_map);
+		d_gameplay.assignCountries();
+	}
 }

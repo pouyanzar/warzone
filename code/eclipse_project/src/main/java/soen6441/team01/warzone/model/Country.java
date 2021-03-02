@@ -7,9 +7,9 @@ import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.CountrySummary;
+
 /**
-/**
- * Manages the information associated with a country
+ * /** Manages the information associated with a country
  *
  */
 public class Country implements ICountryModel {
@@ -48,8 +48,8 @@ public class Country implements ICountryModel {
 	/**
 	 * The constructor for the Country class.
 	 * 
-	 * @param p_id           a unique country identifier
-	 * @param p_name         country name
+	 * @param p_id        a unique country identifier
+	 * @param p_name      country name
 	 * @param p_continent the continent this country belongs to countries
 	 * @throws Exception when there is an exception
 	 */
@@ -123,9 +123,10 @@ public class Country implements ICountryModel {
 	public IContinentModel getContinent() {
 		return d_continent;
 	}
-	
+
 	/**
 	 * getter for continent id
+	 * 
 	 * @return d_continent_id the continent id
 	 */
 	public int getContinentId() {
@@ -154,7 +155,7 @@ public class Country implements ICountryModel {
 	/**
 	 * 
 	 * @return The player who owns this country. Null if there is no owner.
-	 */	
+	 */
 	public IPlayerModel getOwner() {
 		return d_owner;
 	}
@@ -240,10 +241,10 @@ public class Country implements ICountryModel {
 		l_sum.d_armies = getArmies();
 		l_sum.d_continent_name = getContinent().getName();
 		l_sum.d_continent_bonus = "+" + getContinent().getExtraArmy();
-//		ArrayList<ICountryModel> l_continent_countries = d_factory_model.getMapModel()
-//				.getCountriesOfContinent(getContinent());
 		ArrayList<ICountryModel> l_continent_countries = getContinent().getCountries();
 		int l_owns_ctr = 0;
+
+		// do all the countries
 		for (ICountryModel l_xcountry : l_continent_countries) {
 			if (l_xcountry.getOwner() != null && l_xcountry.getOwner().getName().equals(getOwner().getName())) {
 				l_owns_ctr++;
@@ -251,5 +252,32 @@ public class Country implements ICountryModel {
 		}
 		l_sum.d_player_owns_countries_of_continent = l_owns_ctr + "/" + l_continent_countries.size();
 		return l_sum;
+	}
+
+	/**
+	 * Format the country data into a string be saved to a domination style map
+	 * file.
+	 * 
+	 * @return the current country as it would be saved to a domination stype map
+	 *         file
+	 */
+	public String toDominationMapString() {
+		String l_smap = d_country_id + " " + d_country_name + " " + d_continent.getId() + " " + d_x + " " + d_y;
+		return l_smap;
+	}
+
+	/**
+	 * Format the country neighbor data into a string be saved to a domination style
+	 * map file as a border.
+	 * 
+	 * @return the current border as it would be saved to a domination stype map
+	 *         file
+	 */
+	public String toDominationMapBorderString() {
+		String l_smap = d_country_id + " ";
+		for( ICountryModel d_neighbor : d_neighbors) {
+			l_smap += d_neighbor.getId() + " ";
+		}
+		return l_smap;
 	}
 }

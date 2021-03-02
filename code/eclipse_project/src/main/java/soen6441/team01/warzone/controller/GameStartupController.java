@@ -149,8 +149,11 @@ public class GameStartupController implements IGameStartupController {
 			processGameplayer(l_cmd_params[1]);
 			break;
 		case "assigncountries":
-			processAssignCountries(d_gameplay);
-			l_return_command = "assignedcountries";
+			l_return_command = "";
+			if( processAssignCountries(d_gameplay) ) {
+				// move on to gameplay
+				l_return_command = "assignedcountries";				
+			}
 			break;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
@@ -167,13 +170,16 @@ public class GameStartupController implements IGameStartupController {
 	 * 
 	 * @param p_gameplay the gameplay model containing the countries and players to
 	 *                   use for the assignment.
+	 * @return true if successful otherwise false                  
 	 */
-	private void processAssignCountries(IGamePlayModel p_gameplay) {
+	private boolean processAssignCountries(IGamePlayModel p_gameplay) {
 		try {
 			p_gameplay.assignCountries();
 			d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
+			return true;
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, "assigncountries exception: " + ex.getMessage());
+			return false;
 		}
 	}
 
@@ -260,12 +266,17 @@ public class GameStartupController implements IGameStartupController {
 		try {
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
 			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
-			d_model_factory.setMapModel(l_map_model);
+			if (l_map_model.validatemap()) {
+				d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+				d_model_factory.setMapModel(l_map_model);
+			} else {
+				d_msg_model.setMessage(MessageType.Error, "loadmap error - map is not a valid map.");
+				return false;
+			}
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 			return false;
 		}
-		d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
 		return true;
 	}
 

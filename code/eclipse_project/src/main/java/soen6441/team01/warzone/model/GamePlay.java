@@ -116,7 +116,15 @@ public class GamePlay implements IGamePlayModel {
 		if (d_game_state != GameState.Startup) {
 			return;
 		}
+		// setup and do some high level validations
 		ArrayList<ICountryModel> l_countries = d_map.getCountries();
+		if( l_countries.size() < 1) {
+			throw new Exception("No countries defined to assigncountries to");
+		}
+		if( d_players.size() < 1) {
+			throw new Exception("No players defined to assigncountries to");
+		}
+		// assign countries to players
 		while (l_countries.size() > 0) {
 			for (IPlayerModel l_player : d_players) {
 				int randomIdx = ThreadLocalRandom.current().nextInt(0, l_countries.size());

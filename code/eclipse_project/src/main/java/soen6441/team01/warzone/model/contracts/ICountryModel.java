@@ -39,4 +39,8 @@ public interface ICountryModel {
 	public IPlayerModel getOwner();
 	
 	CountrySummary getSummary();
+	
+	String toDominationMapString();
+	
+	String toDominationMapBorderString();
 }

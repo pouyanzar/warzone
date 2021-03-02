@@ -139,15 +139,21 @@ public class MapEditorController implements IMapEditorController {
 			d_view.showmap(d_model_factory.getMapModel());
 			break;
 		case "savemap":
-			d_msg_model.setMessage(MessageType.None, "savemap coming soon...");
+			processSaveMap(l_cmd_params[1]);
 			break;
 		case "editmap":
 			processEditMap(l_cmd_params[1]);
 			break;
 		case "validatemap":
-			d_msg_model.setMessage(MessageType.None, "validatemap coming soon...");
+			if (d_model_factory.getMapModel().validatemap()) {
+				d_msg_model.setMessage(MessageType.None, "The current map is valid.");
+			} else {
+				d_msg_model.setMessage(MessageType.None, "The current map is invalid.");
+			}
 			break;
 		case "loadmap":
+			// if the map is not a valid map then stay in the editor, otherwise move on to
+			// the game startup phase.
 			if (processLoadMap(l_cmd_params[1])) {
 				return false;
 			}
@@ -161,6 +167,9 @@ public class MapEditorController implements IMapEditorController {
 
 	/**
 	 * process the editmap command
+	 * <p>
+	 * editmap filename
+	 * </p>
 	 * 
 	 * @param p_editmap_params the editmap parameters (just the parameters without
 	 *                         the editmap command itself)
@@ -170,8 +179,14 @@ public class MapEditorController implements IMapEditorController {
 	public boolean processEditMap(String p_editmap_params) throws Exception {
 		try {
 			String l_params[] = Utl.getFirstWord(p_editmap_params);
-			IMapModel l_map_model = Map.editmap(l_params[0], d_model_factory);
-			d_model_factory.setMapModel(l_map_model);
+			String l_filename = l_params[0];
+			if (Utl.isEmpty(l_filename)) {
+				throw new Exception("Invalid editmap command, filename not specified");
+			}
+			IMapModel l_map_model = Map.editmap(l_filename, d_model_factory);
+			if (l_map_model != null) {
+				d_model_factory.setMapModel(l_map_model);
+			}
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 			return false;
@@ -181,7 +196,8 @@ public class MapEditorController implements IMapEditorController {
 	}
 
 	/**
-	 * process the loadmap command
+	 * process the loadmap command. if the map is not a valid map then stay in the
+	 * editor, otherwise move on to the game startup phase.
 	 * 
 	 * @param p_loadmap_params the loadmap parameters (just the parameters without
 	 *                         the loadmap command itself)
@@ -197,7 +213,38 @@ public class MapEditorController implements IMapEditorController {
 			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
 			return false;
 		}
-		d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+		if (d_model_factory.getMapModel().validatemap()) {
+			d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+		} else {
+			d_msg_model.setMessage(MessageType.Error, "loadmap error - map is not a valid map.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * process the savemap command.
+	 * <p>
+	 * syntax: savemap filename
+	 * </p>
+	 * 
+	 * @param p_editmap_params the savemap parameters (just the parameters without
+	 *                         the savemap command itself)
+	 * @return true if successful
+	 * @throws Exception unexpected error encountered
+	 */
+	public boolean processSaveMap(String p_editmap_params) throws Exception {
+		String l_filename = "";
+		try {
+			String l_params[] = Utl.getFirstWord(p_editmap_params);
+			l_filename = l_params[0];
+			d_model_factory.getMapModel().saveMap(l_filename);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			return false;
+		}
+		d_msg_model.setMessage(MessageType.None, "map saved successfully to file '" + l_filename + "'");
 		return true;
 	}
 

@@ -2,6 +2,7 @@ package soen6441.team01.warzone.model;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -215,61 +216,123 @@ public class MapTest {
 	 */
 	@Test
 	public void test_validatemap_true() throws Exception {
-		IMapModel l_map = new Map(d_model_factory);
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+		Map l_map = new Map(d_model_factory);
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
 
-		assertTrue(l_map.validatemap(d_MAP_DIR + "canada/canada.map"));
+		assertTrue(l_map.validatemap());
 	}
 
 	/**
-	 * checks if validatemap function works properly for invalid map
+	 * checks if validatemap function works properly for invalid map // (1) map
+	 * validation – map is a connected graph; (2) continent validation – continent
+	 * is a connected subgraph;
 	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_validatemap_false() throws Exception {
-		IMapModel l_map = new Map(d_model_factory);
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete/canada_incomplete.map", d_model_factory);
+		Map l_map = new Map(d_model_factory);
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete/canada_incomplete.map", d_model_factory);
 
-		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete/canada_incomplete.map"));
+		assertTrue(!l_map.validatemap());
 	}
 
 	/**
-	 * checks if validatemap function works properly for invalid map
+	 * checks if validatemap function works properly for invalid map. // (1) map
+	 * validation – map is a connected graph; (2) continent validation – continent
+	 * is a connected subgraph;
 	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_validatemap_false2() throws Exception {
-		IMapModel l_map = new Map(d_model_factory);
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map", d_model_factory);
-
-		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map"));
+		Map l_map = new Map(d_model_factory);
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete2/canada_incomplete.map", d_model_factory);
+		assertTrue(!l_map.validatemap());
 	}
-	
+
 	/**
-	 * checks if validatemap function works properly for invalid map
+	 * checks if validatemap function works properly for invalid map. // (1) map
+	 * validation – map is a connected graph; (2) continent validation – continent
+	 * is a connected subgraph;
 	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
 	public void test_validatemap_false3() throws Exception {
-		IMapModel l_map = new Map(d_model_factory);
-		l_map = Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete3/canada.map", d_model_factory);
-
-		assertTrue(!l_map.validatemap(d_MAP_DIR + "canada_incomplete3/canada.map"));
+		Map l_map = new Map(d_model_factory);
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada_incomplete3/canada.map", d_model_factory);
+		assertTrue(!l_map.validatemap());
 	}
-	
+
 	/**
-	 * checks editmap functionality
+	 * tests the getMapAsDominationMapFormat function
 	 * 
 	 * @throws Exception when there is an exception
 	 */
-//	@Test
-//	public void test_editmap() throws Exception {
-//		Map l_map = new Map();
-//		l_map.editmap(d_MAP_DIR + "germany");
-//
-//		assertTrue(true);
-//	}
+	@Test
+	public void test_getMapAsDominationMapFormat_1() throws Exception {
+		Map l_map = new Map(d_model_factory);
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+		l_map.validatemap();
+		ArrayList<String> l_xmap = l_map.getMapAsDominationMapFormat();
+		assertTrue(l_xmap.get(0).equals("[files]"));
+		assertTrue(l_xmap.get(2).equals("[continents]"));
+		assertTrue(l_xmap.get(3).equals("Atlantic_Provinces 3 white"));
+		assertTrue(l_xmap.get(8).equals("Northwestern_Territories 2 white"));
+		assertTrue(l_xmap.get(10).equals("[countries]"));
+		assertTrue(l_xmap.get(11).equals("1 New_Brunswick 1 0 0"));
+		assertTrue(l_xmap.get(20).equals("10 Ontario-West 2 0 0"));
+		assertTrue(l_xmap.get(30).equals("20 Manitoba-North 4 0 0"));
+		assertTrue(l_xmap.get(40).equals("30 Northwest_Territories-Continental 6 0 0"));
+		assertTrue(l_xmap.get(41).equals("31 Yukon_Territory 6 0 0"));
+		assertTrue(l_xmap.get(43).equals("[borders]"));
+		assertTrue(l_xmap.get(44).equals("1 8 2 3"));
+		assertTrue(l_xmap.get(54).equals("11 7 9 10 20 22"));
+		assertTrue(l_xmap.get(58).equals("15 14 16 17"));
+		assertTrue(l_xmap.get(64).equals("21 20 22 23 24 25 30"));
+		assertTrue(l_xmap.get(73).equals("30 17 18 19 21 28 29 31"));
+		assertTrue(l_xmap.get(74).equals("31 17 30"));
+		Map l_map_model = (Map) Map.loadMap(l_xmap, d_model_factory);
+		l_map_model.validatemap();
+		ArrayList<String> l_ymap = l_map_model.getMapAsDominationMapFormat();
+		assertTrue(l_xmap.size() == l_ymap.size());
+		for (int i = 0; i < l_xmap.size(); i++) {
+			assertTrue(l_xmap.get(i).equals(l_ymap.get(i)));
+		}
+	}
+
+	/**
+	 * tests the saveMap function
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_saveMap_1() throws Exception {
+		Map l_map = new Map(d_model_factory);
+		File myObj = new File("c:\\tmp\\test_1_map.map");
+		myObj.delete();
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+		l_map.saveMap("c:\\tmp\\test_1_map.map");
+		l_map = new Map(d_model_factory);
+		d_model_factory.setMapModel(l_map);
+		l_map = (Map) Map.loadMapFromFile("c:\\tmp\\test_1_map.map", d_model_factory);
+		assertTrue(l_map.validatemap());
+	}
+
+	/**
+	 * tests the saveMap overwrite existing file
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_saveMap_2() throws Exception {
+		Map l_map = new Map(d_model_factory);
+		File myObj = new File("c:\\tmp\\test_2_map.map");
+		myObj.delete();
+		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+		l_map.saveMap("c:\\tmp\\test_2_map.map");
+		l_map.saveMap("c:\\tmp\\test_2_map.map");
+	}
+
 }

@@ -27,4 +27,6 @@ public interface IContinentModel {
 	void refreshCountriesOfContinent(IMapModel p_map);
 
 	ArrayList<ICountryModel> getCountries();
+
+	String toDominationMapString();
 }

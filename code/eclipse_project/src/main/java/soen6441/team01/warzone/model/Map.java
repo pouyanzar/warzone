@@ -1,12 +1,15 @@
 package soen6441.team01.warzone.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.activation.ActivationGroup_Stub;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +23,7 @@ import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IUserMessageModel;
 
 /**
  * Manages Warzone Maps. Maps are basically composed of continents, countries
@@ -291,35 +295,45 @@ public class Map implements IMapModel {
 	 * Checks if there is at least one continent, one country, and there is at least
 	 * one neighbor for each country on the current map
 	 * 
-	 * @param p_filename the map file to validate
 	 * @return l_isValid when the map is valid is true otherwise is false.
 	 * @throws Exception when there is an exception
 	 */
-	public boolean validatemap(String p_filename) throws Exception {
+	public boolean validatemap() throws Exception {
 
-		loadMapFromFile(p_filename, d_factory_model); // load map to validate
 		ArrayList<ICountryModel> l_passed_countries = new ArrayList<>(); // list of visited countries from start point
 																			// country
 		ArrayList<ICountryModel> l_continent_countries = new ArrayList<>(); // list of continent's countries
+		IUserMessageModel l_msg = d_factory_model.getUserMessageModel();
+
 		// Checks if there is at least one continent on the map
-		if (d_continents.size() < 1)
+		if (d_continents.size() < 1) {
+			l_msg.setMessage(MessageType.Error, "Map does not have at least 1 continent.");
 			return false;
+		}
 
 		// Checks if there is at least one country on the map
-		if (d_countries.size() < 1)
+		if (d_countries.size() < 1) {
+			l_msg.setMessage(MessageType.Error, "Map does not have at least 1 country.");
 			return false;
+		}
 
 		// Checks if it is possible to reach to all countries on the map from any
 		// country
 		for (ICountryModel l_country : d_countries) {
 			l_passed_countries.removeAll(l_passed_countries);
-			if (l_country.getNeighbors().size() < 1) // Checks if the country have at least one neighbor
+			if (l_country.getNeighbors().size() < 1) {
+				// Checks if the country have at least one neighbor
+				l_msg.setMessage(MessageType.Error,
+						"Country '" + l_country.getName() + "' should have at least 1 neighbor");
 				return false;
+			}
 			mapTraversal(l_country, l_passed_countries);
-
 			for (ICountryModel l_country1 : d_countries) {
-				if (!l_passed_countries.contains(l_country1))
+				if (!l_passed_countries.contains(l_country1)) {
+					l_msg.setMessage(MessageType.Error,
+							"Country '" + l_country.getName() + "' is not fully connected to all other countries");
 					return false;
+				}
 			}
 		}
 
@@ -329,12 +343,19 @@ public class Map implements IMapModel {
 			l_continent_countries = getContinentCountries(l_continent);
 			for (ICountryModel l_country : l_continent_countries) {
 				l_passed_countries.removeAll(l_passed_countries);
-				if (l_country.getNeighbors().size() < 1)// Checks if the country have at least one neighbor
+				if (l_country.getNeighbors().size() < 1) {
+					// Checks if the country have at least one neighbor
+					l_msg.setMessage(MessageType.Error,
+							"Country '" + l_country.getName() + "' should have at least 1 neighbor");
 					return false;
+				}
 				mapContinentTraversal(l_continent, l_country, l_passed_countries);
 				for (ICountryModel l_country1 : l_continent_countries) {
-					if (!l_passed_countries.contains(l_country1))
+					if (!l_passed_countries.contains(l_country1)) {
+						l_msg.setMessage(MessageType.Error, "Country '" + l_country.getName() + "' in continent '"
+								+ l_continent.getName() + " is not fully connected to all other countries");
 						return false;
+					}
 				}
 			}
 		}
@@ -605,7 +626,8 @@ public class Map implements IMapModel {
 	}
 
 	/**
-	 * loads an existing map file or create a new one in case file does not exist
+	 * Load a map from an existing "domination" map file, or create a new map from
+	 * scratch if the file does not exist.
 	 * 
 	 * @param p_filename      map file name
 	 * @param p_factory_model the model factory to use when needed
@@ -615,21 +637,22 @@ public class Map implements IMapModel {
 	 * @throws Exception             when there is an exception
 	 */
 	public static IMapModel editmap(String p_filename, SoftwareFactoryModel p_factory_model) throws Exception {
-		return loadMapFromFile(p_filename, p_factory_model);
-//		File l_filename = new File(p_filename + ".map");
-//		if (l_filename.exists()) {
-//			loadmap(p_filename);
-//		}
-//
-//		else {
-//			try {
-//				l_filename.createNewFile();
-//			} catch (IOException e) {
-//
-//				e.printStackTrace();
-//			}
-//
-//		}
+		IMapModel l_map;
+
+		// if the specified filename exists then load the existing map from the file
+		File l_filename = new File(p_filename);
+		if (l_filename.exists()) {
+			l_map = Map.loadMapFromFile(p_filename, p_factory_model);
+			return l_map;
+		}
+
+		// the specified filename does not exist, therefore create a new map
+		p_factory_model.getUserMessageModel().setMessage(MessageType.Warning,
+				"Specified filename '" + p_filename + "' does not exist. Creating new (empty) map.");
+		l_map = new Map(p_factory_model);
+		p_factory_model.setMapModel(l_map);
+
+		return l_map;
 	}
 
 	/**
@@ -674,6 +697,64 @@ public class Map implements IMapModel {
 		}
 
 		return l_map;
+	}
+
+	/**
+	 * Convert the current map into the "domination" game map format. Note that this
+	 * implementation of Warzone does not process the continent color which is part
+	 * of the domination map file format.
+	 * 
+	 * @return the current map in the domination game style map file. Each string of
+	 *         the array is a line in the map file.
+	 */
+	public ArrayList<String> getMapAsDominationMapFormat() {
+		ArrayList<String> l_dmap = new ArrayList<String>();
+		l_dmap.add("[files]");
+
+		// process continent section
+		l_dmap.add("");
+		l_dmap.add("[continents]");
+		for (IContinentModel l_continent : d_continents) {
+			l_dmap.add(l_continent.toDominationMapString());
+		}
+
+		// process country section
+		l_dmap.add("");
+		l_dmap.add("[countries]");
+		for (ICountryModel l_country : d_countries) {
+			l_dmap.add(l_country.toDominationMapString());
+		}
+
+		// process border section
+		l_dmap.add("");
+		l_dmap.add("[borders]");
+		for (ICountryModel l_country : d_countries) {
+			l_dmap.add(l_country.toDominationMapBorderString().trim());
+		}
+
+		return l_dmap;
+	}
+
+	/**
+	 * Save a map to a text file exactly as edited (using the "domination" game map
+	 * format). Note that the map is validated before it is saved, and a warning is
+	 * issued to the user if it's invalid; however the map is still saved if it's
+	 * invalid to give the user a chance to reload it and finish editing it at a
+	 * later time.
+	 * 
+	 * @param p_filename the filaname of the map file
+	 * @throws Exception unexpected error
+	 */
+	public void saveMap(String p_filename) throws Exception {
+		PrintWriter pw = new PrintWriter(new FileOutputStream(p_filename));
+		ArrayList<String> l_map_data = getMapAsDominationMapFormat();
+		for (String l_map_rec : l_map_data)
+			pw.println(l_map_rec);
+		pw.close();
+		if (!validatemap()) {
+			d_factory_model.getUserMessageModel().setMessage(MessageType.Warning,
+					"The saved map is not a fully connected valid map. Please use the map editor to fix the issue before playing a game.");
+		}
 	}
 
 }

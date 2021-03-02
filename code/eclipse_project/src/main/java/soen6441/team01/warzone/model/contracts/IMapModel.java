@@ -36,5 +36,7 @@ public interface IMapModel {
 	
 	ArrayList<ICountryModel> getNeighbors(int p_country_id);
 	
-	boolean validatemap(String filename) throws Exception;
+	boolean validatemap() throws Exception;
+
+	void saveMap(String p_filename) throws Exception;
 }
