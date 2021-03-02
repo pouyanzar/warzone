@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import soen6441.team01.warzone.common.Observable;
@@ -121,19 +122,20 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_map the map to show
 	 */
 	public void showmap(IMapModel p_map) {
-		for(int j=0;j<p_map.getCountries().size();j++){
-			
-			ICountryModel l_country_model=p_map.getCountries().get(j);				
-			IContinentModel l_continent_model=l_country_model.getContinent();
-
-			System.out.println("\n" +l_continent_model.getName());				
-			System.out.println("\n\t" +l_country_model.getName()+"[\n");				
-			for(int k=0;k<l_country_model.getNeighbors().size();k++){		
-				ICountryModel l_neighbor=l_country_model.getNeighbors().get(k);
-				System.out.println(l_neighbor.getName()+", ");
+		for(IContinentModel l_continent : p_map.getContinents()) {
+			System.out.println("\n" + l_continent.getName()  + ":");				
+			for( ICountryModel l_country : l_continent.getCountries()){
+				System.out.println("   " + l_country.getName() + ":");	
+				System.out.print("      [");	
+				ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors(); 
+				for(int k=0; k < l_neighbors.size() ; k++){               
+					System.out.print(l_neighbors.get(k).getName());
+					if( k < l_neighbors.size() - 1) {
+						System.out.print(", ");
+					}
+				}
+				System.out.println("]");
 			}
-			System.out.println("]\n");
 		}
 	}
-
 }
