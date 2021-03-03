@@ -385,7 +385,7 @@ public class MapEditorControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.equals("Country 'France' should have at least 1 neighbor"));
 
-		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1 Asia");
+		d_map_editor_controller.processMapEditorCommand("editcontinent -add 2 Asia");
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Germany 2");
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add France Germany");
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Germany France");
@@ -435,5 +435,4 @@ public class MapEditorControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.equals("Country 'France' is not fully connected to all other countries"));
 	}
-
 }

@@ -26,6 +26,9 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	private Scanner d_keyboard = null;
 	private IUserMessageModel d_user_message_model = null;
 	private SoftwareFactoryModel d_factory_model = null;
+	
+	// used mainly to check showmap in unit tests
+	public ArrayList<String> d_last_showmap;
 
 	/**
 	 * Constructor.
@@ -122,20 +125,32 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_map the map to show
 	 */
 	public void showmap(IMapModel p_map) {
+		String l_str = "";
+		d_last_showmap = new ArrayList<String>();	// used mainly to check showmap in unit tests
+		
 		for(IContinentModel l_continent : p_map.getContinents()) {
-			System.out.println("\n" + l_continent.getName()  + ":");				
+			l_str = "\n" + l_continent.getName()  + ":";
+			d_last_showmap.add(l_str);
+			// show each continent's countries
 			for( ICountryModel l_country : l_continent.getCountries()){
-				System.out.println("   " + l_country.getName() + ":");	
-				System.out.print("      [");	
+				l_str = "   " + l_country.getName() + ":";
+				d_last_showmap.add(l_str);
+				l_str = "      [";
+				// show each country's neighbors
 				ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors(); 
 				for(int k=0; k < l_neighbors.size() ; k++){               
-					System.out.print(l_neighbors.get(k).getName());
+					l_str += l_neighbors.get(k).getName();
 					if( k < l_neighbors.size() - 1) {
-						System.out.print(", ");
+						l_str += ", ";
 					}
 				}
-				System.out.println("]");
+				l_str += "]";
+				d_last_showmap.add(l_str);
 			}
+		}
+		
+		for( String l_line : d_last_showmap) {
+			System.out.println(l_line);
 		}
 	}
 }

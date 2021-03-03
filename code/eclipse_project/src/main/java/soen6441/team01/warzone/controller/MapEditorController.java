@@ -318,6 +318,7 @@ public class MapEditorController implements IMapEditorController {
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
+			Map.refreshCountriesOfAllContinents(l_map);
 			d_msg_model.setMessage(MessageType.None, "editneighbor processed successfully");
 		}
 	}
@@ -394,6 +395,7 @@ public class MapEditorController implements IMapEditorController {
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
+			Map.refreshCountriesOfAllContinents(l_map);
 			d_msg_model.setMessage(MessageType.None, "editcountry processed successfully");
 		}
 	}
@@ -475,6 +477,14 @@ public class MapEditorController implements IMapEditorController {
 		}
 	}
 
+	/**
+	 * 
+	 * @return the current map editor view
+	 */
+	public IMapEditorView getMapEditorView() {
+		return d_view;
+	}
+	
 	/**
 	 * Asks the view to display the list of map editor commands along with their
 	 * syntax.
