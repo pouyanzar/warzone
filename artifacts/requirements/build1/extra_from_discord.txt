@@ -35,6 +35,11 @@ q: We are using the MVC pattern, and our view is console based. In the requireme
 -----------------------------------------------------
 unit test requirements: 
 
+MapTest.java
+MapEditorControllerTest.java
+        // (1) map validation – map is a connected graph; (2) continent validation – continent is a connected subgraph; 
+
+
 GamePlayTest:
         // build 1 requirement: Unit testing framework
         // (3) calculation of number of reinforcement armies;
