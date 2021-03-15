@@ -5,7 +5,13 @@ editmap ./src/test/resources/maps/canada/canada.map
 
 * players
 gameplayer -add John -add Pouyan -add Nazanin
+gameplayer -add John
 assigncountries
+
+
+editcontinent -add 1 North_America
+editcountry -add Canada 1 -add USA 1
+editneighbor -add Canada USA -add USA Canada
 
 
 -----------------------------------------------------
@@ -14,3 +20,11 @@ assigncountries
 * All turns start with reinforcement. Each turn, each player receives a number of armies equal to: (max(3, # of countries the player own/3)+(continent value of all continents controlled by the player)).
 
 
+-----------------------------------------------------
+refactoring:
+
+1) all/controller factory references all other factories:
+
+2) all writes to console done via Utl.consoleMessage - adds logging
+
+3) Refactor class names:

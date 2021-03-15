@@ -23,6 +23,7 @@ public class Player implements IPlayerModel {
 	private ArrayList<IOrderModel> d_order_list;
 	private ArrayList<Card> d_cards;
 	private SoftwareFactoryModel d_factory_model = null;
+	private boolean d_done_turn = false;
 
 	/**
 	 * Constructor for class Player. Don't use issue_order if using this constructor
@@ -192,7 +193,28 @@ public class Player implements IPlayerModel {
 		IOrderModel l_order = d_order_datasource.getOrder(this);
 		if (l_order != null) {
 			d_order_list.add(l_order);
+			d_done_turn = false;
+		} else {
+			d_done_turn = true;
 		}
+	}
+
+	/**
+	 * checks if the player is done with their turn
+	 * 
+	 * @return true if the player is done with their turn, false otherwise
+	 */
+	public boolean isDoneTurn() {
+		return d_done_turn;
+	}
+
+	/**
+	 * sets if the player is done with their turn or not
+	 * 
+	 * @param p_done_turn the value to set the done turn to
+	 */
+	public void setDoneTurn(boolean p_done_turn) {
+		d_done_turn = p_done_turn;
 	}
 
 	/**

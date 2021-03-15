@@ -522,7 +522,7 @@ public class Map implements IMapModel {
 
 		String l_country_id_str = l_tokens[0];
 		int l_country_id = Utl.convertToInteger(l_country_id_str);
-		if (l_country_id >= Integer.MAX_VALUE) {
+		if (l_country_id >= Integer.MAX_VALUE || l_country_id < 0) {
 			throw new Exception("Invalid border country id value '" + l_country_id_str + "' specified");
 		}
 
@@ -530,7 +530,7 @@ public class Map implements IMapModel {
 		while (!Utl.isEmpty(l_tokens[0])) {
 			String l_border_id_str = l_tokens[0];
 			int l_border_id = Utl.convertToInteger(l_border_id_str);
-			if (l_border_id >= Integer.MAX_VALUE) {
+			if (l_border_id >= Integer.MAX_VALUE || l_border_id < 0) {
 				throw new Exception("Invalid border country id value '" + l_border_id_str
 						+ "' specified for country with id of '" + l_country_id_str + "'");
 			}
@@ -551,7 +551,7 @@ public class Map implements IMapModel {
 
 		String l_country_id_str = l_tokens[0];
 		int l_country_id = Utl.convertToInteger(l_country_id_str);
-		if (l_country_id >= Integer.MAX_VALUE) {
+		if (l_country_id >= Integer.MAX_VALUE || l_country_id < 0) {
 			throw new Exception("Invalid country id value '" + l_country_id_str + "' specified");
 		}
 
@@ -566,7 +566,7 @@ public class Map implements IMapModel {
 
 		String l_continent_id_str = l_tokens[0];
 		int l_continent_id = Utl.convertToInteger(l_continent_id_str);
-		if (l_continent_id >= Integer.MAX_VALUE) {
+		if (l_continent_id >= Integer.MAX_VALUE || l_continent_id < 0) {
 			throw new Exception("Invalid continent id value '" + l_continent_id_str + "' specified for country '"
 					+ l_country_name + "'");
 		}

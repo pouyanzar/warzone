@@ -31,8 +31,12 @@ public interface IPlayerModel {
 	String deploy(String p_country_name, int p_number_of_armies) throws Exception;
 
 	void copyOrders(IPlayerModel p_cloned_player) throws Exception;
-	
+
 	void addCard(Card l_card);
-	
-	public ArrayList<Card> getCards();
+
+	ArrayList<Card> getCards();
+
+	boolean isDoneTurn();
+
+	void setDoneTurn(boolean p_done_turn);
 }

@@ -21,14 +21,17 @@ public class Observable {
 
 	/**
 	 * Register the specified object as an observer, i.e. who wants to be notified
-	 * when changes are made to the underlying data.
+	 * when changes are made to the underlying data. An observer can only be
+	 * attached once.
 	 * 
 	 * @param observer the observer object that wants to receive notification
 	 *                 messages.
 	 */
 	public void attach(Observer observer) {
 		try {
-			d_observers.add(observer);
+			if( !d_observers.contains(observer)) {
+				d_observers.add(observer);
+			}
 		} catch (Exception ex) {
 		}
 	}
@@ -57,7 +60,6 @@ public class Observable {
 				} catch (Exception ex) {
 					detach(observer);
 				}
-
 			}
 		}
 		d_dirty = false;

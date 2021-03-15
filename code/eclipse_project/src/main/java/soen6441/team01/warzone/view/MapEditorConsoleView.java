@@ -26,7 +26,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	private Scanner d_keyboard = null;
 	private IUserMessageModel d_user_message_model = null;
 	private SoftwareFactoryModel d_factory_model = null;
-	
+
 	// used mainly to check showmap in unit tests
 	public ArrayList<String> d_last_showmap;
 
@@ -43,7 +43,6 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
 		d_user_message_model = d_factory_model.getUserMessageModel();
-		d_user_message_model.attach(this);
 	}
 
 	/**
@@ -66,14 +65,23 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	}
 
 	/**
-	 * do a clean shutdown of the view
+	 * activate the view
 	 */
-	public void shutdown() {
+	public void activate() {
 		if (d_user_message_model != null) {
-			d_user_message_model.detach(this);
+			d_user_message_model.attach(this);
 		}
 	}
 
+	/**
+	 * do a clean shutdown of the view
+	 */
+	public void deactivate() {
+		if (d_user_message_model != null) {
+			d_user_message_model.detach(this);
+		}
+	}	
+	
 	/**
 	 * Get the next command typed in on the console from the user
 	 * 
@@ -116,7 +124,6 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 		if (p_obserable == d_user_message_model) {
 			processMessage(d_user_message_model.getLastMessage());
 		}
-
 	}
 
 	/**
@@ -126,21 +133,21 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 */
 	public void showmap(IMapModel p_map) {
 		String l_str = "";
-		d_last_showmap = new ArrayList<String>();	// used mainly to check showmap in unit tests
-		
-		for(IContinentModel l_continent : p_map.getContinents()) {
-			l_str = "\n" + l_continent.getName()  + ":";
+		d_last_showmap = new ArrayList<String>(); // used mainly to check showmap in unit tests
+
+		for (IContinentModel l_continent : p_map.getContinents()) {
+			l_str = "\n" + l_continent.getName() + ":";
 			d_last_showmap.add(l_str);
 			// show each continent's countries
-			for( ICountryModel l_country : l_continent.getCountries()){
+			for (ICountryModel l_country : l_continent.getCountries()) {
 				l_str = "   " + l_country.getName() + ":";
 				d_last_showmap.add(l_str);
 				l_str = "      [";
 				// show each country's neighbors
-				ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors(); 
-				for(int k=0; k < l_neighbors.size() ; k++){               
+				ArrayList<ICountryModel> l_neighbors = l_country.getNeighbors();
+				for (int k = 0; k < l_neighbors.size(); k++) {
 					l_str += l_neighbors.get(k).getName();
-					if( k < l_neighbors.size() - 1) {
+					if (k < l_neighbors.size() - 1) {
 						l_str += ", ";
 					}
 				}
@@ -148,8 +155,8 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 				d_last_showmap.add(l_str);
 			}
 		}
-		
-		for( String l_line : d_last_showmap) {
+
+		for (String l_line : d_last_showmap) {
 			System.out.println(l_line);
 		}
 	}

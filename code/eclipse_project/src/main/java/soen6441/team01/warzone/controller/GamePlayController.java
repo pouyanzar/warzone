@@ -58,11 +58,12 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	public void execPhase() {
 		try {
 			if( d_round == 1 ) {
+				d_view.activate();
 				d_view.displayGamePlayBanner();
 				d_gameplay_model = d_model_factory.getGamePlayModel();
 				d_gameplay_model.setGameState(GameState.GamePlay);
 			}
-			d_msg_model.setMessage(MessageType.None, "\n* round " + d_round++);
+			d_msg_model.setMessage(MessageType.None, "\n-- round " + d_round++ + " --");
 			Phase l_gmaeplay_start_phase = d_controller_factory.getReinforcementPhase();
 			nextPhase(l_gmaeplay_start_phase);
 		} catch (Exception ex) {
@@ -78,13 +79,12 @@ public class GamePlayController extends Phase implements IGamePlayController{
 		try {
 			l_end_phase = d_controller_factory.getGameEndPhase();
 		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error during game startup, exception: " + ex.getMessage());
+			Utl.consoleMessage("Fatal error during game play, exception: " + ex.getMessage());
 		}
 		nextPhase(l_end_phase);
 
 		if (d_view != null) {
-			d_view.shutdown();
+			d_view.deactivate();
 		}
-
 	}
 }

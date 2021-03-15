@@ -70,15 +70,19 @@ public class MapEditorControllerTest {
 
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add Europe");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcontinent -add continentID"));
+		assertTrue(l_msg.contains("Invalid continent id 'Europe', expecting a positive integer less than 1000"));
 
+		d_map_editor_controller.processMapEditorCommand("editcontinent -add -1 Europe");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid continent id '-1',"));
+		
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcontinent -add continentvalue"));
+		assertTrue(l_msg.contains("Invalid continent name: ''"));
 
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1 Europe add");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcontinent option"));
+		assertTrue(l_msg.contains("Invalid editcontinent option 'add', expecting: -add, -remove"));
 
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1 Europe -add 1 Africa");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -90,11 +94,11 @@ public class MapEditorControllerTest {
 
 		d_map_editor_controller.processMapEditorCommand("editcontinent -remove");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcontinent -remove continentID"));
+		assertTrue(l_msg.contains("Invalid continent id: '',"));
 
 		d_map_editor_controller.processMapEditorCommand("editcontinent -remove Europe");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcontinent -remove continentID"));
+		assertTrue(l_msg.contains("Invalid continent id: 'Europe',"));
 	}
 
 	/**
@@ -154,23 +158,27 @@ public class MapEditorControllerTest {
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Can!ada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -add countryId"));
+		assertTrue(l_msg.contains("Invalid country name 'Can!ada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add 0001 Canada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -add countryId"));
+		assertTrue(l_msg.contains("Invalid country name '0001'"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -add continentID"));
+		assertTrue(l_msg.contains("Invalid continent id: '', expecting a positive integer less than 1000"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada1 Europe");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -add continentID"));
+		assertTrue(l_msg.contains("Invalid continent id: 'Europe',"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada 1 add");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid editcountry option"));
+		
+		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada -1");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid continent id: '-1',"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada1 1 -add Canada1 2");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -182,11 +190,11 @@ public class MapEditorControllerTest {
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -remove Cana!X");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -remove countryId"));
+		assertTrue(l_msg.contains("Invalid country name 'Cana!X'"));
 
 		d_map_editor_controller.processMapEditorCommand("editcountry -remove");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editcountry -remove countryId"));
+		assertTrue(l_msg.contains("Invalid country name ''"));
 	}
 
 	/**
@@ -239,15 +247,15 @@ public class MapEditorControllerTest {
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Can!ada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -add countryId"));
+		assertTrue(l_msg.contains("Invalid country name 'Can!ada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -add neighborcountryID"));
+		assertTrue(l_msg.contains("Invalid country neighbor name 'Canada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada U!SA");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -add neighborcountryID"));
+		assertTrue(l_msg.contains("Invalid country neighbor name 'Canada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -269,15 +277,15 @@ public class MapEditorControllerTest {
 		String l_msg;
 		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Can!ada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -remove countryId"));
+		assertTrue(l_msg.contains("Invalid country name 'Can!ada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -remove neighborcountryID"));
+		assertTrue(l_msg.contains("Invalid country neighbor name 'Canada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada U!SA");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid editneighbor -remove neighborcountryID"));
+		assertTrue(l_msg.contains("Invalid country neighbor name 'Canada'"));
 
 		d_map_editor_controller.processMapEditorCommand("editneighbor -remove Canada USA");
 		l_msg = d_msg.getLastMessageAndClear().d_message;

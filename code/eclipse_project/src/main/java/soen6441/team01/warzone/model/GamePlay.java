@@ -82,7 +82,7 @@ public class GamePlay implements IGamePlayModel {
 		String l_pname = p_player.getName();
 		IPlayerModel l_player = Player.FindPlayer(l_pname, d_players);
 		if (l_player != null) {
-			throw new Exception("Cannot add player '" + p_player + "' to the game, since that name already exists");
+			throw new Exception("Cannot add player '" + p_player.getName() + "' to the game, since that name already exists");
 		}
 		d_players.add(p_player);
 	}

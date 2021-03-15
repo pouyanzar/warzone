@@ -59,6 +59,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		Phase l_end_phase = null;
 
 		try {
+			d_view.activate();
 			l_end_phase = d_controller_factory.getGameEndPhase();
 			d_view.displayGameStartupBanner();
 			
@@ -77,7 +78,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		}
 
 		if (d_view != null) {
-			d_view.shutdown();
+			d_view.deactivate();
 		}
 	}
 
@@ -281,7 +282,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		d_view.processMessage(MessageType.None, "Game startup commands:");
 		d_view.processMessage(MessageType.None, " - gameplayer -add playername -remove playername");
 		d_view.processMessage(MessageType.None, " - assigncountries");
-		d_view.processMessage(MessageType.None, " - loapmap filename");
+		d_view.processMessage(MessageType.None, " - loadmap filename");
 		d_view.processMessage(MessageType.None, " - exit");
 		d_view.processMessage(MessageType.None, " - help");
 	}

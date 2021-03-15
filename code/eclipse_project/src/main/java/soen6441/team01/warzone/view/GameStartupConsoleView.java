@@ -35,13 +35,21 @@ public class GameStartupConsoleView implements Observer, IGameStartupView {
 		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
 		d_user_message_model = d_factory_model.getUserMessageModel();
-		d_user_message_model.attach(this);
+	}
+
+	/**
+	 * activate the view
+	 */
+	public void activate() {
+		if (d_user_message_model != null) {
+			d_user_message_model.attach(this);
+		}
 	}
 
 	/**
 	 * do a clean shutdown of the view
 	 */
-	public void shutdown() {
+	public void deactivate() {
 		if (d_user_message_model != null) {
 			d_user_message_model.detach(this);
 		}

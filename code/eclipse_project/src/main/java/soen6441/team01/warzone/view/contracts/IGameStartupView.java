@@ -12,7 +12,9 @@ public interface IGameStartupView {
 
 	String getCommand();
 	
-	void shutdown();
+	void deactivate();
 
 	void processMessage(MessageType none, String string);
+	
+	void activate();
 }

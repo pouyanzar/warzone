@@ -17,7 +17,9 @@ public interface IMapEditorView {
 
 	void processMessage(MessageType p_msg_type, String p_message);
 
-	void shutdown();
-	
+	void deactivate();
+
 	void showmap(IMapModel p_map);
+
+	void activate();
 }

@@ -82,7 +82,7 @@ public class IssueOrderControllerTest {
 
 		d_gameplay_controller.processGamePlayCommand("deploy 5 Canada", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Invalid deploy county name"));
+		assertTrue(l_msg.contains("Invalid deploy country name '5'"));
 
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 5x", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -100,8 +100,35 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("does not have enough reinforcements (3) to deploy 5 armies"));
+
+		d_gameplay_controller.processGamePlayCommand("deploy Canada -1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid number of deploy reinforcements '-1'"));
 	}
 
+	/**
+	 * test processGamePlayCommand_gameplayer valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_deploy_valid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_country);
+		d_player.setReinforcements(3);
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Deploy order successful"));
+
+		d_player.setReinforcements(3);
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 2", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Deploy order successful"));
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Deploy order successful"));
+	}	
+	
 	/**
 	 * test loadmap valid commands
 	 * 
@@ -118,5 +145,27 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));
+	}
+
+	/**
+	 * test end turn command
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_end() throws Exception {
+		String l_msg;
+		d_gameplay_controller.processGamePlayCommand("end", d_player);
+		assertTrue(d_msg.getLastMessageAndClear() == null);
+
+		d_gameplay_controller.processGamePlayCommand("end turn", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("invalid parameters for end command: 'turn'"));
+
+		d_player.addPlayerCountry(d_country);
+		d_player.setReinforcements(5);
+		d_gameplay_controller.processGamePlayCommand("end", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Cannot end turn as player 'John' has 5 reinforcement(s) left to deploy."));
 	}
 }

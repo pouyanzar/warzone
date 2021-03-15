@@ -15,9 +15,11 @@ public interface IGamePlayView {
 	
 	String getCommand(String p_prompt);
 	
-	void shutdown();
+	void deactivate();
 
 	void processMessage(MessageType none, String string);
 	
 	void showCountry(ICountryModel p_country);
+	
+	void activate();
 }

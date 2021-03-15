@@ -52,24 +52,24 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 */
 	public void execMapEditor() {
 		Phase l_next_phase = null;
-		
+
 		try {
+			d_view.activate();
 			d_view.displayWarzoneBanner();
 			d_view.displayMapEditorBanner();
 
-            String l_cmd;
+			String l_cmd;
 			while (l_next_phase == null) {
 				l_cmd = d_view.getCommand();
 				l_next_phase = processMapEditorCommand(l_cmd);
 			}
 			nextPhase(l_next_phase);
 		} catch (Exception ex) {
-			System.out.println("Fatal error processing Map Editor.");
-			System.out.println("Exception: " + ex.getMessage());
+			Utl.consoleMessage("Fatal error processing Map Editor, exception: " + ex.getMessage());
 		}
 
 		if (d_view != null) {
-			d_view.shutdown();
+			d_view.deactivate();
 		}
 	}
 
@@ -97,7 +97,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 */
 	public Phase processMapEditorCommand(String p_command) throws Exception {
 		Phase l_next_phase = null;
-		
+
 		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
@@ -229,7 +229,11 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	}
 
 	/**
-	 * process the editneighbor command
+	 * process the editneighbor command:<br>
+	 * 
+	 * <pre>
+	 * editneighbor -add countryName neighborcountryName -remove countryName neighborcountryName
+	 * </pre>
 	 * 
 	 * @param p_editneighbor_params the editneighbor parameters (just the parameters
 	 *                              without the editneighbor command itself)
@@ -253,15 +257,14 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -add countryId '"
-								+ l_countryName + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
 					if (!Utl.isValidMapName(l_neighbor_name)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -add neighborcountryID '"
-								+ l_countryName + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error,
+								"Invalid country neighbor name '" + l_countryName + "'");
 						return;
 					}
 					l_map.addNeighbor(l_countryName, l_neighbor_name);
@@ -275,15 +278,14 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -remove countryId '"
-								+ l_countryName + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
 					if (!Utl.isValidMapName(l_neighbor_name)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editneighbor -remove neighborcountryID '"
-								+ l_countryName + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error,
+								"Invalid country neighbor name '" + l_countryName + "'");
 						return;
 					}
 					l_map.removeNeighbor(l_countryName, l_neighbor_name);
@@ -304,7 +306,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	}
 
 	/**
-	 * process the editcountry command
+	 * process the editcountry command: <br>
+	 * editcountry -add countryName continentID -remove countryName
 	 * 
 	 * @param p_editcountry_params the editcountry parameters (just the parameters
 	 *                             without the editcountry command itself)
@@ -328,15 +331,14 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -add countryId '" + l_countryName
-								+ "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
-					if (l_continentId > 1000) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -add continentID '" + l_params[0]
-								+ "', expecting a valid integer value less than 1000");
+					if (l_continentId > 1000 || l_continentId < 0) {
+						d_msg_model.setMessage(MessageType.Error, "Invalid continent id: '" + l_params[0]
+								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					ICountryModel l_country = l_map.addCountry(l_countryName, l_continentId);
@@ -354,8 +356,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcountry -remove countryId '"
-								+ l_countryName + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					ICountryModel l_country = l_map.removeCountry(l_countryName);
@@ -381,7 +382,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	}
 
 	/**
-	 * process editcontinent command
+	 * process editcontinent command: <br>
+	 * editcontinent -add continentID continentName -remove continentID
 	 * 
 	 * @param p_editcontinent_params the editcontinent parameters (just the
 	 *                               parameters without the editcontinent command
@@ -405,16 +407,15 @@ public class MapEditorController extends Phase implements IMapEditorController {
 				try {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
-					if (l_continentId > 1000) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -add continentID '"
-								+ l_params[0] + "', expecting a valid integer value less than 1000");
+					if (l_continentId > 1000 || l_continentId < 0) {
+						d_msg_model.setMessage(MessageType.Error, "Invalid continent id '" + l_params[0]
+								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentvalue = l_params[0];
 					if (!Utl.isValidMapName(l_continentvalue)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -add continentvalue '"
-								+ l_params[0] + "', expecting a valid map name");
+						d_msg_model.setMessage(MessageType.Error, "Invalid continent name: '" + l_params[0] + "'");
 						return;
 					}
 					IContinentModel l_continent = l_map.addContinent(l_continentId, l_continentvalue, 0);
@@ -432,8 +433,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid editcontinent -remove continentID '"
-								+ l_params[0] + "', expecting a valid integer value less than 1000");
+						d_msg_model.setMessage(MessageType.Error, "Invalid continent id: '" + l_params[0]
+								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					IContinentModel l_continent = l_map.removeContinent(l_continentId);
@@ -474,16 +475,14 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	private void mapEditorHelp() {
 		d_view.displayMapEditorBanner();
 		d_view.processMessage(MessageType.None, "Map editor commands:");
-		d_view.processMessage(MessageType.None, " - editcontinent -add continentID continentvalue -remove continentID");
+		d_view.processMessage(MessageType.None, " - editcontinent -add continentID continentName -remove continentID");
+		d_view.processMessage(MessageType.None, " - editcountry -add countryName continentID -remove countryName");
 		d_view.processMessage(MessageType.None,
-				" - editcountry -add countryID continentID -remove countryID (countryID = country name)");
-		d_view.processMessage(MessageType.None,
-				" - editneighbor -add countryID neighborcountryID -remove countryID neighborcountryID (countryID = country name, neighborcountryID = country name)");
-		d_view.processMessage(MessageType.None,
-				" - showmap (show all continents and countries and their respective neighbors)");
+				" - editneighbor -add countryName neighborcountryName -remove countryName neighborcountryName");
+		d_view.processMessage(MessageType.None, " - showmap");
 		d_view.processMessage(MessageType.None, " - savemap filename");
 		d_view.processMessage(MessageType.None, " - editmap filename");
-		d_view.processMessage(MessageType.None, " - loadmap filename (this command initiates game startup)");
+		d_view.processMessage(MessageType.None, " - loadmap filename (initiates game startup)");
 		d_view.processMessage(MessageType.None, " - validatemap");
 		d_view.processMessage(MessageType.None, " - exit");
 		d_view.processMessage(MessageType.None, " - help");
