@@ -102,25 +102,6 @@ public class GameEngine implements IGameEngineModel {
 //		System.out.println("End of game.");
 	}
 
-//	/**
-//	 * Startup and process the map editor phase of the game
-//	 * 
-//	 * @return true=continue game; false=exit game
-//	 * @throws Exception unexpected errors
-//	 */
-//	public boolean processMapEditor() throws Exception {
-//		String l_cmd = d_controller_factory.getNewMapEditorController().startMapEditor();
-//		switch (l_cmd) {
-//		case "exit":
-//			return false;
-//		case "map_loaded":
-//			break;
-//		default:
-//			throw new Exception("Internal error processing map editor.");
-//		}
-//		return true;
-//	}
-
 	/**
 	 * set the current phase of the game
 	 * 
@@ -130,24 +111,6 @@ public class GameEngine implements IGameEngineModel {
 		d_phase = p_next_phase;
 	}
 
-	/**
-	 * Startup and process the game startup phase of the game
-	 *
-	 * @return true=continue game; false=exit game
-	 * @throws Exception unexpected errors
-	 */
-	public boolean processGameStartup() throws Exception {
-		String l_cmd = d_controller_factory.getGameStartupController().processGameStartup();
-		switch (l_cmd) {
-		case "exit":
-			return false;
-		case "startup_complete":
-			break;
-		default:
-			throw new Exception("Internal error processing GameEngine startup.");
-		}
-		return true;
-	}
 
 	/**
 	 * Startup and process the game startup phase of the game

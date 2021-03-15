@@ -7,5 +7,5 @@ import soen6441.team01.warzone.model.contracts.IGamePlayModel;
  *
  */
 public interface IGameStartupController {
-	String processGameStartup() throws Exception;
+	void execGameStartup();
 }

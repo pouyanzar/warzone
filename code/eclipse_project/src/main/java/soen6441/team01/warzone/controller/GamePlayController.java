@@ -9,6 +9,7 @@ import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.OrderDeploy;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
@@ -26,9 +27,10 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class GamePlayController implements IGamePlayController, IGameplayOrderDatasource {
+public class GamePlayController extends Phase implements IGamePlayController, IGameplayOrderDatasource {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
+	private SoftwareFactoryController d_controller_factory;
 	private IGamePlayView d_view;
 	private IUserMessageModel d_msg_model;
 	private IGamePlayModel d_gameplay_model;
@@ -38,15 +40,28 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 	/**
 	 * Constructor with view and models defined.
 	 * 
-	 * @param p_model_factory predefined SoftwareFactoryModel.
-	 * @param p_view_factory  predefined SoftwareFactoryView.
+	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory)
-			throws Exception {
-		d_model_factory = p_model_factory;
-		d_view_factory = p_view_factory;
+	public GamePlayController(SoftwareFactoryController p_controller_factory) throws Exception {
+		super(p_controller_factory.getModelFactory().getGameEngine());
+		d_controller_factory = p_controller_factory;
+		d_model_factory = p_controller_factory.getModelFactory();
+		d_view_factory = p_controller_factory.getViewFactory();
 		d_msg_model = d_model_factory.getUserMessageModel();
+	}
+
+	/**
+	 * invoked by the game engine as part of the Map Editor phase of the game.
+	 */
+	@Override
+	public void execPhase() {
+		// execMapEditor();
+		try {
+			Phase l_next_phase = d_controller_factory.getGameEndPhase();
+			nextPhase(l_next_phase);
+		} catch (Exception ex) {
+		}
 	}
 
 	/**
@@ -66,7 +81,7 @@ public class GamePlayController implements IGamePlayController, IGameplayOrderDa
 			d_view.displayGamePlayBanner();
 			// main game play loop
 			while (!d_exit) {
-				
+
 				// assigning reinforcements phase
 				d_msg_model.setMessage(MessageType.None,
 						"\n* round " + l_round++ + " *\n\n* assigning reinforcements:");

@@ -54,7 +54,6 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		Phase l_next_phase = null;
 		
 		try {
-			//processMapEditor();
 			d_view.displayWarzoneBanner();
 			d_view.displayMapEditorBanner();
 
@@ -136,9 +135,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			// if the map is not a valid map then stay in the editor, otherwise move on to
 			// the game startup phase.
 			if (processLoadMap(l_cmd_params[1])) {
-				//return false;
-				d_msg_model.setMessage(MessageType.None, "todo: proceed to game startup phase");
-				d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+				l_next_phase = d_controller_factory.getGameStartupPhase();
 			}
 			break;
 		default:

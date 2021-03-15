@@ -104,6 +104,16 @@ public class SoftwareFactoryController {
 	}
 
 	/**
+	 * return the Game Startup phase controller
+	 * 
+	 * @return map edit controller
+	 * @throws Exception unexpected error
+	 */
+	public Phase getGameStartupPhase() throws Exception {
+		return (Phase) getGameStartupController();
+	}
+	
+	/**
 	 * Create or return the current GameEndController
 	 * 
 	 * @return game end controller
@@ -124,9 +134,20 @@ public class SoftwareFactoryController {
 	 */
 	public IGameStartupController getGameStartupController() throws Exception {
 		if (d_startup_controller == null) {
-			d_startup_controller = new GameStartupController(d_model_factory, d_view_factory, this);
+			d_startup_controller = new GameStartupController(this);
 		}
 		return d_startup_controller;
+	}
+	
+	/**
+	 * Create new GameStartupController
+	 * 
+	 * @return game end controller
+	 * @throws Exception unexpected error
+	 */
+	public IGameStartupController getNewGameStartupController() throws Exception {
+		d_startup_controller = null;
+		return getGameStartupController();
 	}
 
 	/**
@@ -137,7 +158,7 @@ public class SoftwareFactoryController {
 	 */
 	public IGamePlayController getGamePlayController() throws Exception {
 		if (d_game_play_controller == null) {
-			d_game_play_controller = new GamePlayController(d_model_factory, d_view_factory);
+			d_game_play_controller = new GamePlayController(this);
 			;
 		}
 		return d_game_play_controller;
@@ -151,7 +172,7 @@ public class SoftwareFactoryController {
 	 */
 	public IGameplayOrderDatasource getGamePlayOrderDatasource() throws Exception {
 		if (d_game_play_controller == null) {
-			d_game_play_controller = new GamePlayController(d_model_factory, d_view_factory);
+			d_game_play_controller = new GamePlayController(this);
 			;
 		}
 		return d_game_play_controller;

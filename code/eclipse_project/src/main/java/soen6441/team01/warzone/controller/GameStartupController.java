@@ -5,6 +5,7 @@ import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.GamePlay;
 import soen6441.team01.warzone.model.Map;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -19,7 +20,7 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
  * Warzone game startup controller. Manages the coordination and progression of
  * the game startup phase.
  */
-public class GameStartupController implements IGameStartupController {
+public class GameStartupController extends Phase implements IGameStartupController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
 	private SoftwareFactoryController d_controller_factory;
@@ -30,92 +31,54 @@ public class GameStartupController implements IGameStartupController {
 	/**
 	 * Constructor with view and models defined.
 	 * 
-	 * @param p_model_factory      predefined SoftwareFactoryModel.
-	 * @param p_view_factory       predefined SoftwareFactoryView.
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GameStartupController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory,
-			SoftwareFactoryController p_controller_factory) throws Exception {
-		d_model_factory = p_model_factory;
-		d_view_factory = p_view_factory;
-		d_view = d_view_factory.getGameStartupConsoleView(this); 
+	public GameStartupController(SoftwareFactoryController p_controller_factory) throws Exception {
+		super(p_controller_factory.getModelFactory().getGameEngine());
 		d_controller_factory = p_controller_factory;
+		d_model_factory = p_controller_factory.getModelFactory();
+		d_view_factory = p_controller_factory.getViewFactory();
+		d_view = d_view_factory.getGameStartupConsoleView(this);
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
 	/**
-	 * Starts executing the game startup dynamics
-	 * 
-	 * @return String one of: exit, startup_complete
-	 * @throws Exception unexpected error
+	 * invoked by the game engine as part of the game startup phase of the game.
 	 */
-	public String processGameStartup() throws Exception {
-		String l_cmd = "exit";
-		d_gameplay = d_model_factory.getGamePlayModel();
+	@Override
+	public void execPhase() {
+		execGameStartup();
+	}
+
+	/**
+	 * Starts executing the game startup dynamics
+	 */
+	public void execGameStartup() {
+		Phase l_next_phase = null;
+		Phase l_end_phase = null;
 
 		try {
+			l_end_phase = d_controller_factory.getGameEndPhase();
 			d_view.displayGameStartupBanner();
-			l_cmd = processUserCommands();
-			switch (l_cmd) {
-			case "exit":
-				break;
-			case "startup_complete":
-				break;
-			default:
-				throw new Exception("Internal error processing the game startup.");
+			
+			d_gameplay = d_model_factory.getNewGamePlayModel();
+			d_gameplay.setMap(d_model_factory.getMapModel());
+
+			String l_cmd;
+			while (l_next_phase == null) {
+				l_cmd = d_view.getCommand();
+				l_next_phase = processGameStartupCommand(l_cmd);
 			}
+			nextPhase(l_next_phase);
 		} catch (Exception ex) {
-			System.out.println("Fatal error encountered during game startup.");
-			System.out.println("Exception: " + ex.getMessage());
+			Utl.consoleMessage("Fatal error during game startup, exception: " + ex.getMessage());
+			nextPhase(l_end_phase);
 		}
 
 		if (d_view != null) {
 			d_view.shutdown();
 		}
-
-		return l_cmd;
-	}
-
-	/**
-	 * Manages the map editor's interactions with the game startup view, and
-	 * processes any commands coming from the view.
-	 * 
-	 * @param p_view the GameStartupView to interact with
-	 * @return String one of; exit, startup_complete
-	 * @throws Exception general exception processing the map editor
-	 */
-	private String processUserCommands() throws Exception {
-		boolean l_exit_startup = false;
-		String l_cmd = "exit";
-		while (!l_exit_startup) {
-			l_cmd = d_view.getCommand();
-			l_cmd = processGameStartupCommand(l_cmd);
-			switch (l_cmd) {
-			case "exit":
-				l_exit_startup = true;
-				break;
-			case "assignedcountries":
-				l_cmd = "startup_complete";
-				l_exit_startup = true;
-				break;
-			}
-		}
-		return l_cmd;
-	}
-
-	/**
-	 * mirror of method processGameStartupCommand(String p_command). this method is
-	 * used mainly to test processGameStartupCommand.
-	 * 
-	 * @param p_command  the command to process
-	 * @param p_gameplay the gameplay model to process
-	 * @return String one of; exit, assigncountries
-	 * @throws Exception unexpected error
-	 */
-	public String processGameStartupCommand(String p_command, IGamePlayModel p_gameplay) throws Exception {
-		d_gameplay = p_gameplay;
-		return processGameStartupCommand(p_command);
 	}
 
 	/**
@@ -129,37 +92,66 @@ public class GameStartupController implements IGameStartupController {
 	 * </ul>
 	 * 
 	 * @param p_command the command to process
-	 * @return String one of; exit, assigncountries
+	 * @return the next phase of the game. null = stay in current phase.
 	 * @throws Exception unexpected error
 	 */
-	public String processGameStartupCommand(String p_command) throws Exception {
-		String l_return_command = "";
+	public Phase processGameStartupCommand(String p_command) throws Exception {
+		Phase l_next_phase = null;
+
 		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			GameStartupHelp();
 			break;
 		case "exit":
-			l_return_command = "exit";
+			l_next_phase = d_controller_factory.getGameEndPhase();
 			break;
 		case "loadmap":
-			processLoadMap(l_cmd_params[1]);
+			if (processLoadMap(l_cmd_params[1])) {
+				// will execute this startup phase with a new instance of this class.
+				// this is desired as this is essentially the start of a new game.
+				d_controller_factory.getNewGameStartupController();
+				l_next_phase = d_controller_factory.getGameStartupPhase();
+			}
 			break;
 		case "gameplayer":
 			processGameplayer(l_cmd_params[1]);
 			break;
 		case "assigncountries":
-			l_return_command = "";
-			if( processAssignCountries(d_gameplay) ) {
+			if (processAssignCountries(d_gameplay)) {
 				// move on to gameplay
-				l_return_command = "assignedcountries";				
+				// l_return_command = "assignedcountries";
+				d_msg_model.setMessage(MessageType.None, "todo: proceed to game startup phase");
+				d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
 			}
 			break;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
-		return l_return_command;
+		return l_next_phase;
+	}
+
+	/**
+	 * mirror of method processGameStartupCommand(String p_command). this method is
+	 * used mainly to test processGameStartupCommand.
+	 * 
+	 * @param p_command  the command to process
+	 * @param p_gameplay the gameplay model to process
+	 * @return String one of; exit, assigncountries
+	 * @throws Exception unexpected error
+	 */
+	public String processGameStartupCommand(String p_command, IGamePlayModel p_gameplay) throws Exception {
+		d_gameplay = p_gameplay;
+		Phase l_phase = processGameStartupCommand(p_command);
+		if (l_phase instanceof GameEndController) {
+			return "exit";
+		}
+		if (l_phase instanceof GamePlayController) {
+			return "exit";
+		}
+
+		return "";
 	}
 
 	/**
@@ -170,7 +162,7 @@ public class GameStartupController implements IGameStartupController {
 	 * 
 	 * @param p_gameplay the gameplay model containing the countries and players to
 	 *                   use for the assignment.
-	 * @return true if successful otherwise false                  
+	 * @return true if successful otherwise false
 	 */
 	private boolean processAssignCountries(IGamePlayModel p_gameplay) {
 		try {
