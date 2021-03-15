@@ -163,18 +163,28 @@ public class Utl {
 	public static void consoleMessage(MessageType p_msg_type, String p_message) {
 		switch (p_msg_type) {
 		case None:
-			System.out.println(p_message);
+			consoleMessage(p_message);
 			break;
 		case Informational:
-			System.out.println("info: " + p_message);
+			consoleMessage("info: " + p_message);
 			break;
 		case Warning:
-			System.out.println("warn: " + p_message);
+			consoleMessage("warn: " + p_message);
 			break;
 		default:
-			System.out.println("error: " + p_message);
+			consoleMessage("error: " + p_message);
 			break;
 		}
+	}
+
+	/**
+	 * Display a message to the system console
+	 * 
+	 * @param p_message the message to display on the console
+	 */
+	public static void consoleMessage(String p_message) {
+		System.out.println(p_message);
+		// todo: add logging to file
 	}
 
 	/**

@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.controller.MapEditorController;
+import soen6441.team01.warzone.controller.SoftwareFactoryController;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.UserMessageModel;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
@@ -22,6 +23,7 @@ public class MapEditorConsoleViewTest {
 	public SoftwareFactoryModel d_model_factory = null;
 	public MapEditorController d_map_editor_controller = null;
 	public SoftwareFactoryView d_view_factory = null;
+	public SoftwareFactoryController d_controller_factory = null;
 	public UserMessageModel d_msg = null;
 
 	/**
@@ -33,7 +35,9 @@ public class MapEditorConsoleViewTest {
 	public void setupMapEditController() throws Exception {
 		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
 		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
-		d_map_editor_controller = new MapEditorController(d_model_factory, d_view_factory);
+		d_controller_factory = SoftwareFactoryController.CreateWarzoneBasicConsoleGameControllers(d_model_factory,
+				d_view_factory);
+		d_map_editor_controller = new MapEditorController(d_controller_factory);
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
 	}
 

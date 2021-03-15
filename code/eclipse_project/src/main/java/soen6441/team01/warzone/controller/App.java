@@ -15,8 +15,9 @@ public class App {
 	 * main entry point of the application
 	 * 
 	 * @param args passed in by the operating system
+	 * @throws Exception unexpected error
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		GameEngine l_game_engine = new GameEngine();
 		l_game_engine.startNewGame();
 	}
