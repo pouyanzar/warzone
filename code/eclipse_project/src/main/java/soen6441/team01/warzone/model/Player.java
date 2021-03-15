@@ -21,6 +21,7 @@ public class Player implements IPlayerModel {
 	private IGameplayOrderDatasource d_order_datasource;
 	private ArrayList<ICountryModel> d_player_countries;
 	private ArrayList<IOrderModel> d_order_list;
+	private ArrayList<Card> d_cards;
 	private SoftwareFactoryModel d_factory_model = null;
 
 	/**
@@ -53,6 +54,7 @@ public class Player implements IPlayerModel {
 		d_order_datasource = p_order_datasource;
 		d_player_countries = new ArrayList<ICountryModel>();
 		d_order_list = new ArrayList<IOrderModel>();
+		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
 	}
 
@@ -244,5 +246,24 @@ public class Player implements IPlayerModel {
 			l_player.addPlayerCountry(l_country);
 		}
 		return l_player;
+	}
+
+	/**
+	 * Getter method to return current player's cards
+	 * 
+	 * @return d_cards the list of current player's card
+	 */
+	public ArrayList<Card> getCards() {
+
+		return d_cards;
+	}
+
+	/**
+	 * Method to add new card into the list of cards
+	 * 
+	 * @param l_card the new card
+	 */
+	public void addCard(Card l_card) {
+		d_cards.add(l_card);
 	}
 }
