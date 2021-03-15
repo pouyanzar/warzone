@@ -1,0 +1,16 @@
+* maps:
+loadmap ./src/test/resources/maps/canada/canada.map
+loadmap ./src/test/resources/maps/usa8/usa8regions.map
+editmap ./src/test/resources/maps/canada/canada.map
+
+* players
+gameplayer -add John -add Pouyan -add Nazanin
+assigncountries
+
+
+-----------------------------------------------------
+* For the sake of simplicity, let us just assume that the country/continent names are unique
+
+* All turns start with reinforcement. Each turn, each player receives a number of armies equal to: (max(3, # of countries the player own/3)+(continent value of all continents controlled by the player)).
+
+

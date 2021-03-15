@@ -1,6 +1,5 @@
 package soen6441.team01.warzone.model;
 
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.contracts.*;
 
 /**
@@ -12,6 +11,7 @@ public class SoftwareFactoryModel {
 	private IMapModel d_map_model = null;
 	private IUserMessageModel d_user_message_model = null;
 	private IGamePlayModel d_gameplay = null;
+	private GameEngine d_game_engine = null;
 
 	/**
 	 * Constructor with models defined. Models passed as null will result in the
@@ -46,6 +46,23 @@ public class SoftwareFactoryModel {
 		IUserMessageModel l_usermsg = new UserMessageModel();
 		SoftwareFactoryModel l_model = new SoftwareFactoryModel(l_usermsg);
 		return l_model;
+	}
+
+	/**
+	 * 
+	 * @return an IMapModel object
+	 */
+	public IGameEngineModel getGameEngine() {
+		return d_game_engine;
+	}
+
+	/**
+	 * set the current map model to the supplied map
+	 * 
+	 * @param p_game_engine the game engine object
+	 */
+	public void setGameEngine(GameEngine p_game_engine) {
+		d_game_engine = p_game_engine;
 	}
 
 	/**

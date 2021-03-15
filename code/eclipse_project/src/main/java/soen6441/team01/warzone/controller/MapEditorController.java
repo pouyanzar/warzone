@@ -4,6 +4,7 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MessageType;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.SoftwareFactoryModel;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -16,52 +17,53 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * Warzone Map Editor controller. Manages the coordination and progression of
  * the Map Editor.
  */
-public class MapEditorController implements IMapEditorController {
+public class MapEditorController extends Phase implements IMapEditorController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
+	private SoftwareFactoryController d_controller_factory;
 	private IMapEditorView d_view;
 	private IUserMessageModel d_msg_model;
 
 	/**
 	 * Constructor with view and models defined.
 	 * 
-	 * @param p_model_factory predefined SoftwareFactoryModel.
-	 * @param p_view_factory  predefined SoftwareFactoryView.
+	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public MapEditorController(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory)
-			throws Exception {
-		d_model_factory = p_model_factory;
-		d_view_factory = p_view_factory;
+	public MapEditorController(SoftwareFactoryController p_controller_factory) throws Exception {
+		super(p_controller_factory.getModelFactory().getGameEngine());
+		d_controller_factory = p_controller_factory;
+		d_model_factory = p_controller_factory.getModelFactory();
+		d_view_factory = p_controller_factory.getViewFactory();
 		d_view = d_view_factory.getMapEditorConsoleView(this);
 		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
 	/**
-	 * Starts executing the game dynamics
-	 * 
-	 * @return String one of: exit, map_loaded
+	 * invoked by the game engine as part of the Map Editor phase of the game.
 	 */
-	public String startMapEditor() {
-		String l_cmd = "exit";
+	@Override
+	public void execPhase() {
+		execMapEditor();
+	}
 
+	/**
+	 * Start executing the map editor dynamics
+	 */
+	public void execMapEditor() {
+		Phase l_next_phase = null;
+		
 		try {
-			l_cmd = processMapEditor();
-			if (l_cmd == null || Utl.isEmpty(l_cmd)) {
-				throw new Exception("Internal error 1 processing the map editor.");
+			//processMapEditor();
+			d_view.displayWarzoneBanner();
+			d_view.displayMapEditorBanner();
+
+            String l_cmd;
+			while (l_next_phase == null) {
+				l_cmd = d_view.getCommand();
+				l_next_phase = processMapEditorCommand(l_cmd);
 			}
-			String l_cmd_params[] = new String[2];
-			l_cmd_params = Utl.getFirstWord(l_cmd);
-			switch (l_cmd_params[0]) {
-			case "exit":
-				l_cmd = "exit";
-				break;
-			case "loadmap":
-				l_cmd = "map_loaded";
-				break;
-			default:
-				throw new Exception("Internal error 2 processing the map editor.");
-			}
+			nextPhase(l_next_phase);
 		} catch (Exception ex) {
 			System.out.println("Fatal error processing Map Editor.");
 			System.out.println("Exception: " + ex.getMessage());
@@ -70,30 +72,6 @@ public class MapEditorController implements IMapEditorController {
 		if (d_view != null) {
 			d_view.shutdown();
 		}
-
-		return l_cmd;
-	}
-
-	/**
-	 * Manages the map editor's interactions with the view, and processes any
-	 * commands coming from the view.
-	 * 
-	 * @param p_view the MapEditorView to interact with
-	 * @return String the last command entered
-	 * @throws Exception general exception processing the map editor
-	 */
-	private String processMapEditor() throws Exception {
-		boolean l_exit_map_editor = false;
-		String l_cmd = "exit";
-
-		d_view.displayWarzoneBanner();
-		d_view.displayMapEditorBanner();
-
-		while (!l_exit_map_editor) {
-			l_cmd = d_view.getCommand();
-			l_exit_map_editor = !processMapEditorCommand(l_cmd);
-		}
-		return l_cmd;
 	}
 
 	/**
@@ -115,17 +93,20 @@ public class MapEditorController implements IMapEditorController {
 	 * </ul>
 	 * 
 	 * @param p_command the command to process
-	 * @return true = command processed successfully, false = command to exit
+	 * @return the next phase in the game, null if this phase is not done yet
 	 * @throws Exception unexpected error
 	 */
-	public boolean processMapEditorCommand(String p_command) throws Exception {
+	public Phase processMapEditorCommand(String p_command) throws Exception {
+		Phase l_next_phase = null;
+		
 		String l_cmd_params[] = Utl.getFirstWord(p_command);
 		switch (l_cmd_params[0]) {
 		case "help":
 			mapEditorHelp();
 			break;
 		case "exit":
-			return false;
+			l_next_phase = d_controller_factory.getGameEndPhase();
+			break;
 		case "editcontinent":
 			processEditContinent(l_cmd_params[1]);
 			break;
@@ -155,14 +136,16 @@ public class MapEditorController implements IMapEditorController {
 			// if the map is not a valid map then stay in the editor, otherwise move on to
 			// the game startup phase.
 			if (processLoadMap(l_cmd_params[1])) {
-				return false;
+				//return false;
+				d_msg_model.setMessage(MessageType.None, "todo: proceed to game startup phase");
+				d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
 			}
 			break;
 		default:
 			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
-		return true;
+		return l_next_phase;
 	}
 
 	/**
@@ -484,7 +467,7 @@ public class MapEditorController implements IMapEditorController {
 	public IMapEditorView getMapEditorView() {
 		return d_view;
 	}
-	
+
 	/**
 	 * Asks the view to display the list of map editor commands along with their
 	 * syntax.

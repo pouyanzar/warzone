@@ -21,6 +21,7 @@ public class MapEditorControllerTest {
 	public SoftwareFactoryModel d_model_factory = null;
 	public MapEditorController d_map_editor_controller = null;
 	public SoftwareFactoryView d_view_factory = null;
+	public SoftwareFactoryController d_controller_factory = null;
 	public UserMessageModel d_msg = null;
 
 	/**
@@ -32,7 +33,9 @@ public class MapEditorControllerTest {
 	public void setupMapEditController() throws Exception {
 		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
 		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
-		d_map_editor_controller = new MapEditorController(d_model_factory, d_view_factory);
+		d_controller_factory = SoftwareFactoryController.CreateWarzoneBasicConsoleGameControllers(d_model_factory,
+				d_view_factory);
+		d_map_editor_controller = new MapEditorController(d_controller_factory);
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
 	}
 
@@ -412,8 +415,8 @@ public class MapEditorControllerTest {
 		assertFalse(d_model_factory.getMapModel().validatemap());
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.equals("Country 'Italy' is not fully connected to all other countries"));
-	}	
-	
+	}
+
 	/**
 	 * test validatemap command - countries not connected. // (2) continent
 	 * validation – continent is a connected subgraph;
@@ -430,7 +433,7 @@ public class MapEditorControllerTest {
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada 2 -add USA 2");
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Canada USA -add USA Canada");
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Italy Canada -add France USA");
-		
+
 		assertFalse(d_model_factory.getMapModel().validatemap());
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.equals("Country 'France' is not fully connected to all other countries"));

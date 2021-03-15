@@ -5,5 +5,5 @@ package soen6441.team01.warzone.controller.contracts;
  *
  */
 public interface IMapEditorController {
-	String startMapEditor();
+	void execMapEditor();
 }
