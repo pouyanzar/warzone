@@ -20,11 +20,11 @@ import soen6441.team01.warzone.view.SoftwareFactoryView;
  * 
  *
  */
-public class GamePlayControllerTest {
+public class IssueOrderControllerTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
 
 	public SoftwareFactoryModel d_model_factory = null;
-	public GamePlayController d_gameplay_controller = null;
+	public IssueOrderController d_gameplay_controller = null;
 	public IGamePlayModel d_gameplay = null;
 	public SoftwareFactoryView d_view_factory = null;
 	public UserMessageModel d_msg = null;
@@ -44,7 +44,7 @@ public class GamePlayControllerTest {
 		d_gameplay = d_model_factory.getNewGamePlayModel();
 		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
 		d_controller_factory = new SoftwareFactoryController(d_model_factory, d_view_factory);
-		d_gameplay_controller = (GamePlayController) d_controller_factory.getGamePlayController();
+		d_gameplay_controller = (IssueOrderController) d_controller_factory.getIssueOrderController();
 		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);

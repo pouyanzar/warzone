@@ -27,14 +27,14 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class GamePlayController extends Phase implements IGamePlayController{
+public class ReinforcementController extends GamePlayController {
 	private SoftwareFactoryModel d_model_factory;
 	private SoftwareFactoryView d_view_factory;
 	private SoftwareFactoryController d_controller_factory;
 	private IGamePlayView d_view;
-	private IGamePlayModel d_gameplay_model;
 	private IUserMessageModel d_msg_model;
-	private int d_round = 1;
+	private boolean d_exit = false;
+	private boolean d_game_over = false;
 
 	/**
 	 * Constructor with view and models defined.
@@ -42,8 +42,8 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayController(SoftwareFactoryController p_controller_factory) throws Exception {
-		super(p_controller_factory.getModelFactory().getGameEngine());
+	public ReinforcementController(SoftwareFactoryController p_controller_factory) throws Exception {
+		super(p_controller_factory);
 		d_controller_factory = p_controller_factory;
 		d_model_factory = p_controller_factory.getModelFactory();
 		d_view_factory = p_controller_factory.getViewFactory();
@@ -52,39 +52,30 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	}
 
 	/**
-	 * invoked by the game engine as part of the game play phase of the game.
+	 * invoked by the game engine as part of the Map Editor phase of the game.
 	 */
 	@Override
 	public void execPhase() {
 		try {
-			if( d_round == 1 ) {
-				d_view.displayGamePlayBanner();
-				d_gameplay_model = d_model_factory.getGamePlayModel();
-				d_gameplay_model.setGameState(GameState.GamePlay);
-			}
-			d_msg_model.setMessage(MessageType.None, "\n* round " + d_round++);
-			Phase l_gmaeplay_start_phase = d_controller_factory.getReinforcementPhase();
-			nextPhase(l_gmaeplay_start_phase);
+			processGamePlayReinforcements();
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, "exception in GamePlayController: " + ex.getMessage());
+			d_msg_model.setMessage(MessageType.Error, "exception in ReinforcementController: " + ex.getMessage());
+			endGamePlayPhase();
 		}
 	}
-	
+
 	/**
-	 * setups the game to end the game play phase
+	 * executes the assigning of reinforcements phase
+	 * 
+	 * @throws Exception unexpected error
 	 */
-	public void endGamePlayPhase() {
-		Phase l_end_phase = null;
-		try {
-			l_end_phase = d_controller_factory.getGameEndPhase();
-		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error during game startup, exception: " + ex.getMessage());
-		}
-		nextPhase(l_end_phase);
+	public void processGamePlayReinforcements() throws Exception {
+		IGamePlayModel p_gameplay_model = d_model_factory.getGamePlayModel();
+		d_msg_model.setMessage(MessageType.None, "\n* assigning reinforcements:");
+		
+		p_gameplay_model.assignReinforcements();
 
-		if (d_view != null) {
-			d_view.shutdown();
-		}
-
+		Phase l_phase = d_controller_factory.getIssueOrderPhase();
+		nextPhase(l_phase);
 	}
 }

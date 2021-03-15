@@ -120,9 +120,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		case "assigncountries":
 			if (processAssignCountries(d_gameplay)) {
 				// move on to gameplay
-				// l_return_command = "assignedcountries";
-				d_msg_model.setMessage(MessageType.None, "todo: proceed to game startup phase");
-				d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
+				l_next_phase = d_controller_factory.getGamePlayPhase();
 			}
 			break;
 		default:

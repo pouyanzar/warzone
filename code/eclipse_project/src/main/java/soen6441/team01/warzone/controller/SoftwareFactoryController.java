@@ -18,6 +18,9 @@ public class SoftwareFactoryController {
 	private IGameStartupController d_startup_controller = null;
 	private IGameEndController d_gameend_controller = null;
 	private GamePlayController d_game_play_controller = null;
+	private ReinforcementController d_reinforcement_controller = null;
+	private IssueOrderController d_issue_order_controller = null;
+	private OrderExecutionController d_order_exec_controller = null;
 
 	/**
 	 * Constructor with views defined. Views passed as null will result in the
@@ -36,7 +39,7 @@ public class SoftwareFactoryController {
 	 * controller objects for the console version of the game.
 	 *
 	 * @param p_model the model software factory to use
-	 * @param p_view the view software factory to use
+	 * @param p_view  the view software factory to use
 	 * @return newly create Warzone view software factory
 	 */
 	public static SoftwareFactoryController CreateWarzoneBasicConsoleGameControllers(SoftwareFactoryModel p_model,
@@ -112,7 +115,7 @@ public class SoftwareFactoryController {
 	public Phase getGameStartupPhase() throws Exception {
 		return (Phase) getGameStartupController();
 	}
-	
+
 	/**
 	 * Create or return the current GameEndController
 	 * 
@@ -138,7 +141,7 @@ public class SoftwareFactoryController {
 		}
 		return d_startup_controller;
 	}
-	
+
 	/**
 	 * Create new GameStartupController
 	 * 
@@ -159,9 +162,70 @@ public class SoftwareFactoryController {
 	public IGamePlayController getGamePlayController() throws Exception {
 		if (d_game_play_controller == null) {
 			d_game_play_controller = new GamePlayController(this);
-			;
 		}
 		return d_game_play_controller;
+	}
+
+	/**
+	 * return the current GamePlayController
+	 * 
+	 * @return game play controller
+	 * @throws Exception unexpected error
+	 */
+	public Phase getGamePlayPhase() throws Exception {
+		return (Phase) getGamePlayController();
+	}
+
+	/**
+	 * return the current ReinforcementController
+	 * 
+	 * @return reinforcement controller as a phase object
+	 * @throws Exception unexpected error
+	 */
+	public Phase getReinforcementPhase() throws Exception {
+		if (d_reinforcement_controller == null) {
+			d_reinforcement_controller = new ReinforcementController(this);
+		}
+		return (Phase) d_reinforcement_controller;
+	}
+
+	/**
+	 * return the current ReinforcementController
+	 * 
+	 * @return reinforcement controller as a phase object
+	 * @throws Exception unexpected error
+	 */
+	public Phase getIssueOrderPhase() throws Exception {
+		if (d_issue_order_controller == null) {
+			d_issue_order_controller = new IssueOrderController(this);
+		}
+		return (Phase) d_issue_order_controller;
+	}
+
+	/**
+	 * Create or return the current GamePlayController
+	 * 
+	 * @return instance of IssueOrderController
+	 * @throws Exception unexpected error
+	 */
+	public IssueOrderController getIssueOrderController() throws Exception {
+		if (d_issue_order_controller == null) {
+			d_issue_order_controller = new IssueOrderController(this);
+		}
+		return d_issue_order_controller;
+	}	
+	
+	/**
+	 * return the current ReinforcementController
+	 * 
+	 * @return reinforcement controller as a phase object
+	 * @throws Exception unexpected error
+	 */
+	public Phase getOrderExecPhase() throws Exception {
+		if (d_order_exec_controller == null) {
+			d_order_exec_controller = new OrderExecutionController(this);
+		}
+		return (Phase) d_order_exec_controller;
 	}
 
 	/**
@@ -171,10 +235,9 @@ public class SoftwareFactoryController {
 	 * @throws Exception unexpected error
 	 */
 	public IGameplayOrderDatasource getGamePlayOrderDatasource() throws Exception {
-		if (d_game_play_controller == null) {
-			d_game_play_controller = new GamePlayController(this);
-			;
+		if (d_issue_order_controller == null) {
+			d_issue_order_controller = new IssueOrderController(this);
 		}
-		return d_game_play_controller;
+		return d_issue_order_controller;
 	}
 }

@@ -74,32 +74,12 @@ public class GameEngine implements IGameEngineModel {
 			while( d_phase != null ) {
 				d_phase.execPhase();
 			}
-			// processMapEditor();
 		} catch (Exception ex) {
 			Utl.consoleMessage("Fatal error processing GameEngine.");
 			Utl.consoleMessage("Exception: " + ex.getMessage());
 		}
 
 		Utl.consoleMessage("Game execution terminated.\n");
-
-		// try {
-//			boolean l_continue_game = false;
-//			l_continue_game = processMapEditor();
-//			IGamePlayModel p_gameplay = d_model_factory.getNewGamePlayModel();
-//			p_gameplay.setMap(d_model_factory.getMapModel());
-//			if (l_continue_game) {
-//				l_continue_game = processGameStartup();
-//			}
-//			if (l_continue_game) {
-//				l_continue_game = processGamePlay();
-//			}
-//		} catch (Exception ex) {
-//			System.out.println("Fatal error processing GameEngine.");
-//			System.out.println("Exception: " + ex.getMessage());
-//			System.out.println("Terminating game.");
-//		}
-//
-//		System.out.println("End of game.");
 	}
 
 	/**
@@ -109,43 +89,5 @@ public class GameEngine implements IGameEngineModel {
 	 */
 	public void setNextPhase(Phase p_next_phase) {
 		d_phase = p_next_phase;
-	}
-
-
-	/**
-	 * Startup and process the game startup phase of the game
-	 * 
-	 * @return true=continue game; false=exit game
-	 * @throws Exception unexpected errors
-	 */
-	public boolean processGamePlay() throws Exception {
-		String l_cmd = d_controller_factory.getGamePlayController().processGamePlay();
-		switch (l_cmd) {
-		case "exit":
-			return false;
-		case "game_over":
-			break;
-		default:
-			throw new Exception("Internal error processing GameEngine gameplay.");
-		}
-		return true;
-	}
-
-	/**
-	 * Process a game related message, which needs to somehow be communicated with
-	 * the user.
-	 * 
-	 * @param p_message_type the severity of the message.
-	 * @param p_message      the message text to display to the user.
-	 */
-	public void processMessage(MessageType p_message_type, String p_message) {
-		try {
-			d_model_factory.getUserMessageModel().setMessage(p_message_type, p_message);
-		} catch (Exception ex) {
-			Utl.consoleMessage(MessageType.Error,
-					"Exception encountered processing user message via model based classes, exception: "
-							+ ex.getMessage());
-			Utl.consoleMessage(p_message_type, p_message);
-		}
 	}
 }

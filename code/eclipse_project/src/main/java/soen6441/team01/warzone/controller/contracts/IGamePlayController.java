@@ -9,5 +9,5 @@ import soen6441.team01.warzone.model.contracts.IPlayerModel;
  *
  */
 public interface IGamePlayController {
-	String processGamePlay() throws Exception;
+	//String processGamePlay() throws Exception;
 }
