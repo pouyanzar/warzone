@@ -4,10 +4,10 @@ import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.UserMessageModel;
+import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.AppMsg;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
@@ -17,8 +17,8 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * of objects that define the respective classes for the different Warzone
  * views.
  */
-public class SoftwareFactoryView {
-	private SoftwareFactoryModel d_model_factory;
+public class ViewFactory {
+	private ModelFactory d_model_factory;
 
 	/**
 	 * Constructor with views defined. Views passed as null will result in the
@@ -26,7 +26,7 @@ public class SoftwareFactoryView {
 	 * 
 	 * @param p_models the software factory for all the game models
 	 */
-	public SoftwareFactoryView(SoftwareFactoryModel p_models) {
+	public ViewFactory(ModelFactory p_models) {
 		d_model_factory = p_models;
 	}
 
@@ -37,8 +37,8 @@ public class SoftwareFactoryView {
 	 * @param p_model the model software foctory to use
 	 * @return newly create Warzone view software factory
 	 */
-	public static SoftwareFactoryView CreateWarzoneBasicConsoleGameViews(SoftwareFactoryModel p_model) {
-		SoftwareFactoryView l_model = new SoftwareFactoryView(p_model);
+	public static ViewFactory CreateWarzoneBasicConsoleGameViews(ModelFactory p_model) {
+		ViewFactory l_model = new ViewFactory(p_model);
 		return l_model;
 	}
 
@@ -50,7 +50,7 @@ public class SoftwareFactoryView {
 	 * @throws Exception if there is a problem creating the view
 	 */
 	public IMapEditorView getMapEditorConsoleView(IMapEditorController p_controller) throws Exception {
-		return new MapEditorConsoleView(p_controller, d_model_factory);
+		return new MapEditorConsole(p_controller, d_model_factory);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class SoftwareFactoryView {
 	 * @throws Exception if there is a problem creating the view
 	 */
 	public IGameStartupView getGameStartupConsoleView(IGameStartupController p_controller) throws Exception {
-		return new GameStartupConsoleView(p_controller, d_model_factory);
+		return new GameStartupConsole(p_controller, d_model_factory);
 	}
 
 	/**
@@ -72,6 +72,6 @@ public class SoftwareFactoryView {
 	 * @throws Exception if there is a problem creating the view
 	 */
 	public IGamePlayView getGamePlayConsoleView(IGamePlayController p_controller) throws Exception {
-		return new GamePlayConsoleView(p_controller, d_model_factory);
+		return new GamePlayConsole(p_controller, d_model_factory);
 	}
 }

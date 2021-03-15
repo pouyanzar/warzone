@@ -6,10 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.UserMessageModel;
+import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.AppMsg;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.view.ViewFactory;
 
 /**
  * Supports all the test methods used to test class GameStartupController
@@ -19,12 +19,12 @@ import soen6441.team01.warzone.view.SoftwareFactoryView;
 public class GameStartupControllerTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
 
-	public SoftwareFactoryModel d_model_factory = null;
+	public ModelFactory d_model_factory = null;
 	public GameStartupController d_startup_controller = null;
 	public IGamePlayModel d_gameplay = null;
-	public SoftwareFactoryView d_view_factory = null;
-	public UserMessageModel d_msg = null;
-	public SoftwareFactoryController d_controller_factory = null;
+	public ViewFactory d_view_factory = null;
+	public AppMsg d_msg = null;
+	public ControllerFactory d_controller_factory = null;
 
 	/**
 	 * setup the environment for testing of GameStartupController
@@ -33,12 +33,12 @@ public class GameStartupControllerTest {
 	 */
 	@Before
 	public void setupGameStartupController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
 		d_gameplay = d_model_factory.getNewGamePlayModel();
-		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
-		d_controller_factory = new SoftwareFactoryController(d_model_factory, d_view_factory);
+		d_view_factory = ViewFactory.CreateWarzoneBasicConsoleGameViews(d_model_factory);
+		d_controller_factory = new ControllerFactory(d_model_factory, d_view_factory);
 		d_startup_controller = (GameStartupController) d_controller_factory.getGameStartupController();
-		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
+		d_msg = (AppMsg) d_model_factory.getUserMessageModel();
 	}
 
 	/**

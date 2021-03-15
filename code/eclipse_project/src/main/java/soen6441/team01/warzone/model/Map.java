@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 
 /**
  * Manages Warzone Maps. Maps are basically composed of continents, countries
@@ -32,7 +32,7 @@ import soen6441.team01.warzone.model.contracts.IUserMessageModel;
  */
 public class Map implements IMapModel {
 
-	private SoftwareFactoryModel d_factory_model = null;
+	private ModelFactory d_factory_model = null;
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();
 
@@ -41,7 +41,7 @@ public class Map implements IMapModel {
 	 * 
 	 * @param p_factory_model the model software factory
 	 */
-	public Map(SoftwareFactoryModel p_factory_model) {
+	public Map(ModelFactory p_factory_model) {
 		d_factory_model = p_factory_model;
 	}
 
@@ -303,17 +303,17 @@ public class Map implements IMapModel {
 		ArrayList<ICountryModel> l_passed_countries = new ArrayList<>(); // list of visited countries from start point
 																			// country
 		ArrayList<ICountryModel> l_continent_countries = new ArrayList<>(); // list of continent's countries
-		IUserMessageModel l_msg = d_factory_model.getUserMessageModel();
+		IAppMsg l_msg = d_factory_model.getUserMessageModel();
 
 		// Checks if there is at least one continent on the map
 		if (d_continents.size() < 1) {
-			l_msg.setMessage(MessageType.Error, "Map does not have at least 1 continent.");
+			l_msg.setMessage(MsgType.Error, "Map does not have at least 1 continent.");
 			return false;
 		}
 
 		// Checks if there is at least one country on the map
 		if (d_countries.size() < 1) {
-			l_msg.setMessage(MessageType.Error, "Map does not have at least 1 country.");
+			l_msg.setMessage(MsgType.Error, "Map does not have at least 1 country.");
 			return false;
 		}
 
@@ -323,14 +323,14 @@ public class Map implements IMapModel {
 			l_passed_countries.removeAll(l_passed_countries);
 			if (l_country.getNeighbors().size() < 1) {
 				// Checks if the country have at least one neighbor
-				l_msg.setMessage(MessageType.Error,
+				l_msg.setMessage(MsgType.Error,
 						"Country '" + l_country.getName() + "' should have at least 1 neighbor");
 				return false;
 			}
 			mapTraversal(l_country, l_passed_countries);
 			for (ICountryModel l_country1 : d_countries) {
 				if (!l_passed_countries.contains(l_country1)) {
-					l_msg.setMessage(MessageType.Error,
+					l_msg.setMessage(MsgType.Error,
 							"Country '" + l_country.getName() + "' is not fully connected to all other countries");
 					return false;
 				}
@@ -345,14 +345,14 @@ public class Map implements IMapModel {
 				l_passed_countries.removeAll(l_passed_countries);
 				if (l_country.getNeighbors().size() < 1) {
 					// Checks if the country have at least one neighbor
-					l_msg.setMessage(MessageType.Error,
+					l_msg.setMessage(MsgType.Error,
 							"Country '" + l_country.getName() + "' should have at least 1 neighbor");
 					return false;
 				}
 				mapContinentTraversal(l_continent, l_country, l_passed_countries);
 				for (ICountryModel l_country1 : l_continent_countries) {
 					if (!l_passed_countries.contains(l_country1)) {
-						l_msg.setMessage(MessageType.Error, "Country '" + l_country.getName() + "' in continent '"
+						l_msg.setMessage(MsgType.Error, "Country '" + l_country.getName() + "' in continent '"
 								+ l_continent.getName() + " is not fully connected to all other countries");
 						return false;
 					}
@@ -423,7 +423,7 @@ public class Map implements IMapModel {
 	 * @return instance of new Map model
 	 * @throws Exception error parsing the contents of the map file
 	 */
-	public static IMapModel loadMap(List<String> p_records, SoftwareFactoryModel p_factory_model) throws Exception {
+	public static IMapModel loadMap(List<String> p_records, ModelFactory p_factory_model) throws Exception {
 		IMapModel l_map_model = new Map(p_factory_model);
 		int l_line_ctr = 0;
 		String l_rec;
@@ -496,7 +496,7 @@ public class Map implements IMapModel {
 	 * @return instance of new Map model
 	 * @throws Exception error parsing the contents of the map file
 	 */
-	public static IMapModel loadMapFromFile(String p_map_filename, SoftwareFactoryModel p_factory_model)
+	public static IMapModel loadMapFromFile(String p_map_filename, ModelFactory p_factory_model)
 			throws Exception {
 		List<String> l_records = null;
 		IMapModel l_map_model = null;
@@ -614,7 +614,7 @@ public class Map implements IMapModel {
 	 * @return map model based on the supplied map file filename.
 	 * @throws Exception any problem parsing or creating the new map
 	 */
-	public static IMapModel processLoadMapCommand(String p_loadmap_params, SoftwareFactoryModel p_factory_model)
+	public static IMapModel processLoadMapCommand(String p_loadmap_params, ModelFactory p_factory_model)
 			throws Exception {
 		String l_params[] = Utl.getFirstWord(p_loadmap_params);
 		String l_filename = l_params[0];
@@ -636,7 +636,7 @@ public class Map implements IMapModel {
 	 *                               integer
 	 * @throws Exception             when there is an exception
 	 */
-	public static IMapModel editmap(String p_filename, SoftwareFactoryModel p_factory_model) throws Exception {
+	public static IMapModel editmap(String p_filename, ModelFactory p_factory_model) throws Exception {
 		IMapModel l_map;
 
 		// if the specified filename exists then load the existing map from the file
@@ -647,7 +647,7 @@ public class Map implements IMapModel {
 		}
 
 		// the specified filename does not exist, therefore create a new map
-		p_factory_model.getUserMessageModel().setMessage(MessageType.Warning,
+		p_factory_model.getUserMessageModel().setMessage(MsgType.Warning,
 				"Specified filename '" + p_filename + "' does not exist. Creating new (empty) map.");
 		l_map = new Map(p_factory_model);
 		p_factory_model.setMapModel(l_map);
@@ -665,7 +665,7 @@ public class Map implements IMapModel {
 	 * @return newly created isolated copy of the map
 	 * @throws Exception unexpected error
 	 */
-	public static IMapModel deepCloneMap(IMapModel p_src_map, SoftwareFactoryModel p_cloned_factory_model)
+	public static IMapModel deepCloneMap(IMapModel p_src_map, ModelFactory p_cloned_factory_model)
 			throws Exception {
 		Map l_map = new Map(p_cloned_factory_model);
 		p_cloned_factory_model.setMapModel(l_map);
@@ -752,7 +752,7 @@ public class Map implements IMapModel {
 			pw.println(l_map_rec);
 		pw.close();
 		if (!validatemap()) {
-			d_factory_model.getUserMessageModel().setMessage(MessageType.Warning,
+			d_factory_model.getUserMessageModel().setMessage(MsgType.Warning,
 					"The saved map is not a fully connected valid map. Please use the map editor to fix the issue before playing a game.");
 		}
 	}

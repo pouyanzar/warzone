@@ -1,19 +1,19 @@
 package soen6441.team01.warzone.controller;
 
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.GamePlay;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
+import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
 /**
@@ -21,11 +21,11 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
  * the game startup phase.
  */
 public class GameStartupController extends Phase implements IGameStartupController {
-	private SoftwareFactoryModel d_model_factory;
-	private SoftwareFactoryView d_view_factory;
-	private SoftwareFactoryController d_controller_factory;
+	private ModelFactory d_model_factory;
+	private ViewFactory d_view_factory;
+	private ControllerFactory d_controller_factory;
 	private IGameStartupView d_view;
-	private IUserMessageModel d_msg_model;
+	private IAppMsg d_msg_model;
 	private IGamePlayModel d_gameplay;
 
 	/**
@@ -34,7 +34,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GameStartupController(SoftwareFactoryController p_controller_factory) throws Exception {
+	public GameStartupController(ControllerFactory p_controller_factory) throws Exception {
 		super(p_controller_factory.getModelFactory().getGameEngine());
 		d_controller_factory = p_controller_factory;
 		d_model_factory = p_controller_factory.getModelFactory();
@@ -125,7 +125,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			}
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_command + "'");
+			d_msg_model.setMessage(MsgType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return l_next_phase;
@@ -166,10 +166,10 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	private boolean processAssignCountries(IGamePlayModel p_gameplay) {
 		try {
 			p_gameplay.assignCountries();
-			d_msg_model.setMessage(MessageType.None, "assigncountries processed successfully");
+			d_msg_model.setMessage(MsgType.None, "assigncountries processed successfully");
 			return true;
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, "assigncountries exception: " + ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, "assigncountries exception: " + ex.getMessage());
 			return false;
 		}
 	}
@@ -189,7 +189,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		String l_params[] = Utl.getFirstWord(p_cmd_params);
 
 		if (Utl.isEmpty(l_params[0])) {
-			d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer, no options specified");
+			d_msg_model.setMessage(MsgType.Error, "Invalid gameplayer, no options specified");
 			return;
 		}
 
@@ -200,7 +200,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_playerName = l_params[0];
 					if (!Utl.isValidMapName(l_playerName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -add playername '" + l_playerName
+						d_msg_model.setMessage(MsgType.Error, "Invalid gameplayer -add playername '" + l_playerName
 								+ "', expecting a valid player name.");
 						return;
 					}
@@ -214,9 +214,9 @@ public class GameStartupController extends Phase implements IGameStartupControll
 							d_controller_factory.getGamePlayOrderDatasource());
 
 					d_gameplay.addPlayer(l_player);
-					d_msg_model.setMessage(MessageType.None, "player " + l_player.getName() + " added to game.");
+					d_msg_model.setMessage(MsgType.None, "player " + l_player.getName() + " added to game.");
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
@@ -225,19 +225,19 @@ public class GameStartupController extends Phase implements IGameStartupControll
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_playerName = l_params[0];
 					if (!Utl.isValidMapName(l_playerName)) {
-						d_msg_model.setMessage(MessageType.Error, "Invalid gameplayer -remove playername '"
+						d_msg_model.setMessage(MsgType.Error, "Invalid gameplayer -remove playername '"
 								+ l_playerName + "', expecting a valid player name.");
 						return;
 					}
 					d_gameplay.removePlayer(l_playerName);
-					d_msg_model.setMessage(MessageType.None, "player " + l_playerName + " removed from game.");
+					d_msg_model.setMessage(MsgType.None, "player " + l_playerName + " removed from game.");
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
 			default:
-				d_msg_model.setMessage(MessageType.Error,
+				d_msg_model.setMessage(MsgType.Error,
 						"Invalid gameplayer option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
@@ -258,14 +258,14 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			String l_params[] = Utl.getFirstWord(p_loadmap_params);
 			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
 			if (l_map_model.validatemap()) {
-				d_msg_model.setMessage(MessageType.None, "loadmap processed successfully");
+				d_msg_model.setMessage(MsgType.None, "loadmap processed successfully");
 				d_model_factory.setMapModel(l_map_model);
 			} else {
-				d_msg_model.setMessage(MessageType.Error, "loadmap error - map is not a valid map.");
+				d_msg_model.setMessage(MsgType.Error, "loadmap error - map is not a valid map.");
 				return false;
 			}
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
 		return true;
@@ -279,11 +279,11 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	 */
 	private void GameStartupHelp() {
 		d_view.displayGameStartupBanner();
-		d_view.processMessage(MessageType.None, "Game startup commands:");
-		d_view.processMessage(MessageType.None, " - gameplayer -add playername -remove playername");
-		d_view.processMessage(MessageType.None, " - assigncountries");
-		d_view.processMessage(MessageType.None, " - loadmap filename");
-		d_view.processMessage(MessageType.None, " - exit");
-		d_view.processMessage(MessageType.None, " - help");
+		d_view.processMessage(MsgType.None, "Game startup commands:");
+		d_view.processMessage(MsgType.None, " - gameplayer -add playername -remove playername");
+		d_view.processMessage(MsgType.None, " - assigncountries");
+		d_view.processMessage(MsgType.None, " - loadmap filename");
+		d_view.processMessage(MsgType.None, " - exit");
+		d_view.processMessage(MsgType.None, " - help");
 	}
 }

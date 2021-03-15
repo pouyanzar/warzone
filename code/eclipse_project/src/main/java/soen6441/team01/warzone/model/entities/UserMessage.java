@@ -1,6 +1,6 @@
 package soen6441.team01.warzone.model.entities;
 
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 
 /**
  * Entity class (purpose is to hold data, i.e. basic data structure) in support
@@ -8,7 +8,7 @@ import soen6441.team01.warzone.common.entities.MessageType;
  *
  */
 public class UserMessage {
-	public MessageType d_message_type = MessageType.None;
+	public MsgType d_message_type = MsgType.None;
 	public String d_message = "";
 
 	/**
@@ -24,7 +24,7 @@ public class UserMessage {
 	 * @param p_message_type the type (severity) of message
 	 * @param p_message      the message to present to the user
 	 */
-	public UserMessage(MessageType p_message_type, String p_message) {
+	public UserMessage(MsgType p_message_type, String p_message) {
 		setMessageType(p_message_type);
 		setMessage(p_message);
 	}
@@ -34,7 +34,7 @@ public class UserMessage {
 	 * 
 	 * @param p_message_type the message severity to set to
 	 */
-	public void setMessageType(MessageType p_message_type) {
+	public void setMessageType(MsgType p_message_type) {
 		d_message_type = p_message_type;
 	}
 
@@ -42,7 +42,7 @@ public class UserMessage {
 	 * gets the message type or severity of the user message
 	 * @return the message type or severity of the user message
 	 */
-	public MessageType getMessageType() {
+	public MsgType getMessageType() {
 		return d_message_type;
 	}
 	

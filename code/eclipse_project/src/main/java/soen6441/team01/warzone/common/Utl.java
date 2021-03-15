@@ -3,7 +3,7 @@ package soen6441.team01.warzone.common;
 import java.io.File;
 import java.util.ArrayList;
 
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
@@ -160,7 +160,7 @@ public class Utl {
 	 * @param p_msg_type the type of message to display as defined by the enum
 	 * @param p_message  the message to display to the user
 	 */
-	public static void consoleMessage(MessageType p_msg_type, String p_message) {
+	public static void consoleMessage(MsgType p_msg_type, String p_message) {
 		switch (p_msg_type) {
 		case None:
 			consoleMessage(p_message);

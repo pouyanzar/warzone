@@ -2,7 +2,7 @@ package soen6441.team01.warzone.model;
 
 import java.util.ArrayList;
 
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.GameState;
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,14 +15,14 @@ public class GamePlay implements IGamePlayModel {
 	private GameState d_game_state = GameState.Startup;
 	private IMapModel d_map = null;
 	private ArrayList<IPlayerModel> d_players = new ArrayList<IPlayerModel>();
-	private SoftwareFactoryModel d_model_factory = null;
+	private ModelFactory d_model_factory = null;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param p_model_factory the model software factory
 	 */
-	public GamePlay(SoftwareFactoryModel p_model_factory) {
+	public GamePlay(ModelFactory p_model_factory) {
 		d_model_factory = p_model_factory;
 		d_map = d_model_factory.getMapModel();
 	}
@@ -55,7 +55,7 @@ public class GamePlay implements IGamePlayModel {
 	 * @return user message model
 	 * @throws Exception unexpected errors
 	 */
-	private IUserMessageModel getMsg() throws Exception {
+	private IAppMsg getMsg() throws Exception {
 		return d_model_factory.getUserMessageModel();
 	}
 
@@ -131,7 +131,7 @@ public class GamePlay implements IGamePlayModel {
 				ICountryModel l_country = l_countries.get(randomIdx);
 				l_player.addPlayerCountry(l_country);
 				l_countries.remove(randomIdx);
-				getMsg().setMessage(MessageType.Informational, l_player.getName() + " owns " + l_country.getName());
+				getMsg().setMessage(MsgType.Informational, l_player.getName() + " owns " + l_country.getName());
 				if (l_countries.size() < 1) {
 					break;
 				}
@@ -193,7 +193,7 @@ public class GamePlay implements IGamePlayModel {
 		// status update notification
 		for (IPlayerModel l_player : d_players) {
 			String l_msg = l_player.getName() + " received " + l_player.getReinforcements() + " reinforcements.";
-			getMsg().setMessage(MessageType.Informational, l_msg);
+			getMsg().setMessage(MsgType.Informational, l_msg);
 		}
 	}
 
@@ -216,7 +216,7 @@ public class GamePlay implements IGamePlayModel {
 				IOrderModel l_order = l_player.next_order();
 				if (l_order != null) {
 					String l_msg = l_order.execute();
-					getMsg().setMessage(MessageType.None, l_msg);
+					getMsg().setMessage(MsgType.None, l_msg);
 					l_orders_executed++;
 				}
 			}

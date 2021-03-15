@@ -21,7 +21,7 @@ public class Country implements ICountryModel {
 	private ArrayList<ICountryModel> d_neighbors = new ArrayList<ICountryModel>();
 	private int d_armies = 0;
 	private IPlayerModel d_owner = null;
-	private SoftwareFactoryModel d_factory_model = null;
+	private ModelFactory d_factory_model = null;
 
 	/**
 	 * The constructor for the Country class.
@@ -35,7 +35,7 @@ public class Country implements ICountryModel {
 	 * @throws Exception when there is an exception
 	 */
 	public Country(int p_country_id, String p_country_name, IContinentModel p_continent, int p_x, int p_y,
-			SoftwareFactoryModel p_factory_model) throws Exception {
+			ModelFactory p_factory_model) throws Exception {
 		super();
 		setId(p_country_id);
 		setName(p_country_name);

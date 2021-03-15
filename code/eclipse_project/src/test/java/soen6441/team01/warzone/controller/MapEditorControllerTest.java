@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.UserMessageModel;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.AppMsg;
+import soen6441.team01.warzone.view.ViewFactory;
 
 /**
  * Supports all the test methods used to test class MapEditorController
@@ -18,11 +18,11 @@ import soen6441.team01.warzone.view.SoftwareFactoryView;
 public class MapEditorControllerTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
 
-	public SoftwareFactoryModel d_model_factory = null;
+	public ModelFactory d_model_factory = null;
 	public MapEditorController d_map_editor_controller = null;
-	public SoftwareFactoryView d_view_factory = null;
-	public SoftwareFactoryController d_controller_factory = null;
-	public UserMessageModel d_msg = null;
+	public ViewFactory d_view_factory = null;
+	public ControllerFactory d_controller_factory = null;
+	public AppMsg d_msg = null;
 
 	/**
 	 * setup the environment for testing of MapEditorController
@@ -31,12 +31,12 @@ public class MapEditorControllerTest {
 	 */
 	@Before
 	public void setupMapEditController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
-		d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
-		d_controller_factory = SoftwareFactoryController.CreateWarzoneBasicConsoleGameControllers(d_model_factory,
+		d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
+		d_view_factory = ViewFactory.CreateWarzoneBasicConsoleGameViews(d_model_factory);
+		d_controller_factory = ControllerFactory.CreateWarzoneBasicConsoleGameControllers(d_model_factory,
 				d_view_factory);
 		d_map_editor_controller = new MapEditorController(d_controller_factory);
-		d_msg = (UserMessageModel) d_model_factory.getUserMessageModel();
+		d_msg = (AppMsg) d_model_factory.getUserMessageModel();
 	}
 
 	/**

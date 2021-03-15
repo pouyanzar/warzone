@@ -3,8 +3,8 @@ package soen6441.team01.warzone.model;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Observable;
-import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.common.entities.MsgType;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
@@ -12,13 +12,13 @@ import soen6441.team01.warzone.model.entities.UserMessage;
  * appropriate view)(e.g. command completion messages)
  * 
  */
-public class UserMessageModel extends Observable implements IUserMessageModel {
+public class AppMsg extends Observable implements IAppMsg {
 	private ArrayList<UserMessage> d_user_messages = new ArrayList<UserMessage>();
 
 	/**
 	 * Constructor
 	 */
-	public UserMessageModel() {
+	public AppMsg() {
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class UserMessageModel extends Observable implements IUserMessageModel {
 	 * @param p_message_type the message severity
 	 * @param p_message      the message text
 	 */
-	public void setMessage(MessageType p_message_type, String p_message) {
+	public void setMessage(MsgType p_message_type, String p_message) {
 		d_user_messages.add(new UserMessage(p_message_type, p_message));
 		while (d_user_messages.size() > 10) {
 			d_user_messages.remove(0);

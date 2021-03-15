@@ -1,8 +1,8 @@
 package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MessageType;
-import soen6441.team01.warzone.controller.SoftwareFactoryController;
+import soen6441.team01.warzone.common.entities.MsgType;
+import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.*;
 
@@ -12,9 +12,9 @@ import soen6441.team01.warzone.view.*;
  * interactions, gestures).
  */
 public class GameEngine implements IGameEngineModel {
-	private SoftwareFactoryModel d_model_factory;
-	private SoftwareFactoryView d_view_factory;
-	private SoftwareFactoryController d_controller_factory;
+	private ModelFactory d_model_factory;
+	private ViewFactory d_view_factory;
+	private ControllerFactory d_controller_factory;
 	private Phase d_phase = null;
 
 	/**
@@ -42,25 +42,25 @@ public class GameEngine implements IGameEngineModel {
 	 *                             console based).
 	 * @throws Exception unexpected error
 	 */
-	public GameEngine(SoftwareFactoryModel p_model_factory, SoftwareFactoryView p_view_factory,
-			SoftwareFactoryController p_controller_factory) throws Exception {
+	public GameEngine(ModelFactory p_model_factory, ViewFactory p_view_factory,
+			ControllerFactory p_controller_factory) throws Exception {
 		if (p_model_factory != null) {
 			d_model_factory = p_model_factory;
 		} else {
-			d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+			d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
 		}
 		d_model_factory.setGameEngine(this);
 
 		if (p_model_factory != null) {
 			d_view_factory = p_view_factory;
 		} else {
-			d_view_factory = SoftwareFactoryView.CreateWarzoneBasicConsoleGameViews(d_model_factory);
+			d_view_factory = ViewFactory.CreateWarzoneBasicConsoleGameViews(d_model_factory);
 		}
 
 		if (p_controller_factory != null) {
 			d_controller_factory = p_controller_factory;
 		} else {
-			d_controller_factory = new SoftwareFactoryController(d_model_factory, d_view_factory);
+			d_controller_factory = new ControllerFactory(d_model_factory, d_view_factory);
 		}
 
 		d_phase = (Phase) d_controller_factory.getMapEditorPhase();

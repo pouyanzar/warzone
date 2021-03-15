@@ -15,7 +15,7 @@ import soen6441.team01.warzone.model.contracts.ICountryModel;
  *
  */
 public class ContinentTest {
-	public SoftwareFactoryModel d_model_factory = null;
+	public ModelFactory d_model_factory = null;
 
 	/**
 	 * setup the environment for testing
@@ -24,7 +24,7 @@ public class ContinentTest {
 	 */
 	@Before
 	public void setupGameStartupController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
 	}
 
 	/**

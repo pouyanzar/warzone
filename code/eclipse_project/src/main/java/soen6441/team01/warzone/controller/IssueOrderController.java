@@ -5,22 +5,22 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.OrderDeploy;
+import soen6441.team01.warzone.model.DeployOrder;
 import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrderModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.GameState;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
 /**
@@ -28,11 +28,11 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * game play phase.
  */
 public class IssueOrderController extends GamePlayController implements IGamePlayController, IGameplayOrderDatasource {
-	private SoftwareFactoryModel d_model_factory;
-	private SoftwareFactoryView d_view_factory;
-	private SoftwareFactoryController d_controller_factory;
+	private ModelFactory d_model_factory;
+	private ViewFactory d_view_factory;
+	private ControllerFactory d_controller_factory;
 	private IGamePlayView d_view;
-	private IUserMessageModel d_msg_model;
+	private IAppMsg d_msg_model;
 	private IGamePlayModel d_gameplay_model;
 	private Phase d_next_phase = null;
 
@@ -42,7 +42,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public IssueOrderController(SoftwareFactoryController p_controller_factory) throws Exception {
+	public IssueOrderController(ControllerFactory p_controller_factory) throws Exception {
 		super(p_controller_factory);
 		d_controller_factory = p_controller_factory;
 		d_model_factory = p_controller_factory.getModelFactory();
@@ -58,7 +58,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		try {
 			processIssueOrdersGamePlay();
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, "exception in GamePlayController: " + ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
 			endGamePlayPhase();
 		}
 	}
@@ -71,7 +71,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	public void processIssueOrdersGamePlay() throws Exception {
 		d_view = d_view_factory.getGamePlayConsoleView(this);
 		d_gameplay_model = d_model_factory.getGamePlayModel();
-		d_msg_model.setMessage(MessageType.None, "\n* issuing orders:");
+		d_msg_model.setMessage(MsgType.None, "\n* issuing orders:");
 		Phase l_next_phase = issueOrders();
 		if (l_next_phase != null) {
 			nextPhase(l_next_phase);
@@ -94,7 +94,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		// issuing orders before the execution phase and to isolate each players map
 		// from one another
 		for (IPlayerModel l_player : l_players) {
-			SoftwareFactoryModel l_cloned_sf_model = new SoftwareFactoryModel(d_model_factory);
+			ModelFactory l_cloned_sf_model = new ModelFactory(d_model_factory);
 			IMapModel l_cloned_map = Map.deepCloneMap(d_model_factory.getMapModel(), l_cloned_sf_model);
 			IPlayerModel l_player_clone = l_player.deepClonePlayer(l_cloned_map);
 			l_player_clones.add(l_player_clone);
@@ -176,19 +176,19 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_order = processDeployCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "advance":
-			d_msg_model.setMessage(MessageType.Warning, "command '" + p_cmd + "' coming soon.");
+			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "bomb":
-			d_msg_model.setMessage(MessageType.Warning, "command '" + p_cmd + "' coming soon.");
+			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "blockade":
-			d_msg_model.setMessage(MessageType.Warning, "command '" + p_cmd + "' coming soon.");
+			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "airlift":
-			d_msg_model.setMessage(MessageType.Warning, "command '" + p_cmd + "' coming soon.");
+			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "negotiate":
-			d_msg_model.setMessage(MessageType.Warning, "command '" + p_cmd + "' coming soon.");
+			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "end":
 			processEndTurn(l_cmd_params[1], l_player_clone);
@@ -200,7 +200,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			d_next_phase = d_controller_factory.getGameEndPhase();
 			break;
 		default:
-			d_msg_model.setMessage(MessageType.Error, "invalid command '" + p_cmd + "'");
+			d_msg_model.setMessage(MsgType.Error, "invalid command '" + p_cmd + "'");
 			break;
 		}
 		return l_order;
@@ -218,11 +218,11 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 */
 	private void processEndTurn(String p_end_params, IPlayerModel l_player) {
 		if (!Utl.isEmpty(p_end_params)) {
-			d_msg_model.setMessage(MessageType.Error, "invalid parameters for end command: '" + p_end_params + "'");
+			d_msg_model.setMessage(MsgType.Error, "invalid parameters for end command: '" + p_end_params + "'");
 			return;
 		}
 		if (l_player.getReinforcements() > 0) {
-			d_msg_model.setMessage(MessageType.Error, "Cannot end turn as player '" + l_player.getName()
+			d_msg_model.setMessage(MsgType.Error, "Cannot end turn as player '" + l_player.getName()
 					+ "' has " + l_player.getReinforcements() + " reinforcement(s) left to deploy.");
 			return;
 		}
@@ -246,39 +246,39 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		String l_params[] = Utl.getFirstWord(p_deploy_params);
 
 		if (Utl.isEmpty(l_params[0])) {
-			d_msg_model.setMessage(MessageType.Error, "Invalid deploy command, no options specified");
+			d_msg_model.setMessage(MsgType.Error, "Invalid deploy command, no options specified");
 			return null;
 		}
 		try {
 			// parse the countryID
 			String l_country_name = l_params[0];
 			if (!Utl.isValidMapName(l_country_name)) {
-				d_msg_model.setMessage(MessageType.Error, "Invalid deploy country name '" + l_country_name + "'.");
+				d_msg_model.setMessage(MsgType.Error, "Invalid deploy country name '" + l_country_name + "'.");
 				return null;
 			}
 			// parse the num_reinforcements
 			l_params = Utl.getFirstWord(l_params[1]);
 			String l_reinforcements_str = l_params[0];
 			if (Utl.isEmpty(l_reinforcements_str)) {
-				d_msg_model.setMessage(MessageType.Error,
+				d_msg_model.setMessage(MsgType.Error,
 						"Invalid deploy command, number of reinforcements not specified.");
 				return null;
 			}
 			int l_reinforcements = Utl.convertToInteger(l_reinforcements_str);
 			if (l_reinforcements >= Integer.MAX_VALUE || l_reinforcements < 1) {
-				d_msg_model.setMessage(MessageType.Error,
+				d_msg_model.setMessage(MsgType.Error,
 						"Invalid number of deploy reinforcements '" + l_reinforcements_str + "'.");
 				return null;
 			}
-			l_order = new OrderDeploy(l_country_name, l_reinforcements, l_player_clone);
+			l_order = new DeployOrder(l_country_name, l_reinforcements, l_player_clone);
 			// execute the order on the cloned player to 1) see if it's valid 2) set the
 			// state of the cloned player for the next command
 			l_order.execute();
 			String l_msg = "Deploy order successful.\n" + l_player_clone.getReinforcements()
 					+ " reinforcement(s) left for " + l_player_clone.getName() + " to allocate.";
-			d_msg_model.setMessage(MessageType.Informational, l_msg);
+			d_msg_model.setMessage(MsgType.Informational, l_msg);
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 			return null;
 		}
 		return l_order;
@@ -305,17 +305,17 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 */
 	private void GameStartupHelp() {
 		d_view.displayGamePlayBanner();
-		d_view.processMessage(MessageType.None, "Gameplay commands:");
-		d_view.processMessage(MessageType.None, " - deploy countryID num_reinforcements");
-		d_view.processMessage(MessageType.None, " - advance countrynamefrom countynameto numarmies");
-		d_view.processMessage(MessageType.None, " - bomb countryID (requires bomb card)");
-		d_view.processMessage(MessageType.None, " - blockade countryID (required blockade card)");
-		d_view.processMessage(MessageType.None,
+		d_view.processMessage(MsgType.None, "Gameplay commands:");
+		d_view.processMessage(MsgType.None, " - deploy countryID num_reinforcements");
+		d_view.processMessage(MsgType.None, " - advance countrynamefrom countynameto numarmies");
+		d_view.processMessage(MsgType.None, " - bomb countryID (requires bomb card)");
+		d_view.processMessage(MsgType.None, " - blockade countryID (required blockade card)");
+		d_view.processMessage(MsgType.None,
 				" - airlift sourcecountryID targetcountryID numarmies (requires the airlift card)");
-		d_view.processMessage(MessageType.None, " - negotiate playerID (requires the diplomacy card)");
-		d_view.processMessage(MessageType.None, " - showmap");
-		d_view.processMessage(MessageType.None, " - end (end turn)");
-		d_view.processMessage(MessageType.None, " - exit (exit game)");
-		d_view.processMessage(MessageType.None, " - help");
+		d_view.processMessage(MsgType.None, " - negotiate playerID (requires the diplomacy card)");
+		d_view.processMessage(MsgType.None, " - showmap");
+		d_view.processMessage(MsgType.None, " - end (end turn)");
+		d_view.processMessage(MsgType.None, " - exit (exit game)");
+		d_view.processMessage(MsgType.None, " - help");
 	}
 }

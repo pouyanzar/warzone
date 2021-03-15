@@ -3,16 +3,16 @@ package soen6441.team01.warzone.controller;
 import soen6441.team01.warzone.controller.contracts.*;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.view.ViewFactory;
 
 /**
  * This class implements the Software Factory design pattern to manage the set
  * of objects that define the respective classes for the different Warzone
  * controllers.
  */
-public class SoftwareFactoryController {
-	private SoftwareFactoryModel d_model_factory;
-	private SoftwareFactoryView d_view_factory;
+public class ControllerFactory {
+	private ModelFactory d_model_factory;
+	private ViewFactory d_view_factory;
 
 	private IMapEditorController d_map_editor_controller = null;
 	private IGameStartupController d_startup_controller = null;
@@ -20,7 +20,7 @@ public class SoftwareFactoryController {
 	private GamePlayController d_game_play_controller = null;
 	private ReinforcementController d_reinforcement_controller = null;
 	private IssueOrderController d_issue_order_controller = null;
-	private OrderExecutionController d_order_exec_controller = null;
+	private OrderExecController d_order_exec_controller = null;
 
 	/**
 	 * Constructor with views defined. Views passed as null will result in the
@@ -29,7 +29,7 @@ public class SoftwareFactoryController {
 	 * @param p_models       the software factory for all the game models
 	 * @param p_view_factory the software factory for all the views
 	 */
-	public SoftwareFactoryController(SoftwareFactoryModel p_models, SoftwareFactoryView p_view_factory) {
+	public ControllerFactory(ModelFactory p_models, ViewFactory p_view_factory) {
 		d_model_factory = p_models;
 		d_view_factory = p_view_factory;
 	}
@@ -42,9 +42,9 @@ public class SoftwareFactoryController {
 	 * @param p_view  the view software factory to use
 	 * @return newly create Warzone view software factory
 	 */
-	public static SoftwareFactoryController CreateWarzoneBasicConsoleGameControllers(SoftwareFactoryModel p_model,
-			SoftwareFactoryView p_view) {
-		SoftwareFactoryController l_controller = new SoftwareFactoryController(p_model, p_view);
+	public static ControllerFactory CreateWarzoneBasicConsoleGameControllers(ModelFactory p_model,
+			ViewFactory p_view) {
+		ControllerFactory l_controller = new ControllerFactory(p_model, p_view);
 		return l_controller;
 	}
 
@@ -62,14 +62,14 @@ public class SoftwareFactoryController {
 	/**
 	 * @return the currently defined Model Software Factory
 	 */
-	public SoftwareFactoryModel getModelFactory() {
+	public ModelFactory getModelFactory() {
 		return d_model_factory;
 	}
 
 	/**
 	 * @return the currently defined View Software Factory
 	 */
-	public SoftwareFactoryView getViewFactory() {
+	public ViewFactory getViewFactory() {
 		return d_view_factory;
 	}
 
@@ -223,7 +223,7 @@ public class SoftwareFactoryController {
 	 */
 	public Phase getOrderExecPhase() throws Exception {
 		if (d_order_exec_controller == null) {
-			d_order_exec_controller = new OrderExecutionController(this);
+			d_order_exec_controller = new OrderExecController(this);
 		}
 		return (Phase) d_order_exec_controller;
 	}

@@ -28,3 +28,14 @@ refactoring:
 2) all writes to console done via Utl.consoleMessage - adds logging
 
 3) Refactor class names:
+MessageType, MsgType
+OrderExecutionController, OrderExecController
+SoftwareFactoryController, ControllerFactory
+UserMessageModel, AppMsg
+OrderDeploy, DeployOrder
+SoftwareFactoryModel, ModelFactory
+SoftwareFactoryView, ViewFactory
+IUserMessageModel, IAppMsg
+MapEditorConsoleView, MapEditorConsole
+GameStartupConsoleView, GameStartupConsole
+GamePlayConsoleView, GamePlayConsole

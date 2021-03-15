@@ -22,7 +22,7 @@ public class Player implements IPlayerModel {
 	private ArrayList<ICountryModel> d_player_countries;
 	private ArrayList<IOrderModel> d_order_list;
 	private ArrayList<Card> d_cards;
-	private SoftwareFactoryModel d_factory_model = null;
+	private ModelFactory d_factory_model = null;
 	private boolean d_done_turn = false;
 
 	/**
@@ -34,7 +34,7 @@ public class Player implements IPlayerModel {
 	 * @param p_factory_model the model factory to use when needed
 	 * @throws Exception general exceptions
 	 */
-	public Player(String p_name, SoftwareFactoryModel p_factory_model) throws Exception {
+	public Player(String p_name, ModelFactory p_factory_model) throws Exception {
 		this(p_name, null, p_factory_model);
 	}
 
@@ -47,7 +47,7 @@ public class Player implements IPlayerModel {
 	 * @param p_factory_model    the model software factory
 	 * @throws Exception general exceptions
 	 */
-	public Player(String p_name, IGameplayOrderDatasource p_order_datasource, SoftwareFactoryModel p_factory_model)
+	public Player(String p_name, IGameplayOrderDatasource p_order_datasource, ModelFactory p_factory_model)
 			throws Exception {
 		super();
 		setName(p_name);

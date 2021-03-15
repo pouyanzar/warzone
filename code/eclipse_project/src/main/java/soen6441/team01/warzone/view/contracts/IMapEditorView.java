@@ -1,6 +1,6 @@
 package soen6441.team01.warzone.view.contracts;
 
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 
@@ -15,7 +15,7 @@ public interface IMapEditorView {
 
 	String getCommand();
 
-	void processMessage(MessageType p_msg_type, String p_message);
+	void processMessage(MsgType p_msg_type, String p_message);
 
 	void deactivate();
 

@@ -6,12 +6,12 @@ import java.util.Scanner;
 import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
@@ -20,11 +20,11 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play console based view. The view interacts with the user via
  * the system console.
  */
-public class GamePlayConsoleView implements Observer, IGamePlayView {
+public class GamePlayConsole implements Observer, IGamePlayView {
 	private IGamePlayController d_controller = null;
 	private Scanner d_keyboard = null;
-	private IUserMessageModel d_user_message_model = null;
-	private SoftwareFactoryModel d_factory_model = null;
+	private IAppMsg d_user_message_model = null;
+	private ModelFactory d_factory_model = null;
 
 	/**
 	 * Constructor.
@@ -33,7 +33,7 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 	 * @param p_factory_model model factory
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayConsoleView(IGamePlayController p_controller, SoftwareFactoryModel p_factory_model)
+	public GamePlayConsole(IGamePlayController p_controller, ModelFactory p_factory_model)
 			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
@@ -98,7 +98,7 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 	 * @param p_msg_type the type of message to display as defined by the enum
 	 * @param p_message  the message to display to the user
 	 */
-	public void processMessage(MessageType p_msg_type, String p_message) {
+	public void processMessage(MsgType p_msg_type, String p_message) {
 		Utl.consoleMessage(p_msg_type, p_message);
 	}
 
@@ -108,7 +108,7 @@ public class GamePlayConsoleView implements Observer, IGamePlayView {
 	 * @param p_user_message the UserMessage to process
 	 */
 	public void processMessage(UserMessage p_user_message) {
-		MessageType l_msgtyp = p_user_message.getMessageType();
+		MsgType l_msgtyp = p_user_message.getMessageType();
 		String l_msg = p_user_message.getMessage();
 		processMessage(l_msgtyp, l_msg);
 	}

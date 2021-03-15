@@ -7,9 +7,9 @@ import soen6441.team01.warzone.model.contracts.*;
  * of objects that define the respective classes for the different Warzone
  * models.
  */
-public class SoftwareFactoryModel {
+public class ModelFactory {
 	private IMapModel d_map_model = null;
-	private IUserMessageModel d_user_message_model = null;
+	private IAppMsg d_user_message_model = null;
 	private IGamePlayModel d_gameplay = null;
 	private GameEngine d_game_engine = null;
 
@@ -19,7 +19,7 @@ public class SoftwareFactoryModel {
 	 * 
 	 * @param p_user_message_model the user message model to use
 	 */
-	public SoftwareFactoryModel(IUserMessageModel p_user_message_model) {
+	public ModelFactory(IAppMsg p_user_message_model) {
 		d_map_model = new Map(this);
 		d_user_message_model = p_user_message_model;
 	}
@@ -30,7 +30,7 @@ public class SoftwareFactoryModel {
 	 * @param p_map_model the map model to use
 	 * @throws Exception unexpected error
 	 */
-	public SoftwareFactoryModel(SoftwareFactoryModel p_map_model) throws Exception {
+	public ModelFactory(ModelFactory p_map_model) throws Exception {
 		d_map_model = p_map_model.getMapModel();
 		d_user_message_model = p_map_model.getUserMessageModel();
 		d_gameplay = p_map_model.getGamePlayModel();
@@ -42,9 +42,9 @@ public class SoftwareFactoryModel {
 	 * 
 	 * @return newly create Warzone model software factory
 	 */
-	public static SoftwareFactoryModel createWarzoneBasicConsoleGameModels() {
-		IUserMessageModel l_usermsg = new UserMessageModel();
-		SoftwareFactoryModel l_model = new SoftwareFactoryModel(l_usermsg);
+	public static ModelFactory createWarzoneBasicConsoleGameModels() {
+		IAppMsg l_usermsg = new AppMsg();
+		ModelFactory l_model = new ModelFactory(l_usermsg);
 		return l_model;
 	}
 
@@ -131,9 +131,9 @@ public class SoftwareFactoryModel {
 	 * @return the user message model created or previously defined
 	 * @throws Exception if there was a problem creating a new user message object
 	 */
-	public IUserMessageModel getUserMessageModel() throws Exception {
+	public IAppMsg getUserMessageModel() throws Exception {
 		if (d_user_message_model == null)
-			d_user_message_model = new UserMessageModel();
+			d_user_message_model = new AppMsg();
 		return d_user_message_model;
 	}
 

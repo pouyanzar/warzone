@@ -1,6 +1,6 @@
 package soen6441.team01.warzone.view.contracts;
 
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.entities.UserMessage;
 
@@ -17,7 +17,7 @@ public interface IGamePlayView {
 	
 	void deactivate();
 
-	void processMessage(MessageType none, String string);
+	void processMessage(MsgType none, String string);
 	
 	void showCountry(ICountryModel p_country);
 	

@@ -19,7 +19,7 @@ import soen6441.team01.warzone.model.contracts.IMapModel;
  */
 public class MapTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
-	public SoftwareFactoryModel d_model_factory = null;
+	public ModelFactory d_model_factory = null;
 
 	/**
 	 * setup the environment for testing
@@ -28,7 +28,7 @@ public class MapTest {
 	 */
 	@Before
 	public void setupGameStartupController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
 	}
 
 	/**

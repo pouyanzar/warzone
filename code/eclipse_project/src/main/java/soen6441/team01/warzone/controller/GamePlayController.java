@@ -1,26 +1,13 @@
 package soen6441.team01.warzone.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
-import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IOrderModel;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
-import soen6441.team01.warzone.model.entities.CountrySummary;
-import soen6441.team01.warzone.model.entities.GameState;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.contracts.*;
+import soen6441.team01.warzone.model.entities.*;
+import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
 /**
@@ -28,12 +15,12 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * game play phase.
  */
 public class GamePlayController extends Phase implements IGamePlayController{
-	private SoftwareFactoryModel d_model_factory;
-	private SoftwareFactoryView d_view_factory;
-	private SoftwareFactoryController d_controller_factory;
+	private ModelFactory d_model_factory;
+	private ViewFactory d_view_factory;
+	private ControllerFactory d_controller_factory;
 	private IGamePlayView d_view;
 	private IGamePlayModel d_gameplay_model;
-	private IUserMessageModel d_msg_model;
+	private IAppMsg d_msg_model;
 	private int d_round = 1;
 
 	/**
@@ -42,7 +29,7 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayController(SoftwareFactoryController p_controller_factory) throws Exception {
+	public GamePlayController(ControllerFactory p_controller_factory) throws Exception {
 		super(p_controller_factory.getModelFactory().getGameEngine());
 		d_controller_factory = p_controller_factory;
 		d_model_factory = p_controller_factory.getModelFactory();
@@ -63,11 +50,11 @@ public class GamePlayController extends Phase implements IGamePlayController{
 				d_gameplay_model = d_model_factory.getGamePlayModel();
 				d_gameplay_model.setGameState(GameState.GamePlay);
 			}
-			d_msg_model.setMessage(MessageType.None, "\n-- round " + d_round++ + " --");
+			d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
 			Phase l_gmaeplay_start_phase = d_controller_factory.getReinforcementPhase();
 			nextPhase(l_gmaeplay_start_phase);
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MessageType.Error, "exception in GamePlayController: " + ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
 		}
 	}
 	

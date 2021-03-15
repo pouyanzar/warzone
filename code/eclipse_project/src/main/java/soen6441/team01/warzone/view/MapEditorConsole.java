@@ -6,14 +6,14 @@ import java.util.Scanner;
 import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
-import soen6441.team01.warzone.common.entities.MessageType;
+import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.SoftwareFactoryModel;
+import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IUserMessageModel;
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
@@ -21,11 +21,11 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * Warzone map editor console based view. The view interacts with the user via
  * the system console.
  */
-public class MapEditorConsoleView implements Observer, IMapEditorView {
+public class MapEditorConsole implements Observer, IMapEditorView {
 	private IMapEditorController d_controller = null;
 	private Scanner d_keyboard = null;
-	private IUserMessageModel d_user_message_model = null;
-	private SoftwareFactoryModel d_factory_model = null;
+	private IAppMsg d_user_message_model = null;
+	private ModelFactory d_factory_model = null;
 
 	// used mainly to check showmap in unit tests
 	public ArrayList<String> d_last_showmap;
@@ -37,7 +37,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_factory_model model factory
 	 * @throws Exception unexpected error
 	 */
-	public MapEditorConsoleView(IMapEditorController p_controller, SoftwareFactoryModel p_factory_model)
+	public MapEditorConsole(IMapEditorController p_controller, ModelFactory p_factory_model)
 			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
@@ -100,7 +100,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_msg_type the type of message to display as defined by the enum
 	 * @param p_message  the message to display to the user
 	 */
-	public void processMessage(MessageType p_msg_type, String p_message) {
+	public void processMessage(MsgType p_msg_type, String p_message) {
 		Utl.consoleMessage(p_msg_type, p_message);
 	}
 
@@ -110,7 +110,7 @@ public class MapEditorConsoleView implements Observer, IMapEditorView {
 	 * @param p_user_message the UserMessage to process
 	 */
 	public void processMessage(UserMessage p_user_message) {
-		MessageType l_msgtyp = p_user_message.getMessageType();
+		MsgType l_msgtyp = p_user_message.getMessageType();
 		String l_msg = p_user_message.getMessage();
 		processMessage(l_msgtyp, l_msg);
 	}

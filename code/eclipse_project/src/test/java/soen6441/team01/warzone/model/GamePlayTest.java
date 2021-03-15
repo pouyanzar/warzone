@@ -21,7 +21,7 @@ public class GamePlayTest {
 	public GamePlay d_gameplay = null;
 	public Map d_map = null;
 	public ArrayList<IPlayerModel> d_players = null;
-	public SoftwareFactoryModel d_factory_model = null;
+	public ModelFactory d_factory_model = null;
 
 	/**
 	 * setup test classes before each test is executed
@@ -30,7 +30,7 @@ public class GamePlayTest {
 	 */
 	@Before
 	public void class_instance_setup() throws Exception {
-		d_factory_model = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_factory_model = ModelFactory.createWarzoneBasicConsoleGameModels();
 		d_map = (Map) d_factory_model.getMapModel();
 		d_map.addContinent(1, "North_America", 3);
 		d_map.addCountry(1, "Canada", 1);

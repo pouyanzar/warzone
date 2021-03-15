@@ -8,18 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.controller.GamePlayController;
-import soen6441.team01.warzone.controller.SoftwareFactoryController;
+import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.view.SoftwareFactoryView;
+import soen6441.team01.warzone.view.ViewFactory;
 
 /**
  * Tests for the Country model class
  *
  */
 public class CountryTest {
-	public SoftwareFactoryModel d_model_factory = null;
+	public ModelFactory d_model_factory = null;
 
 	/**
 	 * setup the environment for testing
@@ -28,7 +28,7 @@ public class CountryTest {
 	 */
 	@Before
 	public void setupGameStartupController() throws Exception {
-		d_model_factory = SoftwareFactoryModel.createWarzoneBasicConsoleGameModels();
+		d_model_factory = ModelFactory.createWarzoneBasicConsoleGameModels();
 	}
 	
 	/**
