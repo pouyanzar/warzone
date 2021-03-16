@@ -2,6 +2,7 @@ package soen6441.team01.warzone.common;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.entities.UserMessage;
@@ -268,5 +269,21 @@ public class Utl {
 			l_xreport.add(l_xline);
 		}
 		return l_xreport;
+	}
+
+	/**
+	 * Get a random value from a specified enum
+	 * 
+	 * original code taken from:
+	 * https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum/30641206
+	 * 
+	 * @param <T> the enum type 
+	 * @param clazz the enum to get a value from
+	 * @return a random enum value
+	 */
+	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+		int randomIdx = ThreadLocalRandom.current().nextInt(0, clazz.getEnumConstants().length);
+		//int x = random.nextInt(clazz.getEnumConstants().length);
+		return clazz.getEnumConstants()[randomIdx];
 	}
 }

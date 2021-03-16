@@ -8,14 +8,14 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.DeployOrder;
+import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IOrderModel;
+import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.CountrySummary;
@@ -133,8 +133,8 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * @return the next order, or null if the player is done with this round
 	 * @throws Exception invalid command or unexpected error
 	 */
-	public IOrderModel getOrder(IPlayerModel l_player_clone) throws Exception {
-		IOrderModel l_order = null;
+	public IOrder getOrder(IPlayerModel l_player_clone) throws Exception {
+		IOrder l_order = null;
 
 		while (d_next_phase == null && l_order == null && !l_player_clone.isDoneTurn() ) {
 			String l_cmd = d_view.getCommand("Gameplay " + l_player_clone.getName() + ">");
@@ -164,8 +164,8 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * @return the order, null = order not fulfilled - try again
 	 * @throws Exception unexpected error
 	 */
-	public IOrderModel processGamePlayCommand(String p_cmd, IPlayerModel l_player_clone) throws Exception {
-		IOrderModel l_order = null;
+	public IOrder processGamePlayCommand(String p_cmd, IPlayerModel l_player_clone) throws Exception {
+		IOrder l_order = null;
 		String l_cmd_params[] = Utl.getFirstWord(p_cmd);
 
 		switch (l_cmd_params[0]) {
@@ -241,8 +241,8 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * @return the player's order or null if there was a problem creating the order
 	 * @throws Exception unexpected error encountered
 	 */
-	private IOrderModel processDeployCommand(String p_deploy_params, IPlayerModel l_player_clone) throws Exception {
-		IOrderModel l_order = null;
+	private IOrder processDeployCommand(String p_deploy_params, IPlayerModel l_player_clone) throws Exception {
+		IOrder l_order = null;
 		String l_params[] = Utl.getFirstWord(p_deploy_params);
 
 		if (Utl.isEmpty(l_params[0])) {
@@ -256,6 +256,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid deploy country name '" + l_country_name + "'.");
 				return null;
 			}
+			
 			// parse the num_reinforcements
 			l_params = Utl.getFirstWord(l_params[1]);
 			String l_reinforcements_str = l_params[0];
@@ -264,13 +265,15 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 						"Invalid deploy command, number of reinforcements not specified.");
 				return null;
 			}
+			
 			int l_reinforcements = Utl.convertToInteger(l_reinforcements_str);
 			if (l_reinforcements >= Integer.MAX_VALUE || l_reinforcements < 1) {
 				d_msg_model.setMessage(MsgType.Error,
 						"Invalid number of deploy reinforcements '" + l_reinforcements_str + "'.");
 				return null;
 			}
-			l_order = new DeployOrder(l_country_name, l_reinforcements, l_player_clone);
+			l_order = new OrderDeploy(l_country_name, l_reinforcements, l_player_clone);
+
 			// execute the order on the cloned player to 1) see if it's valid 2) set the
 			// state of the cloned player for the next command
 			l_order.execute();

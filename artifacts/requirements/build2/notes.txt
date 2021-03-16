@@ -39,3 +39,4 @@ IUserMessageModel, IAppMsg
 MapEditorConsoleView, MapEditorConsole
 GameStartupConsoleView, GameStartupConsole
 GamePlayConsoleView, GamePlayConsole
+IOrderModel, IOrder

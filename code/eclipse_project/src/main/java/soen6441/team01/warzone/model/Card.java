@@ -1,25 +1,44 @@
 package soen6441.team01.warzone.model;
 
+import soen6441.team01.warzone.common.Utl;
+import soen6441.team01.warzone.model.entities.*;
+
 /**
  * class Card to create cards for players to issue special orders during the
  * game
  * 
- * @author pouyan
- *
  */
 public class Card {
 
+	private CardType d_card_type;
 	private String d_card_name;
 
 	/**
-	 * Issues a card randomly
+	 * constructor - generates a random card
 	 */
 	public Card() {
-		String[] l_card_list = { "bomb", "reinforcement", "blockade", "airflit", "diplomacy" };
-		int l_random_card = (int) Math.floor((Math.random() * l_card_list.length));
-		setCardName(l_card_list[l_random_card]);
+		d_card_type = Utl.randomEnum(CardType.class);
+		d_card_name = d_card_type.name();
 	}
-	
+
+	/**
+	 * constructor - initialized to a specific card
+	 * 
+	 * @param p_card_type the type of card this is
+	 */
+	public Card(CardType p_card_type) {
+		d_card_type = p_card_type;
+		d_card_name = d_card_type.name();
+	}
+
+	/**
+	 * 
+	 * @return the type of the current card
+	 */
+	public CardType getCardType() {
+		return d_card_type;
+	}
+
 	/**
 	 * Getter method for card name
 	 * 
@@ -27,14 +46,5 @@ public class Card {
 	 */
 	public String getCardName() {
 		return d_card_name;
-	}
-
-	/**
-	 * Setter method for card
-	 * 
-	 * @param l_cardName the name of current card
-	 */
-	public void setCardName(String l_cardName) {
-		d_card_name = l_cardName;
 	}
 }

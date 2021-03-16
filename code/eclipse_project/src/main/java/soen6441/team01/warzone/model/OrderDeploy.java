@@ -1,14 +1,14 @@
 package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.model.contracts.IOrderModel;
+import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 
 /**
  * Supports the definition and implementation of the 'deploy' order.
  *
  */
-public class DeployOrder implements IOrderModel {
+public class OrderDeploy implements IOrder {
 
 	private String d_country_name;
 	private int d_reinforcements;
@@ -22,7 +22,7 @@ public class DeployOrder implements IOrderModel {
 	 *                       specified country
 	 * @param p_player       the player model needed to process this order
 	 */
-	public DeployOrder(String p_country_name, int p_armies, IPlayerModel p_player) {
+	public OrderDeploy(String p_country_name, int p_armies, IPlayerModel p_player) {
 		d_country_name = p_country_name;
 		d_reinforcements = p_armies;
 		d_player = p_player;

@@ -6,7 +6,7 @@ import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IOrderModel;
+import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.*;
 
@@ -20,7 +20,7 @@ public class Player implements IPlayerModel {
 	private int d_reinforcements = 0;
 	private IGameplayOrderDatasource d_order_datasource;
 	private ArrayList<ICountryModel> d_player_countries;
-	private ArrayList<IOrderModel> d_order_list;
+	private ArrayList<IOrder> d_order_list;
 	private ArrayList<Card> d_cards;
 	private ModelFactory d_factory_model = null;
 	private boolean d_done_turn = false;
@@ -54,7 +54,7 @@ public class Player implements IPlayerModel {
 		d_reinforcements = 0;
 		d_order_datasource = p_order_datasource;
 		d_player_countries = new ArrayList<ICountryModel>();
-		d_order_list = new ArrayList<IOrderModel>();
+		d_order_list = new ArrayList<IOrder>();
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
 	}
@@ -104,8 +104,8 @@ public class Player implements IPlayerModel {
 	 * @throws Exception unexpected error
 	 */
 	public void copyOrders(IPlayerModel p_cloned_player) throws Exception {
-		ArrayList<IOrderModel> l_clone_orders = p_cloned_player.getOrders();
-		for (IOrderModel l_clone_order : l_clone_orders) {
+		ArrayList<IOrder> l_clone_orders = p_cloned_player.getOrders();
+		for (IOrder l_clone_order : l_clone_orders) {
 			l_clone_order.setPlayer(this);
 			d_order_list.add(l_clone_order);
 		}
@@ -180,7 +180,7 @@ public class Player implements IPlayerModel {
 	 * 
 	 * @return d_order_list the list of orders player issues
 	 */
-	public ArrayList<IOrderModel> getOrders() {
+	public ArrayList<IOrder> getOrders() {
 		return d_order_list;
 	}
 
@@ -190,7 +190,7 @@ public class Player implements IPlayerModel {
 	 * @throws Exception unexpected error
 	 */
 	public void issue_order() throws Exception {
-		IOrderModel l_order = d_order_datasource.getOrder(this);
+		IOrder l_order = d_order_datasource.getOrder(this);
 		if (l_order != null) {
 			d_order_list.add(l_order);
 			d_done_turn = false;
@@ -224,11 +224,11 @@ public class Player implements IPlayerModel {
 	 * @return l_first_order the first order in order list, null if there are no
 	 *         more orders
 	 */
-	public IOrderModel next_order() {
+	public IOrder next_order() {
 		if (d_order_list.size() < 1) {
 			return null;
 		}
-		IOrderModel l_next_order = d_order_list.get(0);
+		IOrder l_next_order = d_order_list.get(0);
 		d_order_list.remove(0);
 		return l_next_order;
 	}

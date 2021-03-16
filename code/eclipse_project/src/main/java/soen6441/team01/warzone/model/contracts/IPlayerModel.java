@@ -20,11 +20,11 @@ public interface IPlayerModel {
 
 	void removePlayerCountry(ICountryModel p_country) throws Exception;
 
-	ArrayList<IOrderModel> getOrders();
+	ArrayList<IOrder> getOrders();
 
 	void issue_order() throws Exception;
 
-	IOrderModel next_order();
+	IOrder next_order();
 
 	IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception;
 

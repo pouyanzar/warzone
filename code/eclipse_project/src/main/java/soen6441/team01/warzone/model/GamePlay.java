@@ -151,7 +151,7 @@ public class GamePlay implements IGamePlayModel {
 			return;
 		}
 
-		// startoff every player with 5 reinforcement armies to place
+		// start every player with 5 reinforcement armies
 		for (IPlayerModel l_player : d_players) {
 			l_player.setReinforcements(5);
 		}
@@ -213,7 +213,7 @@ public class GamePlay implements IGamePlayModel {
 		while (l_orders_executed > 0) {
 			l_orders_executed = 0;
 			for (IPlayerModel l_player : d_players) {
-				IOrderModel l_order = l_player.next_order();
+				IOrder l_order = l_player.next_order();
 				if (l_order != null) {
 					String l_msg = l_order.execute();
 					getMsg().setMessage(MsgType.None, l_msg);
@@ -227,8 +227,8 @@ public class GamePlay implements IGamePlayModel {
 		for (IPlayerModel l_player : d_players) {
 //			if(l_player.conquer()) {
 			if(true) {
-				Card l_card = new Card();
-				l_player.addCard(l_card);
+				//Card l_card = new Card();
+				//l_player.addCard(l_card);
 			}
 		}
 	}
