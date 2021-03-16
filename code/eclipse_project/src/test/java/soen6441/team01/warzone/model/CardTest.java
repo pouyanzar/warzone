@@ -24,7 +24,7 @@ public class CardTest {
 		l_card_list.add("airlift");
 		l_card_list.add("blockade");
 		l_card_list.add("bomb");
-		l_card_list.add("negotiate");
+		l_card_list.add("diplomacy");
 
 		l_card = new Card(CardType.airlift);
 		assertTrue(l_card.getCardName().equals("airlift"));
@@ -35,8 +35,8 @@ public class CardTest {
 		l_card = new Card(CardType.bomb);
 		assertTrue(l_card.getCardName().equals("bomb"));
 
-		l_card = new Card(CardType.negotiate);
-		assertTrue(l_card.getCardName().equals("negotiate"));
+		l_card = new Card(CardType.diplomacy);
+		assertTrue(l_card.getCardName().equals("diplomacy"));
 
 		// check the random generator by going through some samples and making sure that
 		// the random function is not generating an invalid card type

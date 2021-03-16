@@ -21,6 +21,7 @@ public class OrderBomb implements IOrder {
 	public OrderBomb(IPlayerModel p_player, ICountryModel p_country) {
 		d_player = p_player;
 		d_country = p_country;
+		isValid();
 	}
 
 	/**
@@ -32,7 +33,20 @@ public class OrderBomb implements IOrder {
 	 * @throws Exception if not successfully executed
 	 */
 	public String execute() throws Exception {
+		isValid();
 		throw new Exception("Bomb card execute method not yet implemented");
+	}
+	
+	/**
+	 * is the 
+	 */
+	private void isValid() {
+		// validate that the country is adjacent to one of the current player’s
+		// territories.
+		// ...
+
+		// validate that the player has the bomb card
+		// ...
 	}
 
 	/**

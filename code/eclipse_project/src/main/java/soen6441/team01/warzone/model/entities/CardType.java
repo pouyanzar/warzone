@@ -8,5 +8,5 @@ public enum CardType {
 	bomb,
 	blockade,
 	airlift,
-	negotiate
+	diplomacy
 }

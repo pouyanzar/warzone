@@ -9,8 +9,10 @@ import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
+import soen6441.team01.warzone.model.Card;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
+import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.UserMessage;
@@ -150,6 +152,19 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 		System.out.println("");
 		for (String l_line : l_report) {
 			System.out.println(l_line);
+		}
+	}
+	
+	/**
+	 * Display the players cards
+	 * 
+	 * @param p_player player who's cards to show
+	 */
+	public void showCards(IPlayerModel p_player) {
+		ArrayList<Card> l_cards = p_player.getCards();
+		Utl.consoleMessage("Player " + p_player.getName() + " holds the following cards:");
+		for (Card l_card : l_cards) {
+			Utl.consoleMessage("  " + l_card.getCardName());
 		}
 	}
 

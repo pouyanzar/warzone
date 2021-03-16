@@ -7,6 +7,7 @@ import java.util.Queue;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.model.Card;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;
@@ -18,6 +19,7 @@ import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
+import soen6441.team01.warzone.model.entities.CardType;
 import soen6441.team01.warzone.model.entities.CountrySummary;
 import soen6441.team01.warzone.model.entities.GameState;
 import soen6441.team01.warzone.view.ViewFactory;
@@ -118,9 +120,18 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		for (int l_idx = 0; l_idx < l_players.size(); l_idx++) {
 			l_players.get(l_idx).copyOrders(l_player_clones.get(l_idx));
 		}
-		
-		if( d_next_phase == null ) {
+
+		if (d_next_phase == null) {
 			d_next_phase = d_controller_factory.getOrderExecPhase();
+		}
+
+		// !!! TEMP CODE !!!
+		// todo: used for testing cards - gives each player a free card after every turn
+		// todo: delete this code in final version
+		// !!! TEMP CODE !!!
+		for (IPlayerModel l_xplayer : l_players) {
+			Card l_card = new Card();
+			l_xplayer.addCard(l_card);
 		}
 
 		return d_next_phase;
@@ -136,24 +147,26 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	public IOrder getOrder(IPlayerModel l_player_clone) throws Exception {
 		IOrder l_order = null;
 
-		while (d_next_phase == null && l_order == null && !l_player_clone.isDoneTurn() ) {
+		while (d_next_phase == null && l_order == null && !l_player_clone.isDoneTurn()) {
 			String l_cmd = d_view.getCommand("Gameplay " + l_player_clone.getName() + ">");
 			l_order = processGamePlayCommand(l_cmd, l_player_clone);
 		}
+
 		return l_order;
 	}
 
 	/**
 	 * Process the game play command:
 	 * <ul>
-	 * <li>deploy countryID num_reinforcements</li>
+	 * <li>deploy countryName num_reinforcements</li>
 	 * <li>advance countrynamefrom countynameto numarmies</li>
-	 * <li>bomb countryID (requires bomb card)</li>
-	 * <li>blockade countryID (required blockade card)</li>
-	 * <li>airlift sourcecountryID targetcountryID numarmies (requires the airlift
-	 * card)</li>
-	 * <li>negotiate playerID (requires the diplomacy card)</li>
+	 * <li>bomb countryName (requires bomb card)</li>
+	 * <li>blockade countryName (required blockade card)</li>
+	 * <li>airlift sourcecountryName targetcountryName numarmies (requires the
+	 * airlift card)</li>
+	 * <li>negotiate playerName (requires the diplomacy card)</li>
 	 * <li>showmap</li>
+	 * <li>showcards</li>
 	 * <li>end (end turn)</li>
 	 * <li>exit (exit game)</li>
 	 * <li>help</li>
@@ -179,7 +192,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
 			break;
 		case "bomb":
-			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
+			l_order = processBombCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "blockade":
 			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
@@ -189,6 +202,9 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			break;
 		case "negotiate":
 			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
+			break;
+		case "showcards":
+			showCards(l_player_clone);
 			break;
 		case "end":
 			processEndTurn(l_cmd_params[1], l_player_clone);
@@ -208,7 +224,46 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	}
 
 	/**
-	 * process the deploy command.
+	 * process the bomb command (requires bomb card):<br>
+	 * bomb countryName
+	 * 
+	 * @param p_bomb_params the remaining parameters for the bomb command
+	 * @param p_player      the player for which this command is for
+	 */
+	private IOrder processBombCommand(String p_bomb_params, IPlayerModel p_player) {
+		IOrder l_order = null;
+		String l_params[] = Utl.getFirstWord(p_bomb_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid bomb command, no options specified");
+			return null;
+		}
+
+		try {
+			// parse the countryName
+			String l_country_name = l_params[0];
+			if (!Utl.isValidMapName(l_country_name)) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_country_name + "'.");
+				return null;
+			}
+
+			// create the bomb order
+			// l_order = new OrderBomb(IPlayerModel p_player, ICountryModel p_country);
+
+			// execute the order on the cloned player to 1) see if it's valid 2) set the
+			// state of the cloned player for the next command
+			l_order.execute();
+			String l_msg = "bomb order successful.\n";
+			d_msg_model.setMessage(MsgType.Informational, l_msg);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			return null;
+		}
+		return l_order;
+	}
+
+	/**
+	 * process the end command.
 	 * <ul>
 	 * <li>deploy countryID num_reinforcements</li>
 	 * </ul>
@@ -216,17 +271,17 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * @param p_end_params   the end turn params - should be blank
 	 * @param l_player_clone the player object who wishes to end their turn
 	 */
-	private void processEndTurn(String p_end_params, IPlayerModel l_player) {
+	private void processEndTurn(String p_end_params, IPlayerModel p_player) {
 		if (!Utl.isEmpty(p_end_params)) {
 			d_msg_model.setMessage(MsgType.Error, "invalid parameters for end command: '" + p_end_params + "'");
 			return;
 		}
-		if (l_player.getReinforcements() > 0) {
-			d_msg_model.setMessage(MsgType.Error, "Cannot end turn as player '" + l_player.getName()
-					+ "' has " + l_player.getReinforcements() + " reinforcement(s) left to deploy.");
+		if (p_player.getReinforcements() > 0) {
+			d_msg_model.setMessage(MsgType.Error, "Cannot end turn as player '" + p_player.getName() + "' has "
+					+ p_player.getReinforcements() + " reinforcement(s) left to deploy.");
 			return;
 		}
-		l_player.setDoneTurn(true);
+		p_player.setDoneTurn(true);
 	}
 
 	/**
@@ -256,7 +311,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid deploy country name '" + l_country_name + "'.");
 				return null;
 			}
-			
+
 			// parse the num_reinforcements
 			l_params = Utl.getFirstWord(l_params[1]);
 			String l_reinforcements_str = l_params[0];
@@ -265,7 +320,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 						"Invalid deploy command, number of reinforcements not specified.");
 				return null;
 			}
-			
+
 			int l_reinforcements = Utl.convertToInteger(l_reinforcements_str);
 			if (l_reinforcements >= Integer.MAX_VALUE || l_reinforcements < 1) {
 				d_msg_model.setMessage(MsgType.Error,
@@ -290,7 +345,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	/**
 	 * Show a map of the specified player
 	 * 
-	 * @param p_player the play of whom wants to see a map of their owned countries
+	 * @param p_player the player whom wants to see a map of their owned countries
 	 *                 and their neighbors.
 	 */
 	private void showMap(IPlayerModel p_player) {
@@ -298,6 +353,15 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		for (ICountryModel l_country : l_countries) {
 			d_view.showCountry(l_country);
 		}
+	}
+
+	/**
+	 * Show the cards held by specified player
+	 * 
+	 * @param p_player the player whom wants to see their cards
+	 */
+	private void showCards(IPlayerModel p_player) {
+		d_view.showCards(p_player);
 	}
 
 	/**
@@ -309,14 +373,15 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	private void GameStartupHelp() {
 		d_view.displayGamePlayBanner();
 		d_view.processMessage(MsgType.None, "Gameplay commands:");
-		d_view.processMessage(MsgType.None, " - deploy countryID num_reinforcements");
+		d_view.processMessage(MsgType.None, " - deploy countryName num_reinforcements");
 		d_view.processMessage(MsgType.None, " - advance countrynamefrom countynameto numarmies");
-		d_view.processMessage(MsgType.None, " - bomb countryID (requires bomb card)");
-		d_view.processMessage(MsgType.None, " - blockade countryID (required blockade card)");
+		d_view.processMessage(MsgType.None, " - bomb countryName (requires bomb card)");
+		d_view.processMessage(MsgType.None, " - blockade countryName (requires blockade card)");
 		d_view.processMessage(MsgType.None,
 				" - airlift sourcecountryID targetcountryID numarmies (requires the airlift card)");
-		d_view.processMessage(MsgType.None, " - negotiate playerID (requires the diplomacy card)");
+		d_view.processMessage(MsgType.None, " - negotiate playerName (requires the diplomacy card)");
 		d_view.processMessage(MsgType.None, " - showmap");
+		d_view.processMessage(MsgType.None, " - showcards");
 		d_view.processMessage(MsgType.None, " - end (end turn)");
 		d_view.processMessage(MsgType.None, " - exit (exit game)");
 		d_view.processMessage(MsgType.None, " - help");

@@ -283,7 +283,6 @@ public class Utl {
 	 */
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
 		int randomIdx = ThreadLocalRandom.current().nextInt(0, clazz.getEnumConstants().length);
-		//int x = random.nextInt(clazz.getEnumConstants().length);
 		return clazz.getEnumConstants()[randomIdx];
 	}
 }

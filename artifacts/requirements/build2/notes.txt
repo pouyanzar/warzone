@@ -5,6 +5,7 @@ editmap ./src/test/resources/maps/canada/canada.map
 
 * players
 gameplayer -add John -add Pouyan -add Nazanin
+gameplayer -add John -add Pouyan
 gameplayer -add John
 assigncountries
 
@@ -40,3 +41,11 @@ MapEditorConsoleView, MapEditorConsole
 GameStartupConsoleView, GameStartupConsole
 GamePlayConsoleView, GamePlayConsole
 IOrderModel, IOrder
+
+
+bomb canada france usa
+
+bomb
+canada france usa
+
+added some card logic 

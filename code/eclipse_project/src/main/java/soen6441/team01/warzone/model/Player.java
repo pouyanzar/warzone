@@ -267,6 +267,7 @@ public class Player implements IPlayerModel {
 			}
 			l_player.addPlayerCountry(l_country);
 		}
+		l_player.setCards(d_cards);
 		return l_player;
 	}
 
@@ -276,8 +277,15 @@ public class Player implements IPlayerModel {
 	 * @return d_cards the list of current player's card
 	 */
 	public ArrayList<Card> getCards() {
-
 		return d_cards;
+	}
+
+	/**
+	 * Setter method to set current player's cards
+	 * @param p_cards cards to set 
+	 */
+	public void setCards(ArrayList<Card> p_cards) {
+		d_cards = p_cards;
 	}
 
 	/**
