@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.Card;
 
+/**
+ * Interface for Player class
+ * 
+ * @author John
+ *
+ */
 public interface IPlayerModel {
 
 	String getName();
@@ -39,4 +45,8 @@ public interface IPlayerModel {
 	boolean isDoneTurn();
 
 	void setDoneTurn(boolean p_done_turn);
+
+	public boolean hasCard(Card p_card);
+
+	public String bomb(String p_country_name);
 }

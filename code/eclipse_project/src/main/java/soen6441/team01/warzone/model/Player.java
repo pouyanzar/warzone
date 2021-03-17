@@ -147,6 +147,19 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
+	 * destroys half of the armies on the opponent
+	 * 
+	 * @param p_country_name the target country
+	 * @return a message to show half of the armies destroyed
+	 */
+	public String bomb(String p_country_name)  {
+		ICountryModel l_country = Country.findCountry(p_country_name, d_player_countries);
+		l_country.setArmies(l_country.getArmies() / 2);
+		String l_msg = "Half number of armies destroyed by bomb";
+		return l_msg;
+	}
+
+	/**
 	 * gets the list of countries the player controls
 	 * 
 	 * @return d_player_countries the list of countries player controls
@@ -282,7 +295,8 @@ public class Player implements IPlayerModel {
 
 	/**
 	 * Setter method to set current player's cards
-	 * @param p_cards cards to set 
+	 * 
+	 * @param p_cards cards to set
 	 */
 	public void setCards(ArrayList<Card> p_cards) {
 		d_cards = p_cards;
@@ -296,17 +310,18 @@ public class Player implements IPlayerModel {
 	public void addCard(Card p_card) {
 		d_cards.add(p_card);
 	}
-	
+
 	/**
-	 * Checks if the card exist inside the current player's card list 
-	 * @param p_card desired The card to be checked if it exists in player's card list
+	 * Checks if the card exist inside the current player's card list
+	 * 
+	 * @param p_card desired The card to be checked if it exists in player's card
+	 *               list
 	 * @return true if the card exist and false otherwise
 	 */
 	public boolean hasCard(Card p_card) {
-		if(d_cards.contains(p_card)) {
+		if (d_cards.contains(p_card)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
