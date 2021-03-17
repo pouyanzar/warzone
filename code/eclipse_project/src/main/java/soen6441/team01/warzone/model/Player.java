@@ -291,7 +291,7 @@ public class Player implements IPlayerModel {
 	/**
 	 * Method to add new card into the list of cards
 	 * 
-	 * @param l_card the new card
+	 * @param p_card the new card
 	 */
 	public void addCard(Card p_card) {
 		d_cards.add(p_card);
