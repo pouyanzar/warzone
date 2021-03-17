@@ -293,7 +293,21 @@ public class Player implements IPlayerModel {
 	 * 
 	 * @param l_card the new card
 	 */
-	public void addCard(Card l_card) {
-		d_cards.add(l_card);
+	public void addCard(Card p_card) {
+		d_cards.add(p_card);
+	}
+	
+	/**
+	 * Checks if the card exist inside the current player's card list 
+	 * @param p_card desired The card to be checked if it exists in player's card list
+	 * @return true if the card exist and false otherwise
+	 */
+	public boolean hasCard(Card p_card) {
+		if(d_cards.contains(p_card)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
