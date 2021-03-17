@@ -82,7 +82,8 @@ public class GamePlay implements IGamePlayModel {
 		String l_pname = p_player.getName();
 		IPlayerModel l_player = Player.FindPlayer(l_pname, d_players);
 		if (l_player != null) {
-			throw new Exception("Cannot add player '" + p_player.getName() + "' to the game, since that name already exists");
+			throw new Exception(
+					"Cannot add player '" + p_player.getName() + "' to the game, since that name already exists");
 		}
 		d_players.add(p_player);
 	}
@@ -118,10 +119,10 @@ public class GamePlay implements IGamePlayModel {
 		}
 		// setup and do some high level validations
 		ArrayList<ICountryModel> l_countries = d_map.getCountries();
-		if( l_countries.size() < 1) {
+		if (l_countries.size() < 1) {
 			throw new Exception("No countries defined to assigncountries to");
 		}
-		if( d_players.size() < 1) {
+		if (d_players.size() < 1) {
 			throw new Exception("No players defined to assigncountries to");
 		}
 		// assign countries to players
@@ -144,6 +145,11 @@ public class GamePlay implements IGamePlayModel {
 	 * Assign to each player the correct number of reinforcement armies according to
 	 * the Warzone rules. Only available in GameState.GamePlay.
 	 * 
+	 * <pre>
+	 * formula:
+	 * (max(3, # of countries the player own/3)+(continent value of all continents controlled by the player))
+	 * </pre>
+	 * 
 	 * @throws Exception unexpected error
 	 */
 	public void assignReinforcements() throws Exception {
@@ -151,9 +157,14 @@ public class GamePlay implements IGamePlayModel {
 			return;
 		}
 
-		// start every player with 5 reinforcement armies
+		// calc the number of starting reinforcement armies for each player
 		for (IPlayerModel l_player : d_players) {
-			l_player.setReinforcements(5);
+			int l_num_countries = l_player.getPlayerCountries().size();
+			l_num_countries = l_num_countries / 3;
+			if (l_num_countries < 3) {
+				l_num_countries = 3;
+			}
+			l_player.setReinforcements(l_num_countries);
 		}
 
 		// scan all the countries for every continent, and if all the countries owner
@@ -222,13 +233,13 @@ public class GamePlay implements IGamePlayModel {
 			}
 		}
 	}
-	
+ 
 	public void assignCard() {
 		for (IPlayerModel l_player : d_players) {
 //			if(l_player.conquer()) {
-			if(true) {
-				//Card l_card = new Card();
-				//l_player.addCard(l_card);
+			if (true) {
+				// Card l_card = new Card();
+				// l_player.addCard(l_card);
 			}
 		}
 	}

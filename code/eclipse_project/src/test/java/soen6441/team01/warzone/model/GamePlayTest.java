@@ -53,36 +53,146 @@ public class GamePlayTest {
 		d_gameplay.setGameState(GameState.GamePlay);
 		Map.refreshCountriesOfAllContinents(d_map);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 5);
-		assertTrue(l_p2.getReinforcements() == 5);
+		assertTrue(l_p1.getReinforcements() == 3);
+		assertTrue(l_p2.getReinforcements() == 3);
 		
 		ICountryModel l_country = Country.findCountry("Canada", d_map.getCountries());
 		l_country.setOwner(l_p1);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 5);
-		assertTrue(l_p2.getReinforcements() == 5);
+		assertTrue(l_p1.getReinforcements() == 3);
+		assertTrue(l_p2.getReinforcements() == 3);
 
 		l_country = Country.findCountry("USA", d_map.getCountries());
 		l_country.setOwner(l_p2);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 5);
-		assertTrue(l_p2.getReinforcements() == 5);
+		assertTrue(l_p1.getReinforcements() == 3);
+		assertTrue(l_p2.getReinforcements() == 3);
 		
 		l_country = Country.findCountry("USA", d_map.getCountries());
 		l_country.setOwner(l_p1);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 8);
-		assertTrue(l_p2.getReinforcements() == 5);
+		assertTrue(l_p1.getReinforcements() == 6);
+		assertTrue(l_p2.getReinforcements() == 3);
 		
 		l_country = Country.findCountry("Canada", d_map.getCountries());
 		l_country.setOwner(l_p2);
 		l_country = Country.findCountry("USA", d_map.getCountries());
 		l_country.setOwner(l_p2);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 5);
-		assertTrue(l_p2.getReinforcements() == 8);
+		assertTrue(l_p1.getReinforcements() == 3);
+		assertTrue(l_p2.getReinforcements() == 6);
 	}
 
+	/**
+	 * test assignReinforcements large map. build 1 requirement: Unit testing framework. (3)
+	 * calculation of number of reinforcement armies;
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_assignReinforcements_2() throws Exception {
+		ICountryModel l_country;
+		d_map.addCountry(3, "Canada1", 1);
+		d_map.addCountry(4, "USA1", 1);
+		d_map.addCountry(5, "Canada2", 1);
+		d_map.addCountry(6, "USA2", 1);
+		d_map.addCountry(7, "Canada3", 1);
+		d_map.addCountry(8, "USA3", 1);
+		d_map.addCountry(9, "Canada4", 1);
+		d_map.addCountry(10, "USA4", 1);
+
+		d_map.addContinent(2, "Europe", 5);
+		d_map.addCountry(11, "Italy1", 2);
+		d_map.addCountry(12, "France1", 2);
+		d_map.addCountry(13, "Italy2", 2);
+		d_map.addCountry(14, "France2", 2);
+
+		IPlayerModel l_p1 = new Player("Player_1", d_factory_model);
+		d_gameplay.addPlayer(l_p1);
+		d_gameplay.setGameState(GameState.GamePlay);
+		Map.refreshCountriesOfAllContinents(d_map);
+		
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		l_country = Country.findCountry("Canada", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		l_country = Country.findCountry("Canada1", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		// 3 countries
+		l_country = Country.findCountry("Canada2", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+
+		l_country = Country.findCountry("Canada3", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		l_country = Country.findCountry("Canada4", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+
+		// 6 countries
+		l_country = Country.findCountry("USA", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		l_country = Country.findCountry("USA1", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		l_country = Country.findCountry("USA2", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		// 9 countries
+		l_country = Country.findCountry("USA3", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 3);
+		
+		// whole continent
+		l_country = Country.findCountry("USA4", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 6);
+		
+		l_country = Country.findCountry("Italy1", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 6);
+		
+		// 12 countries
+		l_country = Country.findCountry("Italy2", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 7);
+		
+		// 13 countries
+		l_country = Country.findCountry("France1", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 7);
+		
+		// whole continent
+		l_country = Country.findCountry("France2", d_map.getCountries());
+		l_p1.addPlayerCountry(l_country);
+		d_gameplay.assignReinforcements();
+		assertTrue(l_p1.getReinforcements() == 12);
+	}	
+	
 	/**
 	 * simple test of add player to the game
 	 * 

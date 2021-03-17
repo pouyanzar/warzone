@@ -18,7 +18,13 @@ editneighbor -add Canada USA -add USA Canada
 -----------------------------------------------------
 * For the sake of simplicity, let us just assume that the country/continent names are unique
 
-* All turns start with reinforcement. Each turn, each player receives a number of armies equal to: (max(3, # of countries the player own/3)+(continent value of all continents controlled by the player)).
+* All turns start with reinforcement. Each turn, each player receives a number of armies equal to: 
+(max(3, # of countries the player own/3)+(continent value of all continents controlled by the player)).
+
+very turn, the players are given a number of armies that depends on the number of territories they
+own (# of territories owned divided by 3, rounded down. If the player owns all the territories of an entire continent,
+the player is given a number of armies corresponding to the continent’s control bonus value. In any case, the
+minimal number of reinforcement armies for any player is 3.
 
 
 -----------------------------------------------------
@@ -43,9 +49,12 @@ GamePlayConsoleView, GamePlayConsole
 IOrderModel, IOrder
 
 
-bomb canada france usa
+-------------
 
-bomb
-canada france usa
 
-added some card logic 
+
+Edit
+
+Delete
+
+

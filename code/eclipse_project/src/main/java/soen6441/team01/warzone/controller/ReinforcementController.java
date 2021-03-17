@@ -70,10 +70,10 @@ public class ReinforcementController extends GamePlayController {
 	 * @throws Exception unexpected error
 	 */
 	public void processGamePlayReinforcements() throws Exception {
-		IGamePlayModel p_gameplay_model = d_model_factory.getGamePlayModel();
+		IGamePlayModel l_gameplay_model = d_model_factory.getGamePlayModel();
 		d_msg_model.setMessage(MsgType.None, "\n* assigning reinforcements:");
 		
-		p_gameplay_model.assignReinforcements();
+		l_gameplay_model.assignReinforcements();
 
 		Phase l_phase = d_controller_factory.getIssueOrderPhase();
 		nextPhase(l_phase);
