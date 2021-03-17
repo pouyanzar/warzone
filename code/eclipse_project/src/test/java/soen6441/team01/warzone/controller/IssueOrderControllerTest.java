@@ -52,6 +52,23 @@ public class IssueOrderControllerTest {
 	}
 
 	/**
+	 * test processAdvanceCommand_gameplayer valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processAdvanceCommand_advance_valid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_country);
+		d_player.setReinforcements(3);
+		d_gameplay_controller.processGamePlayCommand("advance Canada USA 5", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Advance order execute method not yet implemented"));
+		//assertTrue(l_msg.contains("Advance order successful."));
+// jj...
+	}	
+	
+	/**
 	 * test processGamePlayCommand invalid commands
 	 * 
 	 * @throws Exception unexpected error
@@ -128,7 +145,7 @@ public class IssueOrderControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));
 	}	
-	
+
 	/**
 	 * test loadmap valid commands
 	 * 
