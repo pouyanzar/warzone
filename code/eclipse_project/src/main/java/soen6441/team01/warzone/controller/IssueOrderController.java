@@ -8,10 +8,12 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.model.Card;
+import soen6441.team01.warzone.model.Country;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.OrderAdvance;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
@@ -172,6 +174,10 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * <li>help</li>
 	 * </ul>
 	 * 
+	 * 
+	 * advance Italy France 5
+	 * 
+	 * 
 	 * @param p_cmd          user full command
 	 * @param l_player_clone the player to get and process commands for
 	 * @return the order, null = order not fulfilled - try again
@@ -189,7 +195,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_order = processDeployCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "advance":
-			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
+			l_order = processAdvanceCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "bomb":
 			l_order = processBombCommand(l_cmd_params[1], l_player_clone);
@@ -221,6 +227,72 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		}
 		return l_order;
 
+	}
+
+	/**
+	 * process the advance command.
+	 * <ul>
+	 * <li>advance countrynamefrom countynameto numarmies</li>
+	 * </ul>
+	 * 
+	 * Italy France 5
+	 * 
+	 * @param p_advance_params the loadmap parameters (just the parameters without
+	 *                         the loadmap command itself)
+	 * @param l_player         the player object who wishes to deploy
+	 * @return the player's order or null if there was a problem creating the order
+	 * @throws Exception unexpected error encountered
+	 */
+	private IOrder processAdvanceCommand(String p_advance_params, IPlayerModel l_player) throws Exception {
+		IOrder l_order = null;
+		String l_params[] = Utl.getFirstWord(p_advance_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid advance command, no options specified");
+			return null;
+		}
+		try {
+			// parse the countrynamefrom
+			String l_country_name_from = l_params[0];
+			ICountryModel l_from_countries = Country.findCountry(l_country_name_from, l_player.getPlayerCountries());
+			if (l_from_countries == null) {
+				d_msg_model.setMessage(MsgType.Error,
+						"Country " + l_country_name_from + " not owned by player " + l_player.getName());
+				return null;
+			}
+
+			// parse the countynameto
+			l_params = Utl.getFirstWord(l_params[1]);
+			String l_country_name_to = l_params[0];
+			// check that l_country_name_to is a neighbor of l_country_name_from
+			// todo: ...
+
+			// parse the numarmies
+			l_params = Utl.getFirstWord(l_params[1]);
+			String l_numarmies_str = l_params[0];
+			int l_numarmies = Utl.convertToInteger(l_numarmies_str);
+			if (l_numarmies >= Integer.MAX_VALUE || l_numarmies < 1) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid number of armies '" + l_numarmies_str + "'.");
+				return null;
+			}
+			
+			// todo: check that the player didn't add more tokens on the command...
+			
+			// todo: create the advance order object...
+			// e.g. l_order = new OrderDeploy(l_country_name_from, l_numarmies, l_player);
+			l_order = new OrderAdvance(l_player, l_from_countries, null, l_numarmies);
+
+			// execute the order on the cloned player to 1) see if it's valid 2) set the
+			// state of the cloned player for the next command
+			l_order.execute();
+			
+			String l_msg = "Advance order successful.\n";
+			d_msg_model.setMessage(MsgType.Informational, l_msg);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			return null;
+		}
+		return l_order;
 	}
 
 	/**
