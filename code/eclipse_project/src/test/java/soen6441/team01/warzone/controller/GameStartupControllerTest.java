@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.AppMsg;
+import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.view.ViewFactory;
 
@@ -23,7 +23,7 @@ public class GameStartupControllerTest {
 	public GameStartupController d_startup_controller = null;
 	public IGamePlayModel d_gameplay = null;
 	public ViewFactory d_view_factory = null;
-	public AppMsg d_msg = null;
+	public LogEntryBuffer d_msg = null;
 	public ControllerFactory d_controller_factory = null;
 
 	/**
@@ -38,7 +38,7 @@ public class GameStartupControllerTest {
 		d_view_factory = ViewFactory.CreateWarzoneBasicConsoleGameViews(d_model_factory);
 		d_controller_factory = new ControllerFactory(d_model_factory, d_view_factory);
 		d_startup_controller = (GameStartupController) d_controller_factory.getGameStartupController();
-		d_msg = (AppMsg) d_model_factory.getUserMessageModel();
+		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 	}
 
 	/**

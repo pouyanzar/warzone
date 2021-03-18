@@ -12,13 +12,13 @@ import soen6441.team01.warzone.model.entities.UserMessage;
  * appropriate view)(e.g. command completion messages)
  * 
  */
-public class AppMsg extends Observable implements IAppMsg {
+public class LogEntryBuffer extends Observable implements IAppMsg {
 	private ArrayList<UserMessage> d_user_messages = new ArrayList<UserMessage>();
 
 	/**
 	 * Constructor
 	 */
-	public AppMsg() {
+	public LogEntryBuffer() {
 	}
 
 	/**

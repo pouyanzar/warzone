@@ -65,8 +65,8 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 * Displays the startup banner
 	 */
 	public void displayGamePlayBanner() {
-		System.out.println("");
-		System.out.println("***         Game Play          ***");
+		Utl.lprintln("");
+		Utl.lprintln("***         Game Play          ***");
 	}
 
 	/**
@@ -75,9 +75,11 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 * @return the command text typed in by the user
 	 */
 	public String getCommand() {
+		String l_prompt = "Gameplay> ";
 		System.out.println("");
-		System.out.print("Gameplay> ");
+		System.out.print(l_prompt);
 		String l_user_command = d_keyboard.nextLine();
+		Utl.logln(l_prompt + l_user_command);
 		return l_user_command;
 	}
 
@@ -91,6 +93,7 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 		System.out.println("");
 		System.out.print(p_prompt + " ");
 		String l_user_command = d_keyboard.nextLine();
+		Utl.logln(p_prompt + l_user_command);
 		return l_user_command;
 	}
 
@@ -101,7 +104,7 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 * @param p_message  the message to display to the user
 	 */
 	public void processMessage(MsgType p_msg_type, String p_message) {
-		Utl.consoleMessage(p_msg_type, p_message);
+		Utl.lprintln(p_msg_type, p_message);
 	}
 
 	/**
@@ -149,9 +152,9 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 		l_report = Utl.justifyReportyField(l_report, "]", 2, l_col, ' ');
 
 		// printout report
-		System.out.println("");
+		Utl.lprintln("");
 		for (String l_line : l_report) {
-			System.out.println(l_line);
+			Utl.lprintln(l_line);
 		}
 	}
 	
@@ -162,9 +165,9 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 */
 	public void showCards(IPlayerModel p_player) {
 		ArrayList<Card> l_cards = p_player.getCards();
-		Utl.consoleMessage("Player " + p_player.getName() + " holds the following cards:");
+		Utl.lprintln("Player " + p_player.getName() + " holds the following cards:");
 		for (Card l_card : l_cards) {
-			Utl.consoleMessage("  " + l_card.getCardName());
+			Utl.lprintln("  " + l_card.getCardName());
 		}
 	}
 

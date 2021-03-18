@@ -73,7 +73,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			}
 			nextPhase(l_next_phase);
 		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error during game startup, exception: " + ex.getMessage());
+			Utl.lprintln("Fatal error during game startup, exception: " + ex.getMessage());
 			nextPhase(l_end_phase);
 		}
 
