@@ -49,4 +49,7 @@ public interface IPlayerModel {
 	public boolean hasCard(Card p_card);
 
 	public String bomb(String p_country_name);
+	
+	public String blockade(String p_country_name);
+
 }

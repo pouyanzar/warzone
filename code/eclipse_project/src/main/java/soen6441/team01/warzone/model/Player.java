@@ -158,6 +158,20 @@ public class Player implements IPlayerModel {
 		String l_msg = "Half number of armies destroyed by bomb";
 		return l_msg;
 	}
+	
+	/**
+	 * blockade the target country of player's countries
+	 * 
+	 * @param p_country_name the target country
+	 * @return a message to show blockade is done.
+	 */
+	public String blockade(String p_country_name) {
+		ICountryModel l_country = Country.findCountry(p_country_name, d_player_countries);
+		l_country.setArmies(l_country.getArmies()*3);
+		d_player_countries.remove(l_country);
+		String l_msg = "Blockade is done";
+		return l_msg;
+	}
 
 	/**
 	 * gets the list of countries the player controls

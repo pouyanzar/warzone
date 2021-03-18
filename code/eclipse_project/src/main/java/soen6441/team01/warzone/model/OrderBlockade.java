@@ -1,15 +1,14 @@
 package soen6441.team01.warzone.model;
 
-import java.util.ArrayList;
-
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
 
 /**
- * Supports the definition and implementation of the 'bomb' order.
+ * Supports the definition and implementation of the 'blockade' order.
+ * @author pouyan
  *
  */
-public class OrderBomb implements IOrder {
+public class OrderBlockade {
 
 	IPlayerModel d_player = null;
 	ICountryModel d_country = null;
@@ -21,23 +20,22 @@ public class OrderBomb implements IOrder {
 	 * @param p_country the country to bomb
 	 * @throws Exception if there is an Exception
 	 */
-	public OrderBomb(IPlayerModel p_player, ICountryModel p_country) throws Exception {
+	public OrderBlockade(IPlayerModel p_player, ICountryModel p_country) throws Exception {
 		d_player = p_player;
 		d_country = p_country;
 		isValid();
 	}
 
 	/**
-	 * Execute the bomb order.<br>
-	 * Note: a player cannot bomb their own country.
+	 * Execute the blockade order.<br>
 	 * 
 	 * @return informational message about what was done, <br>
-	 *         e.g. bombing of country successful
+	 *         e.g. blockading of country successful
 	 * @throws Exception if not successfully executed
 	 */
 	public String execute() throws Exception {
 		isValid();
-		return d_player.bomb(d_country.getName());
+		return d_player.blockade(d_country.getName());
 	}
 
 	/**
@@ -48,25 +46,11 @@ public class OrderBomb implements IOrder {
 	private void isValid() throws Exception {
 		// validate that the player has the bomb card
 		boolean l_valid;
-		Card l_bomb = new Card(CardType.bomb);
-		l_valid = d_player.hasCard(l_bomb);
+		Card l_blockade = new Card(CardType.blockade);
+		l_valid = d_player.hasCard(l_blockade);
 		if (!l_valid) {
-			throw new Exception(d_player + "does not have bomb card!");
+			throw new Exception(d_player + "does not have blockade card!");
 		}
-		// validate that the country is adjacent to one of the current player’s
-		// territories.
-		ArrayList<ICountryModel> l_player_countries = new ArrayList<>();
-		l_player_countries = d_player.getPlayerCountries();
-		for (ICountryModel l_country : l_player_countries) {
-			if (l_country.getNeighbors().contains(d_country)) {
-				l_valid = true;
-				break;
-			}
-		}
-		if (!l_valid) {
-			throw new Exception(d_country.getName() + "is a neighbor of none of your territories");
-		}
-
 	}
 
 	/**
@@ -85,7 +69,7 @@ public class OrderBomb implements IOrder {
 	 */
 	@Override
 	public String toString() {
-		String l_str = "bomb " + d_country.getName();
+		String l_str = "blockade " + d_country.getName();
 		return l_str;
 	}
 }
