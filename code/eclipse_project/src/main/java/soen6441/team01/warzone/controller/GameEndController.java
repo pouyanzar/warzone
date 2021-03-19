@@ -52,7 +52,7 @@ public class GameEndController extends Phase implements IGameEndController {
 	 * cause the game engine to terminate the game.
 	 */
 	public void execPhase() {
-		Utl.consoleMessage("\n*** End Game ***\n");
+		Utl.lprintln("\n*** End Game ***\n");
 		nextPhase(null);
 	}
 }

@@ -65,7 +65,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			}
 			nextPhase(l_next_phase);
 		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error processing Map Editor, exception: " + ex.getMessage());
+			Utl.lprintln("Fatal error processing Map Editor, exception: " + ex.getMessage());
 		}
 
 		if (d_view != null) {

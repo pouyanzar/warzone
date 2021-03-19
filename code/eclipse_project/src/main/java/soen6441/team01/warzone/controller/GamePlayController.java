@@ -66,7 +66,7 @@ public class GamePlayController extends Phase implements IGamePlayController{
 		try {
 			l_end_phase = d_controller_factory.getGameEndPhase();
 		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error during game play, exception: " + ex.getMessage());
+			Utl.lprintln("Fatal error during game play, exception: " + ex.getMessage());
 		}
 		nextPhase(l_end_phase);
 

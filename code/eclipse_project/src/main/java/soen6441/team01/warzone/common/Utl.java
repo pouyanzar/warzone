@@ -1,11 +1,12 @@
 package soen6441.team01.warzone.common;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.model.entities.UserMessage;
 
 /**
  * Utility class holding commonly used general functions
@@ -14,6 +15,10 @@ import soen6441.team01.warzone.model.entities.UserMessage;
  *
  */
 public class Utl {
+	private static PrintWriter d_log = null;
+	private static String LOG_PATH = "/tmp/warzone/output/";
+	private static String LOG_FILENAME = "warzone.log";
+
 	/**
 	 * Print the current directory to the console. Useful for debugging a unit test
 	 * that references resources.
@@ -156,36 +161,100 @@ public class Utl {
 	}
 
 	/**
-	 * Display a message to the system console
+	 * Display a message to the system console and log file
 	 * 
 	 * @param p_msg_type the type of message to display as defined by the enum
 	 * @param p_message  the message to display to the user
 	 */
-	public static void consoleMessage(MsgType p_msg_type, String p_message) {
+	public static void lprintln(MsgType p_msg_type, String p_message) {
 		switch (p_msg_type) {
 		case None:
-			consoleMessage(p_message);
+			lprintln(p_message);
 			break;
 		case Informational:
-			consoleMessage("info: " + p_message);
+			lprintln("info: " + p_message);
 			break;
 		case Warning:
-			consoleMessage("warn: " + p_message);
+			lprintln("warn: " + p_message);
 			break;
 		default:
-			consoleMessage("error: " + p_message);
+			lprintln("error: " + p_message);
 			break;
 		}
 	}
 
 	/**
-	 * Display a message to the system console
+	 * Display a message to the system console and log file
 	 * 
 	 * @param p_message the message to display on the console
 	 */
-	public static void consoleMessage(String p_message) {
+	public static void lprintln(String p_message) {
 		System.out.println(p_message);
-		// todo: add logging to file
+		logln(p_message);
+	}
+
+	/**
+	 * print the message to the game log file
+	 * 
+	 * @param p_message the message to log
+	 */
+	public static void log(String p_message) {
+		try {
+			openLog();
+			d_log.print(p_message);
+		} catch (Exception ex) {
+			System.out.println(
+					"Exception writting to log '" + LOG_PATH + LOG_FILENAME + "', exception: " + ex.getMessage());
+		}
+	}
+
+	/**
+	 * println the message to the game log file
+	 * 
+	 * @param p_message the message to log
+	 */
+	public static void logln(String p_message) {
+		try {
+			openLog();
+			d_log.println(p_message);
+		} catch (Exception ex) {
+			System.out.println(
+					"Exception writting to log '" + LOG_PATH + LOG_FILENAME + "', exception: " + ex.getMessage());
+		}
+	}
+	
+	/**
+	 * open the game log file (appended) if it's not already opened
+	 */
+	public static void openLog() {
+		try {
+			if (d_log == null) {
+				File directory = new File(LOG_PATH);
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				d_log = new PrintWriter(new FileOutputStream(new File(LOG_PATH + LOG_FILENAME), true /* append */));
+				d_log.println("================================================================================");
+				d_log.println("");
+			}
+		} catch (Exception ex) {
+			System.out.println(
+					"Exception opening log file '" + LOG_PATH + LOG_FILENAME + "', exception: " + ex.getMessage());
+		}
+	}
+
+	/**
+	 * close the game log file
+	 */
+	public static void closeLog() {
+		try {
+			if (d_log != null) {
+				d_log.close();
+			}
+		} catch (Exception ex) {
+			System.out.println(
+					"Exception closing log file '" + LOG_PATH + LOG_FILENAME + "', exception: " + ex.getMessage());
+		}
 	}
 
 	/**
@@ -277,7 +346,7 @@ public class Utl {
 	 * original code taken from:
 	 * https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum/30641206
 	 * 
-	 * @param <T> the enum type 
+	 * @param <T>   the enum type
 	 * @param clazz the enum to get a value from
 	 * @return a random enum value
 	 */

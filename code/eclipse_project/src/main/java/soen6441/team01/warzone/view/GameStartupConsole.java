@@ -59,8 +59,8 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 * Displays the startup banner
 	 */
 	public void displayGameStartupBanner() {
-		System.out.println("");
-		System.out.println("***       Game Startup         ***");
+		Utl.lprintln("");
+		Utl.lprintln("***       Game Startup         ***");
 	}
 
 	/**
@@ -69,9 +69,11 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 * @return the command text typed in by the user
 	 */
 	public String getCommand() {
+		String l_prompt = "Game startup command> ";
 		System.out.println("");
-		System.out.print("Game startup command> ");
+		System.out.print(l_prompt);
 		String l_user_command = d_keyboard.nextLine();
+		Utl.logln(l_prompt + l_user_command);
 		return l_user_command;
 	}
 
@@ -82,7 +84,7 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 * @param p_message  the message to display to the user
 	 */
 	public void processMessage(MsgType p_msg_type, String p_message) {
-		Utl.consoleMessage(p_msg_type, p_message);
+		Utl.lprintln(p_msg_type, p_message);
 	}
 
 	/**

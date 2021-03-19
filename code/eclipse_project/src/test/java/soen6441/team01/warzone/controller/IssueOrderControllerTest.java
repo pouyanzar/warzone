@@ -9,7 +9,7 @@ import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.Country;
 import soen6441.team01.warzone.model.Player;
 import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.AppMsg;
+import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
@@ -27,7 +27,7 @@ public class IssueOrderControllerTest {
 	public IssueOrderController d_gameplay_controller = null;
 	public IGamePlayModel d_gameplay = null;
 	public ViewFactory d_view_factory = null;
-	public AppMsg d_msg = null;
+	public LogEntryBuffer d_msg = null;
 	public ControllerFactory d_controller_factory = null;
 	public IContinentModel d_continent = null;
 	public ICountryModel d_country = null;
@@ -45,7 +45,7 @@ public class IssueOrderControllerTest {
 		d_view_factory = ViewFactory.CreateWarzoneBasicConsoleGameViews(d_model_factory);
 		d_controller_factory = new ControllerFactory(d_model_factory, d_view_factory);
 		d_gameplay_controller = (IssueOrderController) d_controller_factory.getIssueOrderController();
-		d_msg = (AppMsg) d_model_factory.getUserMessageModel();
+		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
 		d_player = new Player("John", d_model_factory);

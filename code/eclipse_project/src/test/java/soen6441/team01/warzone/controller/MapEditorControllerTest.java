@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.AppMsg;
+import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.view.ViewFactory;
 
 /**
@@ -22,7 +22,7 @@ public class MapEditorControllerTest {
 	public MapEditorController d_map_editor_controller = null;
 	public ViewFactory d_view_factory = null;
 	public ControllerFactory d_controller_factory = null;
-	public AppMsg d_msg = null;
+	public LogEntryBuffer d_msg = null;
 
 	/**
 	 * setup the environment for testing of MapEditorController
@@ -36,7 +36,7 @@ public class MapEditorControllerTest {
 		d_controller_factory = ControllerFactory.CreateWarzoneBasicConsoleGameControllers(d_model_factory,
 				d_view_factory);
 		d_map_editor_controller = new MapEditorController(d_controller_factory);
-		d_msg = (AppMsg) d_model_factory.getUserMessageModel();
+		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 	}
 
 	/**

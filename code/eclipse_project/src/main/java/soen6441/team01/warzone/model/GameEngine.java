@@ -75,11 +75,12 @@ public class GameEngine implements IGameEngineModel {
 				d_phase.execPhase();
 			}
 		} catch (Exception ex) {
-			Utl.consoleMessage("Fatal error processing GameEngine.");
-			Utl.consoleMessage("Exception: " + ex.getMessage());
+			Utl.lprintln("Fatal error processing GameEngine.");
+			Utl.lprintln("Exception: " + ex.getMessage());
 		}
 
-		Utl.consoleMessage("Game execution terminated.\n");
+		Utl.lprintln("Game execution terminated.\n");
+		Utl.closeLog();
 	}
 
 	/**

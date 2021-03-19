@@ -5,7 +5,7 @@ editmap ./src/test/resources/maps/canada/canada.map
 
 * players
 gameplayer -add John -add Pouyan -add Nazanin
-gameplayer -add John -add Nazanin
+gameplayer -add John -add Pouyan
 assigncountries
 
 
@@ -49,8 +49,4 @@ IOrderModel, IOrder
 
 
 -------------
-
-added some code for advance command from meeting with Nazanin
-
-
 

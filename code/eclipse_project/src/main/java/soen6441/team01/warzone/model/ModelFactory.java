@@ -43,7 +43,7 @@ public class ModelFactory {
 	 * @return newly create Warzone model software factory
 	 */
 	public static ModelFactory createWarzoneBasicConsoleGameModels() {
-		IAppMsg l_usermsg = new AppMsg();
+		IAppMsg l_usermsg = new LogEntryBuffer();
 		ModelFactory l_model = new ModelFactory(l_usermsg);
 		return l_model;
 	}
@@ -133,7 +133,7 @@ public class ModelFactory {
 	 */
 	public IAppMsg getUserMessageModel() throws Exception {
 		if (d_user_message_model == null)
-			d_user_message_model = new AppMsg();
+			d_user_message_model = new LogEntryBuffer();
 		return d_user_message_model;
 	}
 

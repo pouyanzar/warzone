@@ -49,19 +49,19 @@ public class MapEditorConsole implements Observer, IMapEditorView {
 	 * Display the Warzone banner
 	 */
 	public void displayWarzoneBanner() {
-		System.out.println("**********************************");
-		System.out.println("*                                *");
-		System.out.println("*           Warzone              *");
-		System.out.println("*                                *");
-		System.out.println("**********************************");
+		Utl.lprintln("**********************************");
+		Utl.lprintln("*                                *");
+		Utl.lprintln("*           Warzone              *");
+		Utl.lprintln("*                                *");
+		Utl.lprintln("**********************************");
 	}
 
 	/**
 	 * Displays the Warzone map editor banner
 	 */
 	public void displayMapEditorBanner() {
-		System.out.println("");
-		System.out.println("***        Map Editor          ***");
+		Utl.lprintln("");
+		Utl.lprintln("***        Map Editor          ***");
 	}
 
 	/**
@@ -88,9 +88,11 @@ public class MapEditorConsole implements Observer, IMapEditorView {
 	 * @return the command text typed in by the user
 	 */
 	public String getCommand() {
+		String l_prompt = "Map editor command> ";
 		System.out.println("");
-		System.out.print("Map editor command> ");
+		System.out.print(l_prompt);
 		String l_user_command = d_keyboard.nextLine();
+		Utl.logln(l_prompt + l_user_command);
 		return l_user_command;
 	}
 
@@ -101,7 +103,7 @@ public class MapEditorConsole implements Observer, IMapEditorView {
 	 * @param p_message  the message to display to the user
 	 */
 	public void processMessage(MsgType p_msg_type, String p_message) {
-		Utl.consoleMessage(p_msg_type, p_message);
+		Utl.lprintln(p_msg_type, p_message);
 	}
 
 	/**
@@ -157,7 +159,9 @@ public class MapEditorConsole implements Observer, IMapEditorView {
 		}
 
 		for (String l_line : d_last_showmap) {
-			System.out.println(l_line);
+			Utl.lprintln(l_line);
 		}
 	}
+	
+	
 }
