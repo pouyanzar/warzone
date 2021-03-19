@@ -8,7 +8,7 @@ import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IOrder;
 
 /**
- * Supports the definition and implementation of the 'deploy' order.
+ * Supports the definition and implementation of the 'airlift' order.
  *
  */
 public class OrderAirlift implements IOrder {
@@ -20,8 +20,9 @@ public class OrderAirlift implements IOrder {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param p_country_name the country that will receive the reinforcements
+	 * 	 
+	 * @param p_country_source the country to move the reinforcements from
+	 * @param p_country_target the country that will receive the reinforcements
 	 * @param p_armies       the number of reinforcement armies to add to the
 	 *                       specified country
 	 * @param p_player       the player model needed to process this order
