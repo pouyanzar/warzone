@@ -41,7 +41,7 @@ public class OrderAdvance implements IOrder {
 	 */
 	public String execute() throws Exception {
 		isValid();
-		return d_player.deploy(d_country_to.getName(), d_num_armies);
+		return d_player.advance(d_country_from,d_country_to, d_num_armies);
 		//throw new Exception("Advance order execute method not yet implemented");
 	}
 

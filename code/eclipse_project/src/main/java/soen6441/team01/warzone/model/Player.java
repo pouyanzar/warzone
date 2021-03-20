@@ -147,6 +147,30 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
+	 * add the specified armies (reinforcements) to the specified owned country.
+	 * 
+	 * @param p_country_name     the name of the country to advance to
+	 * @param p_number_of_armies the number of reinforcement armies to move to the
+	 *                           specified country
+	 * @return a message that describes the deployment done
+	 * @throws Exception if country is not owned, or not enough reinforcements, or
+	 *                   unexpected error
+	 */
+	public String advance(ICountryModel p_country_from, ICountryModel p_country_to, int p_number_of_armies) throws Exception {
+		// execute the deployment
+		p_country_to.setArmies(p_number_of_armies);
+		this.addPlayerCountry(p_country_to);
+
+		// prepare a returning message
+		String l_xarmy = "army has";
+		if (p_number_of_armies > 1) {
+			l_xarmy = "armies have";
+		}
+		String l_msg = p_number_of_armies + " reinforcement " + l_xarmy + " been advance to " + p_country_to.getName();
+		return l_msg;
+	}
+
+	/**
 	 * destroys half of the armies on the opponent
 	 * 
 	 * @param p_country_name the target country

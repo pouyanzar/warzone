@@ -35,6 +35,8 @@ public interface IPlayerModel {
 	IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception;
 
 	String deploy(String p_country_name, int p_number_of_armies) throws Exception;
+	
+	String advance(ICountryModel p_country_from, ICountryModel p_country_to, int p_number_of_armies) throws Exception;
 
 	void copyOrders(IPlayerModel p_cloned_player) throws Exception;
 

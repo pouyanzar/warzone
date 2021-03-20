@@ -239,11 +239,12 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 * 
 	 * @param p_advance_params the loadmap parameters (just the parameters without
 	 *                         the loadmap command itself)
-	 * @param l_player         the player object who wishes to deploy
+	 * @param l_player         the player object who wishes to advance
 	 * @return the player's order or null if there was a problem creating the order
 	 * @throws Exception unexpected error encountered
 	 */
 	private IOrder processAdvanceCommand(String p_advance_params, IPlayerModel l_player) throws Exception {
+
 		IOrder l_order = null;
 		String l_params[] = Utl.getFirstWord(p_advance_params);
 
@@ -266,14 +267,9 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			String l_country_name_to = l_params[0];
 			// check that l_country_name_to is a neighbor of l_country_name_from
 			// todo: ...
-			ICountryModel l_to_countries = Country.findCountry(l_country_name_to, l_player.getPlayerCountries());
-			boolean l_neighbor=false;
-			for (ICountryModel l_county:l_to_countries.getNeighbors()) {
-				if (l_county.getName()==l_from_countries.getName()) {
-					l_neighbor=true;
-				}
-			}
-			if (!l_neighbor) {
+			
+			ICountryModel l_to_countries = Country.findCountry(l_country_name_to, l_from_countries.getNeighbors());
+			if (l_to_countries==null) {
 				d_msg_model.setMessage(MsgType.Error,
 						"Countries " + l_country_name_from + " and " + l_country_name_to + " are not neighbor." );
 				return null;
@@ -307,13 +303,14 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			// state of the cloned player for the next command
 			l_order.execute();
 			
-			String l_msg = "Advance order successful.\n";
+			String l_msg = "Advance order successfull";
 			d_msg_model.setMessage(MsgType.Informational, l_msg);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 			return null;
 		}
 		return l_order;
+
 	}
 
 	/**
