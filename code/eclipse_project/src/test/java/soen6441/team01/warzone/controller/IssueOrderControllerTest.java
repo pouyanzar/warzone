@@ -63,9 +63,9 @@ public class IssueOrderControllerTest {
 		d_player.setReinforcements(3);
 		d_gameplay_controller.processGamePlayCommand("advance Canada USA 5", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Advance order execute method not yet implemented"));
-		//assertTrue(l_msg.contains("Advance order successful."));
-// jj...
+		//assertTrue(l_msg.contains("Advance order execute method not yet implemented"));
+		assertTrue(l_msg.contains("Advance order successful."));
+
 	}	
 	
 	/**

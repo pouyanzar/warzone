@@ -10,7 +10,9 @@ import soen6441.team01.warzone.model.entities.CardType;
 public class OrderAdvance implements IOrder {
 
 	IPlayerModel d_player = null;
-	ICountryModel d_country = null;
+	ICountryModel d_country_from = null;
+	ICountryModel d_country_to = null;
+	private int d_num_armies=0;
 
 	/**
 	 * Constructor
@@ -23,7 +25,9 @@ public class OrderAdvance implements IOrder {
 	public OrderAdvance(IPlayerModel p_player, ICountryModel p_country_from, ICountryModel p_country_to,
 			int p_num_armies) {
 		d_player = p_player;
-		//d_country = p_country;
+		d_country_from = p_country_from;
+		d_country_to = p_country_to;
+		d_num_armies=p_num_armies;
 		isValid();
 	}
 
@@ -37,16 +41,30 @@ public class OrderAdvance implements IOrder {
 	 */
 	public String execute() throws Exception {
 		isValid();
-		throw new Exception("Advance order execute method not yet implemented");
+		return d_player.deploy(d_country_to.getName(), d_num_armies);
+		//throw new Exception("Advance order execute method not yet implemented");
 	}
 
 	/**
 	 * is the order valid....
+	 * @throws Exception 
 	 */
-	private void isValid() {
-		// validate that the country is adjacent to one of the current player’s
+	private boolean isValid() {
+		// validate that the country is adjacent to one of the current playerâ€™s
 		// territories.
 		// ...
+
+		for (ICountryModel l_county:d_country_from.getNeighbors()) {
+			if (l_county.getName()==d_country_to.getName()) {
+				//throw new Exception("Countries are not adjacent.");
+				return true;
+					
+			}
+		}
+		//throw new Exception("Countries are not adjacent.");
+		return false;
+
+		
 	}
 
 	/**
@@ -65,7 +83,7 @@ public class OrderAdvance implements IOrder {
 	 */
 	@Override
 	public String toString() {
-		String l_str = "advance " + d_country.getName();
+		String l_str = "advance " + d_country_from.getName()+" to "+ d_country_to.getName();
 		return l_str;
 	}
 }
