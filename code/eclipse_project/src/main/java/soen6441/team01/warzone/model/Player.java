@@ -161,7 +161,7 @@ public class Player implements IPlayerModel {
 		// execute the deployment
 		p_country_to.setArmies(p_number_of_armies);
 		this.addPlayerCountry(p_country_to);
-
+		p_country_from.setArmies(p_country_from.getArmies()-p_number_of_armies);
 		// prepare a returning message
 		String l_xarmy = "army has";
 		if (p_number_of_armies > 1) {
