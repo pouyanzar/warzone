@@ -149,11 +149,12 @@ public class Player implements IPlayerModel {
 	/**
 	 * add the specified armies (reinforcements) to the specified owned country.
 	 * 
-	 * @param p_country_name     the name of the country to advance to
+	 * @param p_country_from     the name of the source country 
+	 * @param p_country_to	     the name of the distination country to advance to
 	 * @param p_number_of_armies the number of reinforcement armies to move to the
 	 *                           specified country
 	 * @return a message that describes the deployment done
-	 * @throws Exception if country is not owned, or not enough reinforcements, or
+	 * @throws Exception if distination country is not neighbors, or not enough reinforcements, or
 	 *                   unexpected error
 	 */
 	public String advance(ICountryModel p_country_from, ICountryModel p_country_to, int p_number_of_armies) throws Exception {
