@@ -47,7 +47,9 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller = (IssueOrderController) d_controller_factory.getIssueOrderController();
 		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
+		d_country = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
+		//d_country_to = new Country(1, "USA", d_continent, 0, 0, d_model_factory);		
 		d_player = new Player("John", d_model_factory);
 	}
 
@@ -59,13 +61,26 @@ public class IssueOrderControllerTest {
 	@Test
 	public void test_processAdvanceCommand_advance_valid() throws Exception {
 		String l_msg;
-		d_player.addPlayerCountry(d_country);
-		d_player.setReinforcements(3);
-		d_gameplay_controller.processGamePlayCommand("advance Canada USA 5", d_player);
+		
+		
+		d_gameplay_controller.processGamePlayCommand("advance", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Advance order execute method not yet implemented"));
-		//assertTrue(l_msg.contains("Advance order successful."));
-// jj...
+		assertTrue(l_msg.contains("no options specified"));
+//////
+		/*
+		d_gameplay_controller.processGamePlayCommand("advance Italy France -1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid number of armies"));
+		*/
+		
+		//d_gameplay_controller.processGamePlayCommand("advance Canada USA 5", d_player);
+		//l_msg = d_msg.getLastMessageAndClear().d_message;
+		//assertTrue(l_msg.contains("Advance order execute method not yet implemented"));
+		//assertTrue(l_msg.contains("Advance order successfull"));
+		
+		
+
+		
 	}	
 	
 	/**
@@ -141,6 +156,7 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 2", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));
+		
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 1", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));

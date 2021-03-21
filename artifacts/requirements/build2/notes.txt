@@ -50,3 +50,10 @@ IOrderModel, IOrder
 
 -------------
 
+note: I'm moving deploy, advance, bomb and blockade from the player class into their respective order classes
+
+
+
+
+
+

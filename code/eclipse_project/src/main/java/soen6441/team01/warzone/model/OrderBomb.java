@@ -37,7 +37,7 @@ public class OrderBomb implements IOrder {
 	 */
 	public String execute() throws Exception {
 		isValid();
-		return d_player.bomb(d_country.getName());
+		return bomb();
 	}
 
 	/**
@@ -66,7 +66,6 @@ public class OrderBomb implements IOrder {
 		if (!l_valid) {
 			throw new Exception(d_country.getName() + "is a neighbor of none of your territories");
 		}
-
 	}
 
 	/**
@@ -87,5 +86,16 @@ public class OrderBomb implements IOrder {
 	public String toString() {
 		String l_str = "bomb " + d_country.getName();
 		return l_str;
+	}
+	
+	/**
+	 * destroys half of the armies on the opponent
+	 * 
+	 * @return a message to show half of the armies destroyed
+	 */
+	public String bomb() {
+		d_country.setArmies(d_country.getArmies() / 2);
+		String l_msg = "Half number of armies destroyed by bomb";
+		return l_msg;
 	}
 }
