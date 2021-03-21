@@ -112,68 +112,6 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
-	 * add the specified armies (reinforcements) to the specified owned country.
-	 * 
-	 * @param p_country_name     the name of the country to deploy to
-	 * @param p_number_of_armies the number of reinforcement armies to move to the
-	 *                           specified country
-	 * @return a message that describes the deployment done
-	 * @throws Exception if country is not owned, or not enough reinforcements, or
-	 *                   unexpected error
-	 */
-	public String deploy(String p_country_name, int p_number_of_armies) throws Exception {
-		ICountryModel l_country = Country.findCountry(p_country_name, d_player_countries);
-		if (l_country == null) {
-			throw new Exception("Country " + p_country_name + " is not owned by player " + d_name);
-		}
-		if (p_number_of_armies > d_reinforcements) {
-			throw new Exception(d_name + " does not have enough reinforcements (" + d_reinforcements + ") to deploy "
-					+ p_number_of_armies + " armies to " + p_country_name);
-		}
-
-		// execute the deployment
-		int l_armies = l_country.getArmies();
-		l_armies += p_number_of_armies;
-		l_country.setArmies(l_armies);
-		d_reinforcements -= p_number_of_armies;
-
-		// prepare a returning message
-		String l_xarmy = "army has";
-		if (p_number_of_armies > 1) {
-			l_xarmy = "armies have";
-		}
-		String l_msg = p_number_of_armies + " reinforcement " + l_xarmy + " been deployed to " + p_country_name;
-		return l_msg;
-	}
-
-	/**
-	 * destroys half of the armies on the opponent
-	 * 
-	 * @param p_country_name the target country
-	 * @return a message to show half of the armies destroyed
-	 */
-	public String bomb(String p_country_name) {
-		ICountryModel l_country = Country.findCountry(p_country_name, d_player_countries);
-		l_country.setArmies(l_country.getArmies() / 2);
-		String l_msg = "Half number of armies destroyed by bomb";
-		return l_msg;
-	}
-
-	/**
-	 * blockade the target country of player's countries
-	 * 
-	 * @param p_country_name the target country
-	 * @return a message to show blockade is done.
-	 */
-	public String blockade(String p_country_name) {
-		ICountryModel l_country = Country.findCountry(p_country_name, d_player_countries);
-		l_country.setArmies(l_country.getArmies() * 3);
-		d_player_countries.remove(l_country);
-		String l_msg = "Blockade is done";
-		return l_msg;
-	}
-
-	/**
 	 * gets the list of countries the player controls
 	 * 
 	 * @return d_player_countries the list of countries player controls
