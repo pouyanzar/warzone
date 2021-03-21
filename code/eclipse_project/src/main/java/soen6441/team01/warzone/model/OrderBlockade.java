@@ -35,7 +35,7 @@ public class OrderBlockade {
 	 */
 	public String execute() throws Exception {
 		isValid();
-		return d_player.blockade(d_country.getName());
+		return blockade();
 	}
 
 	/**
@@ -71,5 +71,17 @@ public class OrderBlockade {
 	public String toString() {
 		String l_str = "blockade " + d_country.getName();
 		return l_str;
+	}
+	
+	/**
+	 * blockade the target country of player's countries
+	 * 
+	 * @return a message to show blockade is done.
+	 */
+	public String blockade() {
+		d_country.setArmies(d_country.getArmies() * 3);
+		d_player.getPlayerCountries().remove(d_country);
+		String l_msg = "Blockade is done";
+		return l_msg;
 	}
 }

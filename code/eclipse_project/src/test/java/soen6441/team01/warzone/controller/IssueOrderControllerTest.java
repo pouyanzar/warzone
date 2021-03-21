@@ -156,6 +156,7 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 2", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));
+		
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 1", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Deploy order successful"));

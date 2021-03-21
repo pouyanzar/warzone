@@ -265,17 +265,12 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			// parse the countynameto
 			l_params = Utl.getFirstWord(l_params[1]);
 			String l_country_name_to = l_params[0];
-			// check that l_country_name_to is a neighbor of l_country_name_from
-			// todo: ...
-			
 			ICountryModel l_to_countries = Country.findCountry(l_country_name_to, l_from_countries.getNeighbors());
-			if (l_to_countries==null) {
+			if (l_to_countries == null) {
 				d_msg_model.setMessage(MsgType.Error,
-						"Countries " + l_country_name_from + " and " + l_country_name_to + " are not neighbor." );
+						"Country " + l_country_name_from + " is not a neighbor of " + l_country_name_from);
 				return null;
 			}
-
-		
 
 			// parse the numarmies
 			l_params = Utl.getFirstWord(l_params[1]);
@@ -285,25 +280,22 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid number of armies '" + l_numarmies_str + "'.");
 				return null;
 			}
-			
-			// todo: check that the player didn't add more tokens on the command...
-		
-			if (l_params.length>3) {
+
+			// check that the player didn't add more tokens on the command...
+			if (l_params.length > 3) {
 				d_msg_model.setMessage(MsgType.Error, "Invalid tokens on the command.");
 				return null;
 			}
 
-
-		
-			// todo: create the advance order object...
-			// e.g. l_order = new OrderDeploy(l_country_name_from, l_numarmies, l_player);
+			// create the advance order object. note that the order will throw an exception
+			// if it's not valid
 			l_order = new OrderAdvance(l_player, l_from_countries, l_to_countries, l_numarmies);
 
 			// execute the order on the cloned player to 1) see if it's valid 2) set the
 			// state of the cloned player for the next command
 			l_order.execute();
-			
-			String l_msg = "Advance order successfull";
+
+			String l_msg = "Advance order successful";
 			d_msg_model.setMessage(MsgType.Informational, l_msg);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
