@@ -29,6 +29,10 @@ minimal number of reinforcement armies for any player is 3.
 -----------------------------------------------------
 refactoring:
 
+PMD Source Code Analyzer 
+An extensible cross-language static code analyzer
+https://pmd.github.io/ 
+
 1) all/controller factory references all other factories:
 
 2) all writes to console done via Utl.consoleMessage - adds logging
@@ -57,14 +61,34 @@ IOrderModel, IOrder
 
 8) constructor dependencies to factories
 
+9) Use AssertSame instead OfAssertTrue in unit tests
+
+10) Rename Method: The name of a method does not reveal its purpose. Refactor it by changing the name of the method.
+
+11) remove unused variables:
+Avoid unused local variables
+UnusedPrivateField
+
+12) Remove unused formal parameter
+UnusedFormalParameter
+
+13) Use AssertNull instead of AssertTrue in unit tests
+UseAssertNullInsteadOfAssertTrue
+
+14) Use AssertEquals instead of AssertTrue in unit tests
+UseAssertEqualsInsteadOfAssertTrue
+
+15) Use collection IsEmpty instead of size() == 0 (or size() != 0, size() > 0, size() < 1)
+UseCollectionIsEmpty
+
+
+rename methods:
+setPlayer to cloneToPlayer
 
 
 
 -------------
 
-note: I'm moving deploy, advance, bomb and blockade from the player class into their respective order classes
-
-refactored deploy + fixed some code with advance, bomb and blockade
 
 
 
