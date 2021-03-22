@@ -51,8 +51,8 @@ public class GamePlayController extends Phase implements IGamePlayController{
 				d_gameplay_model.setGameState(GameState.GamePlay);
 			}
 			d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
-			Phase l_gmaeplay_start_phase = d_controller_factory.getReinforcementPhase();
-			nextPhase(l_gmaeplay_start_phase);
+			Phase l_gameplay_start_phase = d_controller_factory.getReinforcementPhase();
+			nextPhase(l_gameplay_start_phase);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
 		}

@@ -9,5 +9,5 @@ public interface IOrder {
 
 	String execute() throws Exception;
 
-	void setPlayer(IPlayerModel p_player);
+	void cloneToPlayer(IPlayerModel p_player);
 }

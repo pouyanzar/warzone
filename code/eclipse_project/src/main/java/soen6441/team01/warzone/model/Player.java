@@ -106,7 +106,7 @@ public class Player implements IPlayerModel {
 	public void copyOrders(IPlayerModel p_cloned_player) throws Exception {
 		ArrayList<IOrder> l_clone_orders = p_cloned_player.getOrders();
 		for (IOrder l_clone_order : l_clone_orders) {
-			l_clone_order.setPlayer(this);
+			l_clone_order.cloneToPlayer(this);
 			d_order_list.add(l_clone_order);
 		}
 	}

@@ -47,12 +47,24 @@ GameStartupConsoleView, GameStartupConsole
 GamePlayConsoleView, GamePlayConsole
 IOrderModel, IOrder
 
+4) moved deploy method from player class to order class
+
+5) State pattern
+
+6) Observer pattern
+
+7) command pattern
+
+8) constructor dependencies to factories
+
+
+
 
 -------------
 
 note: I'm moving deploy, advance, bomb and blockade from the player class into their respective order classes
 
-
+refactored deploy + fixed some code with advance, bomb and blockade
 
 
 

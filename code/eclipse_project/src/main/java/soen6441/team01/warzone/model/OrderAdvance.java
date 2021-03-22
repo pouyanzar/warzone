@@ -79,7 +79,7 @@ public class OrderAdvance implements IOrder {
 	 * 
 	 * @param p_player the new player to assign this order to
 	 */
-	public void setPlayer(IPlayerModel p_player) {
+	public void cloneToPlayer(IPlayerModel p_player) {
 		d_player = p_player;
 	}
 
