@@ -1,10 +1,7 @@
 package soen6441.team01.warzone.model;
 
-import java.util.ArrayList;
-
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
-import soen6441.team01.warzone.model.entities.CardType;
 
 /**
  * Supports the definition and implementation of the 'deploy' order.

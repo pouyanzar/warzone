@@ -1,7 +1,7 @@
 package soen6441.team01.warzone.model;
 
-import soen6441.team01.warzone.model.contracts.IOrder;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
+import soen6441.team01.warzone.model.contracts.*;
+
 
 /**
  * Supports the definition and implementation of the 'diplomacy' order.
@@ -34,14 +34,14 @@ public class OrderDiplomacy implements IOrder {
 	public String execute() throws Exception {
 //			return d_player.diplomacy(d_player_target_name);
 		return null;
-	}
+	} 
 
 	/**
 	 * Change the current player to the specified player
 	 * 
 	 * @param p_player the new player to assign this order to
 	 */
-	public void setPlayer(IPlayerModel p_player) {
+	public void cloneToPlayer(IPlayerModel p_player) {
 		d_player = p_player;
 	}
 
