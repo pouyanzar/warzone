@@ -23,7 +23,8 @@ import soen6441.team01.warzone.view.ViewFactory;
  */
 public class IssueOrderControllerTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
-
+	public MapEditorController d_map_editor_controller = null;
+	
 	public ModelFactory d_model_factory = null;
 	public IssueOrderController d_gameplay_controller = null;
 	public IGamePlayModel d_gameplay = null;
@@ -32,6 +33,7 @@ public class IssueOrderControllerTest {
 	public ControllerFactory d_controller_factory = null;
 	public IContinentModel d_continent = null;
 	public ICountryModel d_country = null;
+	
 	public Player d_player = null;
 
 	/**
@@ -48,9 +50,9 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller = (IssueOrderController) d_controller_factory.getIssueOrderController();
 		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
-		d_country = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
 		d_player = new Player("John", d_model_factory);
+		
 	}
 
 	/**
@@ -61,11 +63,34 @@ public class IssueOrderControllerTest {
 	@Test
 	public void test_processAdvanceCommand_advance_valid() throws Exception {
 		String l_msg;
+		Country l_country_1 = new Country(1, "Canada", null, 0, 0, d_model_factory);
+		Country l_country_2 = new Country(2, "United_States", null, 0, 0, d_model_factory);
+		l_country_1.addNeighbor(l_country_2);
+		l_country_2.addNeighbor(l_country_1);
+
 		
+		l_country_1.setArmies(5);
+		l_country_2.setArmies(3);
+		l_country_1.addNeighbor(l_country_2);		
+		d_player.addPlayerCountry(l_country_1);	
 		
-		d_gameplay_controller.processGamePlayCommand("advance", d_player);
+		d_player.setReinforcements(5);
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
+		
+		d_gameplay_controller.processGamePlayCommand("advance Canada United_States 5  ", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("no options specified"));
+		//System.out.println(l_msg);
+		assertTrue(l_msg.contains("Advance order successful"));
+		
+		
+
+
+		/*
+		System.out.println("Number of player's countries: "+d_player.getPlayerCountries().size());
+		for(ICountryModel ic:d_player.getPlayerCountries())
+			System.out.println("Player Country " +ic.getName());
+		*/
+		
 //////
 		/*
 		d_gameplay_controller.processGamePlayCommand("advance Italy France -1", d_player);
@@ -179,6 +204,7 @@ public class IssueOrderControllerTest {
 		d_player.setReinforcements(5);
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
+		
 		assertTrue(l_msg.contains("Deploy order successful"));
 	}
 
