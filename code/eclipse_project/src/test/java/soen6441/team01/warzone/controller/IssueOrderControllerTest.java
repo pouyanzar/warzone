@@ -35,13 +35,9 @@ public class IssueOrderControllerTest {
 	public LogEntryBuffer d_msg = null;
 	public ControllerFactory d_controller_factory = null;
 	public IContinentModel d_continent = null;
-<<<<<<< HEAD
 	public ICountryModel d_country = null;
-	
-=======
 	public ICountryModel d_us = null;
 	public ICountryModel d_canada = null;
->>>>>>> 5ade182965400800b4ebc121af4b67a4da4c5862
 	public Player d_player = null;
 	public IMapModel d_map = null;
 
@@ -60,15 +56,12 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller = (IssueOrderController) d_controller_factory.getIssueOrderController();
 		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
-<<<<<<< HEAD
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
-=======
 		d_us = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
 		d_canada = new Country(2, "Canada", d_continent, 0, 0, d_model_factory);
 		d_map.addContinent(d_continent);
 		d_map.addCountry(d_us);
 		d_map.addCountry(d_canada);
->>>>>>> 5ade182965400800b4ebc121af4b67a4da4c5862
 		d_player = new Player("John", d_model_factory);
 		
 	}
@@ -81,7 +74,6 @@ public class IssueOrderControllerTest {
 	@Test
 	public void test_processAdvanceCommand_advance_valid() throws Exception {
 		String l_msg;
-<<<<<<< HEAD
 		Country l_country_1 = new Country(1, "Canada", null, 0, 0, d_model_factory);
 		Country l_country_2 = new Country(2, "United_States", null, 0, 0, d_model_factory);
 		l_country_1.addNeighbor(l_country_2);
@@ -94,39 +86,16 @@ public class IssueOrderControllerTest {
 		d_player.addPlayerCountry(l_country_1);	
 		
 		d_player.setReinforcements(5);
-		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
-		
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);		
 		d_gameplay_controller.processGamePlayCommand("advance Canada United_States 5  ", d_player);
-=======
-
-		d_gameplay_controller.processGamePlayCommand("advance", d_player);
->>>>>>> 5ade182965400800b4ebc121af4b67a4da4c5862
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		//System.out.println(l_msg);
+		System.out.println(l_msg);
 		assertTrue(l_msg.contains("Advance order successful"));
-		
-		
+		d_gameplay_controller.processGamePlayCommand("advance", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		System.out.println(l_msg);		
+		assertTrue(l_msg.contains("Invalid advance command, no options specified"));
 
-
-		/*
-		System.out.println("Number of player's countries: "+d_player.getPlayerCountries().size());
-		for(ICountryModel ic:d_player.getPlayerCountries())
-			System.out.println("Player Country " +ic.getName());
-		*/
-		
-//////
-		/*
-		 * d_gameplay_controller.processGamePlayCommand("advance Italy France -1",
-		 * d_player); l_msg = d_msg.getLastMessageAndClear().d_message;
-		 * assertTrue(l_msg.contains("Invalid number of armies"));
-		 */
-
-		// d_gameplay_controller.processGamePlayCommand("advance Canada USA 5",
-		// d_player);
-		// l_msg = d_msg.getLastMessageAndClear().d_message;
-		// assertTrue(l_msg.contains("Advance order execute method not yet
-		// implemented"));
-		// assertTrue(l_msg.contains("Advance order successfull"));
 
 	}
 
