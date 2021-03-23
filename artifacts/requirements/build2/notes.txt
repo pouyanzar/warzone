@@ -88,7 +88,33 @@ setPlayer to cloneToPlayer
 
 
 -------------
+Unit Tests - Build 2
 
+(1) map validation – including map and continents being connected graphs; 
+test_validatemap_false -> MapTest
+test_validatemap_false2 -> MapTest
+test_validatemap_false3 -> MapTest
+test_processMapEditorCommand_loadmap_invalid -> MapEditorControllerTest
+
+(2) reading an invalid map file;
+test_processMapEditorCommand_loadmap_invalid -> MapEditorControllerTest 
+
+3) validation of a correct startup phase
+test_processGameStartupCommand_assigncountries_valid -> GameStartupControllerTest
+test_processMapEditorCommand_loadmap_valid -> MapEditorControllerTest
+
+4) calculation of number of reinforcement armies;
+test_assignReinforcements_1 -> GamePlayTest
+test_assignReinforcements_2 -> GamePlayTest
+
+5) various test for the order validation upon execution
+ + deploy: 
+   test_deploy_1 -> OrderDeployTest
+   test_processGamePlayCommand_deploy_invalid -> IssueOrderControllerTest 
+
+ + advance:
+
+ + bomb...
 
 
 

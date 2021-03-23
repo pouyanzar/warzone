@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.view.ViewFactory;
@@ -152,5 +153,23 @@ public class GameStartupControllerTest {
 		d_startup_controller.processGameStartupCommand("loadmap " + d_MAP_DIR + "canada/canada.map", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("loadmap processed successfully"));
+	}
+	
+	/**
+	 * test assigncountries command
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_assigncountries_valid() throws Exception {
+		String l_msg;
+		MapEditorController l_map_editor_controller = new MapEditorController(d_controller_factory);
+		l_map_editor_controller.processMapEditorCommand("editcontinent -add 1 Europe");
+		l_map_editor_controller.processMapEditorCommand("editcountry -add Italy 1 -add France 1");
+		d_startup_controller.processGameStartupCommand("gameplayer -add Player01", d_gameplay);
+		Phase next_phase = d_startup_controller.processGameStartupCommand("assigncountries");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("assigncountries processed successfully"));
+		assertTrue(next_phase instanceof GamePlayController);
 	}
 }

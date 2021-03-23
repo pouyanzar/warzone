@@ -1,0 +1,132 @@
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Observable.java:19:        UnnecessaryConstructor: Avoid unnecessary constructors - the compiler will generate these for you
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Observable.java:19:        UncommentedEmptyConstructor:    Document empty constructor
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Observable.java:35:        EmptyCatchBlock:        Avoid empty catch blocks
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Observable.java:47:        EmptyCatchBlock:        Avoid empty catch blocks
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:17:       UseUtilityClass:                All methods are static.  Consider using a utility class instead. Alternatively, you could add a private constructor or make the class abstract to silence this warning.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:44:       ControlStatementBraces:         This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:65:       CompareObjectsWithEquals:       Use equals() to compare object references.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:65:       UseEqualsToCompareStrings:      Use equals() to compare strings instead of '==' or '!='
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:81:       SimplifyBooleanReturns:         Avoid unnecessary if..then..else statements when returning booleans
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:96:       ControlStatementBraces:         This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:97:       SimplifyBooleanReturns:         Avoid unnecessary if..then..else statements when returning booleans
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:97:       LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:98:       ControlStatementBraces:         This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:231:      NonThreadSafeSingleton:         Singleton is not thread safe
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:276:      EmptyCatchBlock:                Avoid empty catch blocks
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\common\Utl.java:298:      EmptyCatchBlock:                Avoid empty catch blocks
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\App.java:13:   UseUtilityClass:                All methods are static.  Consider using a utility class instead. Alternatively, you could add a private constructor or make the class abstract to silence this warning.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\ControllerFactory.java:48:     UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_controller'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\GameEndController.java:33:     SingularField:  Perhaps 'd_controller_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\GameEndController.java:34:     SingularField:  Perhaps 'd_model_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\GameEndController.java:35:     SingularField:  Perhaps 'd_msg_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\GamePlayController.java:19:    SingularField:  Perhaps 'd_view_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\GameStartupController.java:25: SingularField:  Perhaps 'd_view_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\IssueOrderController.java:315: UnusedFormalParameter:  Avoid unused method parameters such as 'p_player'.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\MapEditorController.java:22:   SingularField:  Perhaps 'd_view_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\OrderExecController.java:34:   SingularField:  Perhaps 'd_view' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\OrderExecController.java:36:   SingularField:  Perhaps 'd_gameplay_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\ReinforcementController.java:32:               SingularField:  Perhaps 'd_view_factory' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\controller\ReinforcementController.java:34:               SingularField:  Perhaps 'd_view' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Continent.java:171: SimplifyBooleanReturns:         Avoid unnecessary if..then..else statements when returning booleans
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Continent.java:209: UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_smap'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Country.java:24:    SingularField:  Perhaps 'd_factory_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Country.java:266:   UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_smap'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:122:  UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:125:  UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:129:  UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:136:  UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:240:  EmptyIfStmt:    Avoid empty if statements
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\GamePlay.java:240:  UnconditionalIfStatement:       Do not use if statements that are always true or always false
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\LogEntryBuffer.java:21:     UnnecessaryConstructor: Avoid unnecessary constructors - the compiler will generate these for you
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\LogEntryBuffer.java:21:     UncommentedEmptyConstructor:    Document empty constructor
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:62:        UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_neighbors'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:157:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_country'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:171:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_country'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:298:       UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:304:       UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:400:       ControlStatementBraces:         This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:425:       SwitchStmtsShouldHaveDefault:   Switch statements should have a default label
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:425:       UseLocaleWithCaseConversions:   When doing a String.toLowerCase()/toUpperCase() call, use a Locale
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:441:       SwitchStmtsShouldHaveDefault:   Switch statements should have a default label
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:457:       PreserveStackTrace:             New exception is thrown in catch block, original stack trace may be lost
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:497:       PreserveStackTrace:             New exception is thrown in catch block, original stack trace may be lost
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:614:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_map'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:738:       CloseResource:  Ensure that resources like this FileOutputStream object are closed after use
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Map.java:740:       ControlStatementBraces:         This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\ModelFactory.java:48:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_model'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\ModelFactory.java:74:       ControlStatementBraces: This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\ModelFactory.java:99:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_player'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\ModelFactory.java:136:      ControlStatementBraces: This statement should have braces
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderAdvance.java:94:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderAdvance.java:119:      UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_msg'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderAirlift.java:66:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderBlockade.java:73:      UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderBlockade.java:85:      UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_msg'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderBomb.java:88:  UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderBomb.java:99:  UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_msg'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderDeploy.java:91:        UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderDeploy.java:122:       UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_msg'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\OrderDiplomacy.java:56:     UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_str'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Player.java:193:    UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\Player.java:274:    SimplifyBooleanReturns:         Avoid unnecessary if..then..else statements when returning booleans
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\contracts\ICountryModel.java:39:    UnnecessaryModifier:    Unnecessary modifier 'public' on method 'getOwner': the method is declared in an interface type
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\contracts\IPlayerModel.java:47:     UnnecessaryModifier:    Unnecessary modifier 'public' on method 'hasCard': the method is declared in an interface type
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\model\entities\UserMessage.java:18:       UncommentedEmptyConstructor:    Document empty constructor
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\GamePlayConsole.java:26:     SingularField:          Perhaps 'd_controller' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\GamePlayConsole.java:29:     SingularField:          Perhaps 'd_factory_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\GamePlayConsole.java:184:    UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_sum'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\GameStartupConsole.java:20:  SingularField:          Perhaps 'd_controller' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\GameStartupConsole.java:23:  SingularField:          Perhaps 'd_factory_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\MapEditorConsole.java:25:    SingularField:          Perhaps 'd_controller' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\MapEditorConsole.java:28:    SingularField:          Perhaps 'd_factory_model' could be replaced by a local variable.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\main\java\soen6441\team01\warzone\view\ViewFactory.java:42: UnnecessaryLocalBeforeReturn:   Consider simply returning the value vs storing it in local variable 'l_model'
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\common\UtlTest.java:195:  LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\common\UtlTest.java:196:  LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\common\UtlTest.java:197:  LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\common\UtlTest.java:198:  LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\common\UtlTest.java:199:  LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:397:              LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:397:              UseAssertEqualsInsteadOfAssertTrue:     Use assertEquals(x, y) instead of assertTrue(x.equals(y))
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:405:              LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:405:              UseAssertEqualsInsteadOfAssertTrue:     Use assertEquals(x, y) instead of assertTrue(x.equals(y))
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:425:              LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:425:              UseAssertEqualsInsteadOfAssertTrue:     Use assertEquals(x, y) instead of assertTrue(x.equals(y))
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:447:              LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\controller\MapEditorControllerTest.java:447:              UseAssertEqualsInsteadOfAssertTrue:     Use assertEquals(x, y) instead of assertTrue(x.equals(y))
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\CardTest.java:30:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\CardTest.java:33:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\CardTest.java:36:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\CardTest.java:39:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\ContinentTest.java:122:     LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\ContinentTest.java:126:     LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:221:      EmptyStatementNotInLoop:        An empty statement (semicolon) not part of a loop
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:247:      EmptyStatementNotInLoop:        An empty statement (semicolon) not part of a loop
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      UselessParentheses:     Useless parentheses.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\GamePlayTest.java:296:      UselessParentheses:     Useless parentheses.
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:49:    LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:53:    LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:156:   UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:195:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:198:   UseCollectionIsEmpty:           Substitute calls to size() == 0 (or size() != 0, size() > 0, size() < 1) with calls to isEmpty()
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:279:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:280:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:281:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:282:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:283:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:284:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:285:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:286:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:287:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:288:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:289:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:290:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:291:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:292:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:293:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:294:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+D:\tmp\mar21\pmd-bin-6.32.0\bin\src\test\java\soen6441\team01\warzone\model\MapTest.java:295:   LiteralsFirstInComparisons:     Position literals first in String comparisons
+

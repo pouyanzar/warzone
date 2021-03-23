@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import soen6441.team01.warzone.model.Continent;
+import soen6441.team01.warzone.model.GameEngine;
 import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.view.ViewFactory;
 
@@ -347,9 +349,15 @@ public class MapEditorControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("no options specified"));
 
+		// non-existant map file
 		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/quebac.map");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Error loading map file"));
+
+		// invalid random text file
+		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada_invalid/canada.map");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("loadmap error - map is not a valid map."));	
 	}
 
 	/**
@@ -360,9 +368,10 @@ public class MapEditorControllerTest {
 	@Test
 	public void test_processMapEditorCommand_loadmap_valid() throws Exception {
 		String l_msg;
-		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/canada.map");
+		Phase next_phase = d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/canada.map");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("loadmap processed successfully"));
+		assertTrue(next_phase instanceof GameStartupController);
 	}
 
 	/**

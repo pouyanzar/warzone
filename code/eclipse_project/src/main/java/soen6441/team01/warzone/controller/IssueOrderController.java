@@ -226,7 +226,6 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			break;
 		}
 		return l_order;
-
 	}
 
 	/**
@@ -444,6 +443,15 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 	 */
 	private void showCards(IPlayerModel p_player) {
 		d_view.showCards(p_player);
+	}
+
+	/**
+	 * used mainly for testing
+	 * 
+	 * @return the next phase that will be invoked
+	 */
+	public Phase getNextPhase() {
+		return d_next_phase;
 	}
 
 	/**

@@ -456,7 +456,7 @@ public class Map implements IMapModel {
 					+ ", exception: " + ex.getMessage();
 			throw new Exception(l_msg);
 		}
-
+		
 		// ask the continent objects to build their list of countries
 		refreshCountriesOfAllContinents(l_map_model);
 

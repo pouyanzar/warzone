@@ -9,6 +9,7 @@ import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.Country;
 import soen6441.team01.warzone.model.Player;
 import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -49,7 +50,6 @@ public class IssueOrderControllerTest {
 		d_continent = new Continent(1, "North_America", 3);
 		d_country = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
-		//d_country_to = new Country(1, "USA", d_continent, 0, 0, d_model_factory);		
 		d_player = new Player("John", d_model_factory);
 	}
 
@@ -124,7 +124,7 @@ public class IssueOrderControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Country Canada is not owned by player"));
 
-		// build 1 requirement: Unit testing framework
+		// build 1 & 2 requirement: Unit testing framework
 		// (4) player cannot deploy more armies that there is in their reinforcement
 		// pool.
 		d_player.addPlayerCountry(d_country);
@@ -163,16 +163,18 @@ public class IssueOrderControllerTest {
 	}	
 
 	/**
-	 * test loadmap valid commands
+	 * test exit and deploy valid commands
 	 * 
 	 * @throws Exception unexpected error
 	 */
 	@Test
-	public void test_processGamePlayCommand_loadmap_valid() throws Exception {
+	public void test_processGamePlayCommand_exit_deploy_valid() throws Exception {
 		String l_msg;
 		d_gameplay_controller.processGamePlayCommand("exit", d_player);
 		assertTrue(d_msg.getLastMessageAndClear() == null);
-
+		Phase next_phase = ((IssueOrderController)d_gameplay_controller).getNextPhase(); 
+		assertTrue(next_phase instanceof GameEndController);
+		
 		d_player.addPlayerCountry(d_country);
 		d_player.setReinforcements(5);
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);
@@ -190,6 +192,7 @@ public class IssueOrderControllerTest {
 		String l_msg;
 		d_gameplay_controller.processGamePlayCommand("end", d_player);
 		assertTrue(d_msg.getLastMessageAndClear() == null);
+		Phase next_phase = ((IssueOrderController)d_gameplay_controller).getNextPhase(); 
 
 		d_gameplay_controller.processGamePlayCommand("end turn", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -201,4 +204,5 @@ public class IssueOrderControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Cannot end turn as player 'John' has 5 reinforcement(s) left to deploy."));
 	}
+	
 }

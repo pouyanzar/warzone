@@ -91,4 +91,12 @@ public class GameEngine implements IGameEngineModel {
 	public void setNextPhase(Phase p_next_phase) {
 		d_phase = p_next_phase;
 	}
+	
+	/**
+	 * used mainly for unit testing
+	 * @return the current / next phase to be invoked  
+	 */
+	public Phase  getPhase() {
+		return d_phase;
+	}
 }
