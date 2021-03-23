@@ -3,6 +3,8 @@ package soen6441.team01.warzone.model.contracts;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.Card;
+import soen6441.team01.warzone.model.ModelFactory;
+import soen6441.team01.warzone.model.entities.CardType;
 
 /**
  * Interface for Player class
@@ -44,5 +46,9 @@ public interface IPlayerModel {
 
 	void setDoneTurn(boolean p_done_turn);
 
-	public boolean hasCard(Card p_card);
+	boolean hasCard(CardType p_card);
+	
+	void removeCard(CardType p_card);
+	
+	ModelFactory getPlayerModelFactory();
 }

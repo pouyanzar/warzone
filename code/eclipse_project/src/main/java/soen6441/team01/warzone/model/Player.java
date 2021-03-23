@@ -95,6 +95,15 @@ public class Player implements IPlayerModel {
 		d_reinforcements = p_number_of_army;
 	}
 
+    /**
+     * Used mainly when cloning or working with cloned players
+     * @return the player's models which basically contain all the player map information
+     */
+    public ModelFactory getPlayerModelFactory() {
+    	return d_factory_model;
+    }
+
+	
 	/**
 	 * copies the orders from the specified player. used mainly when copying the
 	 * orders from cloned players used during the issue_orders() phase. Note: the
@@ -232,7 +241,7 @@ public class Player implements IPlayerModel {
 			}
 			l_player.addPlayerCountry(l_country);
 		}
-		l_player.setCards(d_cards);
+		l_player.setCards((ArrayList<Card>) d_cards.clone());
 		return l_player;
 	}
 
@@ -264,17 +273,31 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
+	 * Method to delete/remove a card from the player
+	 * 
+	 * @param p_card the card type to remove
+	 */
+	public void removeCard(CardType p_card) {
+		for( int idx = 0 ; idx < d_cards.size(); idx++) {
+			if(d_cards.get(idx).getCardType() == p_card) {
+				d_cards.remove(idx);
+			}
+		}
+	}
+
+	/**
 	 * Checks if the card exist inside the current player's card list
 	 * 
 	 * @param p_card desired The card to be checked if it exists in player's card
 	 *               list
 	 * @return true if the card exist and false otherwise
 	 */
-	public boolean hasCard(Card p_card) {
-		if (d_cards.contains(p_card)) {
-			return true;
-		} else {
-			return false;
+	public boolean hasCard(CardType p_card) {
+		for(Card l_card : d_cards ) {
+			if( l_card.getCardType() == p_card) {
+				return true;
+			}
 		}
+		return false;
 	}
 }

@@ -46,8 +46,7 @@ public class OrderBlockade {
 	private void isValid() throws Exception {
 		// validate that the player has the bomb card
 		boolean l_valid;
-		Card l_blockade = new Card(CardType.blockade);
-		l_valid = d_player.hasCard(l_blockade);
+		l_valid = d_player.hasCard(CardType.blockade);
 		if (!l_valid) {
 			throw new Exception(d_player + "does not have blockade card!");
 		}
