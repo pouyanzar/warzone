@@ -110,6 +110,18 @@ public class Country implements ICountryModel {
 	}
 
 	/**
+	 * subtract the specified armies from the number of armies on this country.
+	 * 
+	 * @param p_num_armies the number of armies to remove from this country
+	 */
+	public void removeArmies(int p_num_armies) {
+		d_armies -= p_num_armies;
+		if (d_armies < 0) {
+			d_armies = 0;
+		}
+	}
+
+	/**
 	 * 
 	 * @return the number of armies currently situated in this country
 	 */
@@ -275,7 +287,7 @@ public class Country implements ICountryModel {
 	 */
 	public String toDominationMapBorderString() {
 		String l_smap = d_country_id + " ";
-		for( ICountryModel d_neighbor : d_neighbors) {
+		for (ICountryModel d_neighbor : d_neighbors) {
 			l_smap += d_neighbor.getId() + " ";
 		}
 		return l_smap;

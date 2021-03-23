@@ -90,7 +90,6 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		}
 		// !!! END TEMP CODE !!!
 
-		
 		// clone the players and their countries to simplify keeping track of
 		// issuing orders before the execution phase and to isolate each players map
 		// from one another
@@ -245,7 +244,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			ICountryModel l_from_countries = Country.findCountry(l_country_name_from, l_player.getPlayerCountries());
 			if (l_from_countries == null) {
 				d_msg_model.setMessage(MsgType.Error,
-						"Country " + l_country_name_from + " not owned by player " + l_player.getName());
+						l_country_name_from + " is not owned by " + l_player.getName());
 				return null;
 			}
 
@@ -255,7 +254,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			ICountryModel l_to_countries = Country.findCountry(l_country_name_to, l_from_countries.getNeighbors());
 			if (l_to_countries == null) {
 				d_msg_model.setMessage(MsgType.Error,
-						"Country " + l_country_name_from + " is not a neighbor of " + l_country_name_from);
+						l_country_name_from + " is not a neighbor of " + l_country_name_to);
 				return null;
 			}
 
@@ -267,10 +266,8 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid number of armies '" + l_numarmies_str + "'.");
 				return null;
 			}
-
-			// check that the player didn't add more tokens on the command...
-			if (l_params.length > 3) {
-				d_msg_model.setMessage(MsgType.Error, "Invalid tokens on the command.");
+			if (!Utl.isEmpty(l_params[1])) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid advance option '" + l_params[1] + "'");
 				return null;
 			}
 
@@ -282,7 +279,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			// state of the cloned player for the next command
 			l_order.execute();
 
-			String l_msg = "Advance order successful";
+			String l_msg = "advance order successful";
 			d_msg_model.setMessage(MsgType.Informational, l_msg);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
@@ -322,7 +319,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 
 			ICountryModel l_country_to_bomb = Country.findCountry(l_country_name,
 					p_player.getPlayerModelFactory().getMapModel().getCountries());
-			if( l_country_to_bomb == null) {
+			if (l_country_to_bomb == null) {
 				d_msg_model.setMessage(MsgType.Error, "Cannot bomb '" + l_country_name + "' since it is not a country");
 				return null;
 			}

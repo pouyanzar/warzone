@@ -32,6 +32,8 @@ public interface ICountryModel {
 
 	void setArmies(int p_num_armies);
 	
+	void removeArmies(int p_num_armies);
+	
 	int getArmies();
 	
 	void setOwner(IPlayerModel p_player);

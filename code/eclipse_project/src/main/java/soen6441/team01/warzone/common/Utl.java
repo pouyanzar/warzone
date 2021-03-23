@@ -354,4 +354,33 @@ public class Utl {
 		int randomIdx = ThreadLocalRandom.current().nextInt(0, clazz.getEnumConstants().length);
 		return clazz.getEnumConstants()[randomIdx];
 	}
+	
+	/**
+	 * Get a random integer between 0 and p_max (inclusive)
+	 * 
+	 * original code taken from:
+	 * https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum/30641206
+	 * 
+	 * @param p_max the max value of the random number
+	 * @return a random integer between 0 and p_max
+	 */
+	public static int randomInt(int p_max) {
+		int randomNum = ThreadLocalRandom.current().nextInt(0, p_max + 1);
+		return randomNum;
+	}
+	
+	/**
+	 * 
+	 * @param p_value the value to evaluate if to use singular or plural
+	 * @param p_single the string to return if the value is singular
+	 * @param p_plural the string to return if the valie is not singular
+	 * @return the sinlular or plural value
+	 */
+	public static String plural(int p_value, String p_single, String p_plural) {
+		if( p_value == 1) {
+			return p_single;
+		} else {
+			return p_plural;
+		}
+	}
 }

@@ -90,13 +90,11 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("advance Canada United_States 5  ", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		System.out.println(l_msg);
-		assertTrue(l_msg.contains("Advance order successful"));
+		assertTrue(l_msg.contains("advance order successful"));
 		d_gameplay_controller.processGamePlayCommand("advance", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		System.out.println(l_msg);		
 		assertTrue(l_msg.contains("Invalid advance command, no options specified"));
-
-
 	}
 
 	/**
@@ -253,5 +251,56 @@ public class IssueOrderControllerTest {
 		d_gameplay_controller.processGamePlayCommand("bomb USA Canada", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid bomb option '"));
+	}
+
+	/**
+	 * test processGamePlayCommand_gameplayer valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_advance_valid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_canada);
+		d_canada.setArmies(2);
+		d_canada.addNeighbor(d_us);
+		d_gameplay_controller.processGamePlayCommand("advance Canada USA 1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("advance order successful"));
+	}
+
+	/**
+	 * test processGamePlayCommand_gameplayer valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_advance_invalid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_canada);
+		
+		d_gameplay_controller.processGamePlayCommand("advance", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+
+		d_gameplay_controller.processGamePlayCommand("advance USA Canada 5", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("not owned by"));
+
+		d_player.addPlayerCountry(d_canada);
+		d_gameplay_controller.processGamePlayCommand("advance Canada USA 5", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("is not a neighbor of"));
+
+		d_canada.setArmies(2);
+		d_canada.addNeighbor(d_us);
+		d_player.addPlayerCountry(d_canada);
+		d_gameplay_controller.processGamePlayCommand("advance Canada USA -1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid number of armies"));
+
+		d_gameplay_controller.processGamePlayCommand("advance Canada USA 1 go", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid advance option"));
 	}
 }
