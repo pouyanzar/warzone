@@ -113,9 +113,14 @@ test_assignReinforcements_2 -> GamePlayTest
    test_processGamePlayCommand_deploy_invalid -> IssueOrderControllerTest 
 
  + advance:
+   all tests -> OrderAdvanceTest
+   test_processGamePlayCommand_advance_valid -> IssueOrderControllerTest
+   test_processGamePlayCommand_advance_invalid -> IssueOrderControllerTest
 
  + bomb...
- 
+   all tests -> OrderBombTest
+   test_processGamePlayCommand_bomb_valid -> test_processGamePlayCommand_advance_invalid 
+   test_processGamePlayCommand_bomb_invalid -> test_processGamePlayCommand_advance_invalid 
  
 
 
