@@ -31,14 +31,20 @@ public class OrderDeployTest {
 	 * @throws Exception when there is an exception
 	 */
 	@Test
-	public void test_deploy_1() throws Exception {
+	public void test_deploy_valid_1() throws Exception {
 		Player l_player = new Player("player", d_model_factory);
 		l_player .setReinforcements(7);
 		Continent l_america = new Continent(1, "America", 10);
 		Country l_canada = new Country(1, "Canada", l_america, 250, 250, d_model_factory);
 		l_player.addPlayerCountry(l_canada);
+
 		OrderDeploy l_deploy = new OrderDeploy("Canada", 7, l_player);
 		l_deploy.execute();
 		assertTrue( l_canada.getArmies() == 7);
+
+		l_player .setReinforcements(3);
+		l_deploy = new OrderDeploy("Canada", 3, l_player);
+		l_deploy.execute();
+		assertTrue( l_canada.getArmies() == 10);
 	}
 }

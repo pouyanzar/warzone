@@ -13,7 +13,7 @@ public class OrderAdvance implements IOrder {
 	IPlayerModel d_player = null;
 	ICountryModel d_country_from = null;
 	ICountryModel d_country_to = null;
-	private int d_num_armies = 0;
+	private int d_num_armies = 0; 
 
 	/**
 	 * Constructor

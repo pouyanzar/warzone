@@ -3,27 +3,12 @@ package soen6441.team01.warzone.controller;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGamePlayController;
-import soen6441.team01.warzone.model.Card;
-import soen6441.team01.warzone.model.Country;
-import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.OrderDeploy;
-import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.OrderAdvance;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IOrder;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IAppMsg;
+import soen6441.team01.warzone.model.*;
+import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
-import soen6441.team01.warzone.model.entities.CountrySummary;
-import soen6441.team01.warzone.model.entities.GameState;
 import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
@@ -94,6 +79,18 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		ArrayList<IPlayerModel> l_players = d_gameplay_model.getPlayers();
 		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
 
+		// !!! START TEMP CODE !!!
+		// todo: used for testing cards - gives each player a free card after every turn
+		// todo: delete this code in final version
+		// !!! TEMP CODE !!!
+		for (IPlayerModel l_xplayer : l_players) {
+			Card l_card = new Card();
+			l_xplayer.addCard(l_card);
+			l_xplayer.addCard(new Card(CardType.bomb));
+		}
+		// !!! END TEMP CODE !!!
+
+		
 		// clone the players and their countries to simplify keeping track of
 		// issuing orders before the execution phase and to isolate each players map
 		// from one another
@@ -125,15 +122,6 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 
 		if (d_next_phase == null) {
 			d_next_phase = d_controller_factory.getOrderExecPhase();
-		}
-
-		// !!! TEMP CODE !!!
-		// todo: used for testing cards - gives each player a free card after every turn
-		// todo: delete this code in final version
-		// !!! TEMP CODE !!!
-		for (IPlayerModel l_xplayer : l_players) {
-			Card l_card = new Card();
-			l_xplayer.addCard(l_card);
 		}
 
 		return d_next_phase;
@@ -327,14 +315,25 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_country_name + "'.");
 				return null;
 			}
+			if (!Utl.isEmpty(l_params[1])) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid bomb option '" + l_params[1] + "'");
+				return null;
+			}
+
+			ICountryModel l_country_to_bomb = Country.findCountry(l_country_name,
+					p_player.getPlayerModelFactory().getMapModel().getCountries());
+			if( l_country_to_bomb == null) {
+				d_msg_model.setMessage(MsgType.Error, "Cannot bomb '" + l_country_name + "' since it is not a country");
+				return null;
+			}
 
 			// create the bomb order
-			// l_order = new OrderBomb(IPlayerModel p_player, ICountryModel p_country);
+			l_order = new OrderBomb(p_player, l_country_to_bomb);
 
 			// execute the order on the cloned player to 1) see if it's valid 2) set the
 			// state of the cloned player for the next command
 			l_order.execute();
-			String l_msg = "bomb order successful.\n";
+			String l_msg = "bomb order successful";
 			d_msg_model.setMessage(MsgType.Informational, l_msg);
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
