@@ -7,7 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 
 @SuiteClasses({ CardTest.class, ContinentTest.class, CountryTest.class, GamePlayTest.class, MapTest.class,
-		ModelTestSuite.class, OrderAdvanceTest.class, OrderBombTest.class, OrderDeployTest.class, PlayerTest.class })
+		OrderAdvanceTest.class, OrderBombTest.class, OrderDeployTest.class, PlayerTest.class })
 
 /**
  * Test Suite for all the classes inside the package
