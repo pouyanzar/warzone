@@ -180,6 +180,8 @@ public class OrderAdvanceTest {
 		assertTrue(d_canada.getArmies() == 2);
 		assertTrue(d_usa.getOwner().getName().equals("Player1"));
 		assertTrue(d_usa.getArmies() == 1);
+		// check that the player got a card
+		assertTrue(d_player_1.getCards().size() == 1);
 	}
 
 	/**
@@ -204,6 +206,8 @@ public class OrderAdvanceTest {
 		assertTrue(d_canada.getOwner().getName().equals("Player1"));
 		assertTrue(d_canada.getArmies() == 1);
 		assertTrue(d_usa.getOwner().getName().equals("Player1"));
+		// check that the player got a card
+		assertTrue(d_player_1.getCards().size() == 1);
 	}
 
 	/**
@@ -247,7 +251,7 @@ public class OrderAdvanceTest {
 
 		l_advance = new OrderAdvance(d_player_1, d_canada, d_usa, 2);
 		l_msg = l_advance.execute();
-		assertTrue(l_msg.equals("Player1 won the attack on US"));
+		assertTrue(l_msg.equals("Player1 has successfully moved 2 armies from Canada to US"));
 		assertTrue(d_canada.getOwner().getName().equals("Player1"));
 		assertTrue(d_canada.getArmies() == 3);
 		assertTrue(d_usa.getOwner().getName().equals("Player1"));

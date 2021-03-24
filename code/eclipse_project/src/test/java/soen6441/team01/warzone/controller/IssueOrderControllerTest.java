@@ -27,7 +27,7 @@ import soen6441.team01.warzone.view.ViewFactory;
 public class IssueOrderControllerTest {
 	private String d_MAP_DIR = "./src/test/resources/maps/";
 	public MapEditorController d_map_editor_controller = null;
-	
+
 	public ModelFactory d_model_factory = null;
 	public IssueOrderController d_gameplay_controller = null;
 	public IGamePlayModel d_gameplay = null;
@@ -63,7 +63,6 @@ public class IssueOrderControllerTest {
 		d_map.addCountry(d_us);
 		d_map.addCountry(d_canada);
 		d_player = new Player("John", d_model_factory);
-		
 	}
 
 	/**
@@ -78,22 +77,20 @@ public class IssueOrderControllerTest {
 		Country l_country_2 = new Country(2, "United_States", null, 0, 0, d_model_factory);
 		l_country_1.addNeighbor(l_country_2);
 		l_country_2.addNeighbor(l_country_1);
-
-		
 		l_country_1.setArmies(5);
 		l_country_2.setArmies(3);
-		l_country_1.addNeighbor(l_country_2);		
-		d_player.addPlayerCountry(l_country_1);	
-		
+		l_country_1.addNeighbor(l_country_2);
+		d_player.addPlayerCountry(l_country_1);
+
 		d_player.setReinforcements(5);
-		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);		
+		d_gameplay_controller.processGamePlayCommand("deploy Canada 5", d_player);
 		d_gameplay_controller.processGamePlayCommand("advance Canada United_States 5  ", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		System.out.println(l_msg);
 		assertTrue(l_msg.contains("advance order successful"));
 		d_gameplay_controller.processGamePlayCommand("advance", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		System.out.println(l_msg);		
+		System.out.println(l_msg);
 		assertTrue(l_msg.contains("Invalid advance command, no options specified"));
 	}
 
@@ -193,7 +190,7 @@ public class IssueOrderControllerTest {
 		d_player.setReinforcements(5);
 		d_gameplay_controller.processGamePlayCommand("deploy Canada 3", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		
+
 		assertTrue(l_msg.contains("Deploy order successful"));
 	}
 
@@ -278,7 +275,7 @@ public class IssueOrderControllerTest {
 	public void test_processGamePlayCommand_advance_invalid() throws Exception {
 		String l_msg;
 		d_player.addPlayerCountry(d_canada);
-		
+
 		d_gameplay_controller.processGamePlayCommand("advance", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("no options specified"));
@@ -303,4 +300,37 @@ public class IssueOrderControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid advance option"));
 	}
+
+	/**
+	 * test blockade valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_blockade_valid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_canada);
+		d_player.addCard(new Card(CardType.blockade));
+		d_gameplay_controller.processGamePlayCommand("blockade Canada", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("blockade order successful"));
+	}
+
+	/**
+	 * test blockade invalid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_blockade_invalid() throws Exception {
+		String l_msg;
+		d_gameplay_controller.processGamePlayCommand("blockade", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+
+		d_gameplay_controller.processGamePlayCommand("blockade USA Canada", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid blockade option '"));
+	}
+
 }

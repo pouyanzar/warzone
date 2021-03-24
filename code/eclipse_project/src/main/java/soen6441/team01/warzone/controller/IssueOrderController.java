@@ -84,23 +84,25 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		// todo: delete this code in final version
 		// !!! TEMP CODE !!!
 		for (IPlayerModel l_xplayer : l_players) {
-			Card l_card = new Card();
-			l_xplayer.addCard(l_card);
 			l_xplayer.addCard(new Card(CardType.bomb));
+			l_xplayer.addCard(new Card(CardType.blockade));
 		}
 		// !!! END TEMP CODE !!!
 
 		// clone the players and their countries to simplify keeping track of
 		// issuing orders before the execution phase and to isolate each players map
 		// from one another
-		for (IPlayerModel l_player : l_players) {
-			ModelFactory l_cloned_sf_model = new ModelFactory(d_model_factory);
-			IMapModel l_cloned_map = Map.deepCloneMap(d_model_factory.getMapModel(), l_cloned_sf_model);
-			IPlayerModel l_player_clone = l_player.deepClonePlayer(l_cloned_map);
-			l_player_clones.add(l_player_clone);
-			l_queue.add(l_player_clone);
+		for (int idx1 = 0; idx1 < l_players.size(); idx1++) {
+			ModelFactory l_cloned_sf_model = d_model_factory.getMapModel().deepCloneMap();
+			for (int idx2 = 0; idx2 < l_players.size(); idx2++) {
+				IPlayerModel l_player_clone = l_players.get(idx2).deepClonePlayer(l_cloned_sf_model);
+				if( idx2 == idx1 ) {
+					l_player_clones.add(l_player_clone);
+					l_queue.add(l_player_clone);
+				}
+			}
 		}
-
+		
 		// get player commands/orders
 		IPlayerModel l_player_clone = l_queue.peek();
 		d_next_phase = null;
@@ -115,8 +117,9 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		}
 
 		// copy orders from cloned players to real players for execution
-		for (int l_idx = 0; l_idx < l_players.size(); l_idx++) {
-			l_players.get(l_idx).copyOrders(l_player_clones.get(l_idx));
+		for (IPlayerModel l_player : l_players) {
+			IPlayerModel l_pclone = Player.FindPlayer(l_player.getName(), l_player_clones);
+			l_player.copyOrders(l_pclone);;
 		}
 
 		if (d_next_phase == null) {
@@ -188,7 +191,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_order = processBombCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "blockade":
-			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
+			l_order = processBlockadeCommand(l_cmd_params[1], l_player_clone);
 			break;
 		case "airlift":
 			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
@@ -211,6 +214,56 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		default:
 			d_msg_model.setMessage(MsgType.Error, "invalid command '" + p_cmd + "'");
 			break;
+		}
+		return l_order;
+	}
+
+	/**
+	 * process the blockade command (requires blockade card):<br>
+	 * blockade countryName
+	 * 
+	 * @param p_blockade_params the remaining parameters for the blockade command
+	 * @param p_player          the player for which this command is for
+	 */
+	private IOrder processBlockadeCommand(String p_blockade_params, IPlayerModel p_player) {
+		IOrder l_order = null;
+		String l_params[] = Utl.getFirstWord(p_blockade_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid blockade command, no options specified");
+			return null;
+		}
+
+		try {
+			// parse the countryName
+			String l_country_name = l_params[0];
+			if (!Utl.isValidMapName(l_country_name)) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_country_name + "'.");
+				return null;
+			}
+			if (!Utl.isEmpty(l_params[1])) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid blockade option '" + l_params[1] + "'");
+				return null;
+			}
+
+			ICountryModel l_country_to_blockade = Country.findCountry(l_country_name,
+					p_player.getPlayerModelFactory().getMapModel().getCountries());
+			if (l_country_to_blockade == null) {
+				d_msg_model.setMessage(MsgType.Error, "Cannot blockade '" + l_country_name + "' since it is not a country");
+				return null;
+			}
+
+			// create the bomb order
+			l_order = new OrderBlockade(p_player, l_country_to_blockade);
+
+			// execute the order on the cloned player to 1) see if it's valid 2) set the
+			// state of the cloned player for the next command
+			l_order.execute();
+			String l_msg = "blockade order successful";
+			d_msg_model.setMessage(MsgType.Informational, l_msg);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			return null;
 		}
 		return l_order;
 	}
@@ -243,8 +296,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			String l_country_name_from = l_params[0];
 			ICountryModel l_from_countries = Country.findCountry(l_country_name_from, l_player.getPlayerCountries());
 			if (l_from_countries == null) {
-				d_msg_model.setMessage(MsgType.Error,
-						l_country_name_from + " is not owned by " + l_player.getName());
+				d_msg_model.setMessage(MsgType.Error, l_country_name_from + " is not owned by " + l_player.getName());
 				return null;
 			}
 
@@ -286,7 +338,6 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			return null;
 		}
 		return l_order;
-
 	}
 
 	/**

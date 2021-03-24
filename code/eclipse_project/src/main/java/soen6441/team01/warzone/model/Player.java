@@ -19,7 +19,7 @@ public class Player implements IPlayerModel {
 	private String d_name;
 	private int d_reinforcements = 0;
 	private IGameplayOrderDatasource d_order_datasource;
-	private ArrayList<ICountryModel> d_player_countries;
+	private ArrayList<ICountryModel> d_countries;
 	private ArrayList<IOrder> d_order_list;
 	private ArrayList<Card> d_cards;
 	private ModelFactory d_factory_model = null;
@@ -53,7 +53,7 @@ public class Player implements IPlayerModel {
 		setName(p_name);
 		d_reinforcements = 0;
 		d_order_datasource = p_order_datasource;
-		d_player_countries = new ArrayList<ICountryModel>();
+		d_countries = new ArrayList<ICountryModel>();
 		d_order_list = new ArrayList<IOrder>();
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
@@ -95,29 +95,14 @@ public class Player implements IPlayerModel {
 		d_reinforcements = p_number_of_army;
 	}
 
-    /**
-     * Used mainly when cloning or working with cloned players
-     * @return the player's models which basically contain all the player map information
-     */
-    public ModelFactory getPlayerModelFactory() {
-    	return d_factory_model;
-    }
-
-	
 	/**
-	 * copies the orders from the specified player. used mainly when copying the
-	 * orders from cloned players used during the issue_orders() phase. Note: the
-	 * specified player must have the same name as this player.
+	 * Used mainly when cloning or working with cloned players
 	 * 
-	 * @param p_cloned_player the player to get the orders to copy from.
-	 * @throws Exception unexpected error
+	 * @return the player's models which basically contain all the player map
+	 *         information
 	 */
-	public void copyOrders(IPlayerModel p_cloned_player) throws Exception {
-		ArrayList<IOrder> l_clone_orders = p_cloned_player.getOrders();
-		for (IOrder l_clone_order : l_clone_orders) {
-			l_clone_order.cloneToPlayer(this);
-			d_order_list.add(l_clone_order);
-		}
+	public ModelFactory getPlayerModelFactory() {
+		return d_factory_model;
 	}
 
 	/**
@@ -126,7 +111,7 @@ public class Player implements IPlayerModel {
 	 * @return d_player_countries the list of countries player controls
 	 */
 	public ArrayList<ICountryModel> getPlayerCountries() {
-		return d_player_countries;
+		return d_countries;
 	}
 
 	/**
@@ -135,7 +120,7 @@ public class Player implements IPlayerModel {
 	 * @throws Exception when there is an exception
 	 */
 	public void addPlayerCountry(ICountryModel p_country) throws Exception {
-		d_player_countries.add(p_country);
+		d_countries.add(p_country);
 		p_country.setOwner(this);
 	}
 
@@ -145,7 +130,8 @@ public class Player implements IPlayerModel {
 	 * @throws Exception when there is an exception
 	 */
 	public void removePlayerCountry(ICountryModel p_country) throws Exception {
-		d_player_countries.remove(p_country);
+		ICountryModel l_country = Country.findCountry(p_country.getName(), d_countries);
+		d_countries.remove(l_country);
 		p_country.setOwner(null);
 	}
 
@@ -225,27 +211,6 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
-	 * Create a new player cloned from the existing player.
-	 * 
-	 * @param l_map the map to relate owned countries to
-	 * @return a deep copy of the current player.
-	 * @throws Exception unexpected errors
-	 */
-	public IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception {
-		Player l_player = new Player(d_name, d_order_datasource, d_factory_model);
-		l_player.setReinforcements(d_reinforcements);
-		for (ICountryModel l_src_country : d_player_countries) {
-			ICountryModel l_country = Country.findCountry(l_src_country.getId(), l_map.getCountries());
-			if (l_country == null) {
-				throw new Exception("Internal error cloning player");
-			}
-			l_player.addPlayerCountry(l_country);
-		}
-		l_player.setCards((ArrayList<Card>) d_cards.clone());
-		return l_player;
-	}
-
-	/**
 	 * Getter method to return current player's cards
 	 * 
 	 * @return d_cards the list of current player's card
@@ -278,8 +243,8 @@ public class Player implements IPlayerModel {
 	 * @param p_card the card type to remove
 	 */
 	public void removeCard(CardType p_card) {
-		for( int idx = 0 ; idx < d_cards.size(); idx++) {
-			if(d_cards.get(idx).getCardType() == p_card) {
+		for (int idx = 0; idx < d_cards.size(); idx++) {
+			if (d_cards.get(idx).getCardType() == p_card) {
 				d_cards.remove(idx);
 			}
 		}
@@ -293,11 +258,53 @@ public class Player implements IPlayerModel {
 	 * @return true if the card exist and false otherwise
 	 */
 	public boolean hasCard(CardType p_card) {
-		for(Card l_card : d_cards ) {
-			if( l_card.getCardType() == p_card) {
+		for (Card l_card : d_cards) {
+			if (l_card.getCardType() == p_card) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * copies the orders from the specified player. used mainly when copying the
+	 * orders from cloned players used during the issue_orders() phase. Note: the
+	 * specified player must have the same name as this player.
+	 * 
+	 * @param p_cloned_player the player to get the orders to copy from.
+	 * @throws Exception unexpected error
+	 */
+	public void copyOrders(IPlayerModel p_cloned_player) throws Exception {
+		ArrayList<IOrder> l_clone_orders = p_cloned_player.getOrders();
+		for (IOrder l_clone_order : l_clone_orders) {
+			l_clone_order.cloneToPlayer(this);
+			d_order_list.add(l_clone_order);
+		}
+	}
+
+	/**
+	 * Create a new player cloned from the existing player.
+	 * 
+	 * @param p_factory_model the new models to use
+	 * @return a deep copy of the current player.
+	 * @throws Exception unexpected errors
+	 */
+	public IPlayerModel deepClonePlayer(ModelFactory p_factory_model) throws Exception {
+		IMapModel l_map = p_factory_model.getMapModel();
+		Player l_player = new Player(d_name, d_order_datasource, p_factory_model);
+
+		// map out the countries
+		for (ICountryModel l_src_country : d_countries) {
+			ICountryModel l_country = Country.findCountry(l_src_country.getId(), l_map.getCountries());
+			if (l_country == null) {
+				throw new Exception("Internal error cloning player");
+			}
+			l_player.addPlayerCountry(l_country);
+		}
+
+		l_player.setReinforcements(d_reinforcements);
+		l_player.setCards((ArrayList<Card>) d_cards.clone());
+
+		return l_player;
 	}
 }

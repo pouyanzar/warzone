@@ -247,7 +247,9 @@ public class Country implements ICountryModel {
 	public CountrySummary getSummary() {
 		CountrySummary l_sum = new CountrySummary();
 		l_sum.d_country_name = getName();
-		if (d_owner != null) {
+		if (d_owner == null) {
+			l_sum.d_country_owner_name = "---";
+		} else {
 			l_sum.d_country_owner_name = d_owner.getName();
 		}
 		l_sum.d_armies = getArmies();
@@ -258,7 +260,7 @@ public class Country implements ICountryModel {
 
 		// do all the countries
 		for (ICountryModel l_xcountry : l_continent_countries) {
-			if (l_xcountry.getOwner() != null && l_xcountry.getOwner().getName().equals(getOwner().getName())) {
+			if (l_xcountry.getOwner() != null && getOwner() != null && l_xcountry.getOwner().getName().equals(getOwner().getName())) {
 				l_owns_ctr++;
 			}
 		}

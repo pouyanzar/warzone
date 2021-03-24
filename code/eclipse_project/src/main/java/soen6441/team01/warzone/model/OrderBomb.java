@@ -1,7 +1,5 @@
 package soen6441.team01.warzone.model;
 
-import java.util.ArrayList;
-
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
 
@@ -56,7 +54,7 @@ public class OrderBomb implements IOrder {
 
 		// cannot bomb your own country
 		IPlayerModel l_owner = d_country_to_bomb.getOwner();
-		if( l_owner != null ) {
+		if (l_owner != null) {
 			if (l_owner.getName().equals(d_player.getName())) {
 				throw new Exception("Cannot bomb your own country " + d_country_to_bomb.getName());
 			}
@@ -86,10 +84,11 @@ public class OrderBomb implements IOrder {
 	 * @throws Exception unexpected error
 	 */
 	public void cloneToPlayer(IPlayerModel p_player) throws Exception {
-		ModelFactory l_model_factory = d_player.getPlayerModelFactory();
+		ModelFactory l_model_factory = p_player.getPlayerModelFactory();
 		// find and set the country to bomb from the new players map
-		d_country_to_bomb = Country.findCountry(d_country_to_bomb.getName(), l_model_factory.getMapModel().getCountries());
-		if( d_country_to_bomb == null ) {
+		d_country_to_bomb = Country.findCountry(d_country_to_bomb.getName(),
+				l_model_factory.getMapModel().getCountries());
+		if (d_country_to_bomb == null) {
 			throw new Exception("Internal error, cannot find country to bomb in OrderBomb");
 		}
 		d_player = p_player;

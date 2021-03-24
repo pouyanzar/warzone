@@ -226,7 +226,12 @@ public class GamePlay implements IGamePlayModel {
 			for (IPlayerModel l_player : d_players) {
 				IOrder l_order = l_player.next_order();
 				if (l_order != null) {
-					String l_msg = l_order.execute();
+					String l_msg = "";
+					try {
+						l_msg = l_order.execute();
+					} catch (Exception ex) {
+						l_msg = ex.getMessage();
+					}
 					getMsg().setMessage(MsgType.None, l_msg);
 					l_orders_executed++;
 				}

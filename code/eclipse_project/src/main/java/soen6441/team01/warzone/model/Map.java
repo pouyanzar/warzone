@@ -12,6 +12,7 @@ import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 
 /**
@@ -456,7 +457,7 @@ public class Map implements IMapModel {
 					+ ", exception: " + ex.getMessage();
 			throw new Exception(l_msg);
 		}
-		
+
 		// ask the continent objects to build their list of countries
 		refreshCountriesOfAllContinents(l_map_model);
 
@@ -485,8 +486,7 @@ public class Map implements IMapModel {
 	 * @return instance of new Map model
 	 * @throws Exception error parsing the contents of the map file
 	 */
-	public static IMapModel loadMapFromFile(String p_map_filename, ModelFactory p_factory_model)
-			throws Exception {
+	public static IMapModel loadMapFromFile(String p_map_filename, ModelFactory p_factory_model) throws Exception {
 		List<String> l_records = null;
 		IMapModel l_map_model = null;
 		try {
@@ -645,50 +645,6 @@ public class Map implements IMapModel {
 	}
 
 	/**
-	 * Create a new isolated map that contains a copy of all counties and
-	 * continents.
-	 * 
-	 * @param p_src_map              the source map to copy from
-	 * @param p_cloned_factory_model the factory model to base the copy on (modifies
-	 *                               respective references)
-	 * @return newly created isolated copy of the map
-	 * @throws Exception unexpected error
-	 */
-	public static IMapModel deepCloneMap(IMapModel p_src_map, ModelFactory p_cloned_factory_model)
-			throws Exception {
-		Map l_map = new Map(p_cloned_factory_model);
-		p_cloned_factory_model.setMapModel(l_map);
-		// clone continents
-		for (IContinentModel l_continent : p_src_map.getContinents()) {
-			l_map.addContinent(new Continent(l_continent));
-		}
-		// clone countries (note: neighbors not set yet)
-		for (ICountryModel l_country : p_src_map.getCountries()) {
-			ICountryModel l_country_clone = new Country(l_country.getId(), l_country.getName(),
-					l_country.getContinent(), 0, 0, p_cloned_factory_model);
-			l_country_clone.setArmies(l_country.getArmies());
-			l_country_clone.setOwner(l_country.getOwner());
-			l_map.addCountry(l_country_clone);
-		}
-		// set countries neighbors
-		for (ICountryModel l_src_country : p_src_map.getCountries()) {
-			ICountryModel l_country = Country.findCountry(l_src_country.getId(), l_map.getCountries());
-			if (l_country == null) {
-				throw new Exception("Internal error cloning map countries");
-			}
-			for (ICountryModel l_src_neighbors : l_src_country.getNeighbors()) {
-				ICountryModel l_neighbor = Country.findCountry(l_src_neighbors.getId(), l_map.getCountries());
-				if (l_neighbor == null) {
-					throw new Exception("Internal error cloning country neighbors");
-				}
-				l_country.addNeighbor(l_neighbor);
-			}
-		}
-
-		return l_map;
-	}
-
-	/**
 	 * Convert the current map into the "domination" game map format. Note that this
 	 * implementation of Warzone does not process the continent color which is part
 	 * of the domination map file format.
@@ -737,8 +693,9 @@ public class Map implements IMapModel {
 	public void saveMap(String p_filename) throws Exception {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(p_filename));
 		ArrayList<String> l_map_data = getMapAsDominationMapFormat();
-		for (String l_map_rec : l_map_data)
+		for (String l_map_rec : l_map_data) {
 			pw.println(l_map_rec);
+		}
 		pw.close();
 		if (!validatemap()) {
 			d_factory_model.getUserMessageModel().setMessage(MsgType.Warning,
@@ -746,4 +703,23 @@ public class Map implements IMapModel {
 		}
 	}
 
+	/**
+	 * Create a new isolated map that contains a copy of all counties and
+	 * continents.
+	 * 
+	 * @return newly created isolated copy of the map
+	 * @throws Exception unexpected error
+	 */
+	public ModelFactory deepCloneMap() throws Exception {
+		ModelFactory l_new_factory_model = new ModelFactory(d_factory_model);
+		ArrayList<String> l_map_data = getMapAsDominationMapFormat();
+		IMapModel l_map_model = loadMap(l_map_data, l_new_factory_model);
+		l_new_factory_model.setMapModel(l_map_model);
+		for( ICountryModel l_country_src : d_countries )
+		{
+			ICountryModel l_country_dest = Country.findCountry(l_country_src.getName(), l_map_model.getCountries());
+			l_country_dest.setArmies(l_country_src.getArmies());
+		}
+		return l_new_factory_model;
+	}
 }

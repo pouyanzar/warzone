@@ -1,14 +1,14 @@
 package soen6441.team01.warzone.model;
 
+import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
 
 /**
  * Supports the definition and implementation of the 'blockade' order.
- * @author pouyan
  *
  */
-public class OrderBlockade {
+public class OrderBlockade implements IOrder {
 
 	IPlayerModel d_player = null;
 	ICountryModel d_country = null;
@@ -35,7 +35,10 @@ public class OrderBlockade {
 	 */
 	public String execute() throws Exception {
 		isValid();
-		return blockade();
+		String l_result = doBlockade();
+		d_player.removeCard(CardType.blockade);
+		return l_result;
+
 	}
 
 	/**
@@ -44,21 +47,47 @@ public class OrderBlockade {
 	 * @throws Exception when any of the conditions to use bomb card does not meet
 	 */
 	private void isValid() throws Exception {
-		// validate that the player has the bomb card
-		boolean l_valid;
-		l_valid = d_player.hasCard(CardType.blockade);
+		if (d_player == null) {
+			throw new Exception("Must supply a player in 'blockade' order.");
+		}
+		if (d_country == null) {
+			throw new Exception("Country cannot be null in 'blockade' order.");
+		}
+
+		// validate that the player has the blockade card
+		boolean l_valid = d_player.hasCard(CardType.blockade);
 		if (!l_valid) {
-			throw new Exception(d_player + "does not have blockade card!");
+			throw new Exception(d_player.getName() + " does not have a blockade card!");
+		}
+
+		// can only blockade your own country
+		String l_msg = "Cannot blockade " + d_country.getName() + " since player " + d_player.getName()
+				+ " does not own it";
+		IPlayerModel l_owner = d_country.getOwner();
+		if (l_owner == null) {
+			throw new Exception(l_msg);
+		}
+		if (!l_owner.getName().equals(d_player.getName())) {
+			throw new Exception(l_msg);
 		}
 	}
 
 	/**
 	 * Change the current player to the specified player
 	 * 
-	 * @param p_player the new player to assign this order to
+	 * @param p_other_player the new player to assign this order to
+	 * @throws Exception unexpected error
 	 */
-	public void setPlayer(IPlayerModel p_player) {
-		d_player = p_player;
+	public void cloneToPlayer(IPlayerModel p_other_player) throws Exception {
+		ModelFactory l_model_factory = p_other_player.getPlayerModelFactory();
+		// find and set the country to blockade from the new players map
+		ICountryModel l_country = Country.findCountry(d_country.getName(),
+				l_model_factory.getMapModel().getCountries());
+		if (l_country == null) {
+			throw new Exception("Internal error, cannot find country to blockade in OrderBlockade");
+		}
+		d_country = l_country;
+		d_player = p_other_player;
 	}
 
 	/**
@@ -71,16 +100,23 @@ public class OrderBlockade {
 		String l_str = "blockade " + d_country.getName();
 		return l_str;
 	}
-	
+
 	/**
 	 * blockade the target country of player's countries
 	 * 
-	 * @return a message to show blockade is done.
+	 * @return message describing what was done
+	 * @throws Exception unexpected error
 	 */
-	public String blockade() {
-		d_country.setArmies(d_country.getArmies() * 3);
-		d_player.getPlayerCountries().remove(d_country);
-		String l_msg = "Blockade is done";
+	public String doBlockade() throws Exception {
+		int l_armies = d_country.getArmies();
+		int l_new_armies = l_armies * 3;
+		if (l_new_armies < 0) {
+			l_new_armies = 0;
+		}
+		d_country.setArmies(l_new_armies);
+		d_player.removePlayerCountry(d_country);
+		String l_msg = d_country.getName() + " has been blockaded and now has " + l_new_armies
+				+ Utl.plural(l_new_armies, " armry", " armies") + " and has become neutral";
 		return l_msg;
 	}
 }

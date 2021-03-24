@@ -3,6 +3,7 @@ package soen6441.team01.warzone.model.contracts;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.Continent;
+import soen6441.team01.warzone.model.ModelFactory;
 
 /**
  * Defines the Map model interface used to define the methods available to
@@ -43,4 +44,6 @@ public interface IMapModel {
 	boolean validatemap() throws Exception;
 
 	void saveMap(String p_filename) throws Exception;
+	
+	ModelFactory deepCloneMap() throws Exception;
 }

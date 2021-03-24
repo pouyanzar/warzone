@@ -105,16 +105,32 @@ public class OrderAdvance implements IOrder {
 		String l_msg = "";
 
 		IPlayerModel l_dest_owner = d_country_to.getOwner();
-		if (l_dest_owner == null) {
-			// no one owns the destination country, so simply move on in
+//		if (l_dest_owner == null) {
+//			// no one owns the destination country, so simply move on in
+//			l_msg = doMoveArmies();
+//		} else {
+//			if (l_dest_owner.getName().equals(d_player.getName())) {
+//				// we own the destination country, so simply move armies
+//				l_msg = doMoveArmies();
+//			} else {
+//				// the target country is owned by another player - attack!
+//				l_msg = doAttack();
+//			}
+//		}
+		if (d_country_to.getArmies() == 0) {
 			l_msg = doMoveArmies();
 		} else {
-			if (l_dest_owner.getName().equals(d_player.getName())) {
-				// we own the destination country, so simply move armies
-				l_msg = doMoveArmies();
-			} else {
-				// the target country is owned by another player - attack!
+			if (l_dest_owner == null) {
+				// no one owns the destination country
 				l_msg = doAttack();
+			} else {
+				if (l_dest_owner.getName().equals(d_player.getName())) {
+					// we own the destination country, so simply move armies
+					l_msg = doMoveArmies();
+				} else {
+					// the target country is owned by another player - attack!
+					l_msg = doAttack();
+				}
 			}
 		}
 
@@ -138,7 +154,11 @@ public class OrderAdvance implements IOrder {
 		l_armies = d_country_to.getArmies();
 		d_country_to.setArmies(l_armies + d_num_armies);
 
-		d_country_to.setOwner(d_player);
+		IPlayerModel l_old_player = d_country_to.getOwner();
+		if (l_old_player != null) {
+			l_old_player.removePlayerCountry(d_country_to);
+		}
+		d_player.addPlayerCountry(d_country_to);
 
 		return l_msg;
 	}
@@ -194,14 +214,20 @@ public class OrderAdvance implements IOrder {
 		if (l_army_from > 0) {
 			// won the attack!
 			d_country_from.removeArmies(d_num_armies);
+			IPlayerModel l_old_player = d_country_to.getOwner();
+			if (l_old_player != null) {
+				l_old_player.removePlayerCountry(d_country_to);
+			}
+			d_player.addPlayerCountry(d_country_to);
 			d_country_to.setArmies(l_army_from);
-			d_country_to.setOwner(d_player);
 			if (l_army_from_lost == 0) {
 				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName();
 			} else {
 				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " but lost "
 						+ l_army_from_lost + Utl.plural(l_army_from_lost, " army", " armies");
 			}
+			// give the user a card!
+			d_player.addCard(new Card());
 		}
 
 		return l_msg;
@@ -214,7 +240,7 @@ public class OrderAdvance implements IOrder {
 	 * @throws Exception unexpected error
 	 */
 	public void cloneToPlayer(IPlayerModel p_player) throws Exception {
-		ModelFactory l_model_factory = d_player.getPlayerModelFactory();
+		ModelFactory l_model_factory = p_player.getPlayerModelFactory();
 		// find and set the countries from the new players map
 		d_country_from = Country.findCountry(d_country_from.getName(), l_model_factory.getMapModel().getCountries());
 		if (d_country_from == null) {

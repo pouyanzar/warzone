@@ -34,7 +34,7 @@ public interface IPlayerModel {
 
 	IOrder next_order();
 
-	IPlayerModel deepClonePlayer(IMapModel l_map) throws Exception;
+	IPlayerModel deepClonePlayer(ModelFactory p_factory_model) throws Exception;
 
 	void copyOrders(IPlayerModel p_cloned_player) throws Exception;
 
