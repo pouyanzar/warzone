@@ -106,7 +106,23 @@ public class Country implements ICountryModel {
 	 * @param p_num_armies the number of armies stationed at country
 	 */
 	public void setArmies(int p_num_armies) {
-		d_armies = p_num_armies;
+		if( p_num_armies < 0 ) {
+			d_armies = 0;
+		} else {
+			d_armies = p_num_armies;			
+		}
+	}
+	
+	/**
+	 * add the number of armies to this country
+	 * 
+	 * @param p_num_armies the number of armies to add
+	 */
+	public void addArmies(int p_num_armies) {
+		if( p_num_armies < 0 ) {
+			return;
+		}
+		d_armies += p_num_armies;			
 	}
 
 	/**
@@ -248,7 +264,7 @@ public class Country implements ICountryModel {
 		CountrySummary l_sum = new CountrySummary();
 		l_sum.d_country_name = getName();
 		if (d_owner == null) {
-			l_sum.d_country_owner_name = "---";
+			l_sum.d_country_owner_name = "*";
 		} else {
 			l_sum.d_country_owner_name = d_owner.getName();
 		}

@@ -105,18 +105,6 @@ public class OrderAdvance implements IOrder {
 		String l_msg = "";
 
 		IPlayerModel l_dest_owner = d_country_to.getOwner();
-//		if (l_dest_owner == null) {
-//			// no one owns the destination country, so simply move on in
-//			l_msg = doMoveArmies();
-//		} else {
-//			if (l_dest_owner.getName().equals(d_player.getName())) {
-//				// we own the destination country, so simply move armies
-//				l_msg = doMoveArmies();
-//			} else {
-//				// the target country is owned by another player - attack!
-//				l_msg = doAttack();
-//			}
-//		}
 		if (d_country_to.getArmies() == 0) {
 			l_msg = doMoveArmies();
 		} else {
@@ -220,14 +208,17 @@ public class OrderAdvance implements IOrder {
 			}
 			d_player.addPlayerCountry(d_country_to);
 			d_country_to.setArmies(l_army_from);
+
+			// give the user a card!
+			Card l_card = new Card();
+			d_player.addCard(l_card);
+			
 			if (l_army_from_lost == 0) {
-				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName();
+				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " [+" + l_card.getCardName() + "]";
 			} else {
 				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " but lost "
-						+ l_army_from_lost + Utl.plural(l_army_from_lost, " army", " armies");
+						+ l_army_from_lost + Utl.plural(l_army_from_lost, " army", " armies") + " [+" + l_card.getCardName() + "]";
 			}
-			// give the user a card!
-			d_player.addCard(new Card());
 		}
 
 		return l_msg;

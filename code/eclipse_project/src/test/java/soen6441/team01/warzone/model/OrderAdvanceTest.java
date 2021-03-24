@@ -175,7 +175,7 @@ public class OrderAdvanceTest {
 		l_advance = new OrderAdvance(d_player_1, d_canada, d_usa, 1);
 		l_advance.setOdds(100, -1);
 		l_msg = l_advance.execute();
-		assertTrue(l_msg.equals("Player1 won the attack on US"));
+		assertTrue(l_msg.contains("Player1 won the attack on US ["));
 		assertTrue(d_canada.getOwner().getName().equals("Player1"));
 		assertTrue(d_canada.getArmies() == 2);
 		assertTrue(d_usa.getOwner().getName().equals("Player1"));

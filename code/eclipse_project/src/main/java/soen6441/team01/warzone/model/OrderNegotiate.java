@@ -4,10 +4,10 @@ import soen6441.team01.warzone.model.contracts.*;
 
 
 /**
- * Supports the definition and implementation of the 'diplomacy' order.
+ * Supports the definition and implementation of the 'negotiate' order.
  *
  */
-public class OrderDiplomacy implements IOrder {
+public class OrderNegotiate implements IOrder {
 
 	private String d_player_target_name;
 	private int d_reinforcements;
@@ -19,7 +19,7 @@ public class OrderDiplomacy implements IOrder {
 	 * @param p_player_target_name the country that will receive the reinforcements
 	 * @param p_player             the player model needed to process this order
 	 */
-	public OrderDiplomacy(String p_player_target_name, IPlayerModel p_player) {
+	public OrderNegotiate(String p_player_target_name, IPlayerModel p_player) {
 		d_player_target_name = p_player_target_name;
 		d_player = p_player;
 	}

@@ -36,7 +36,7 @@ public class IssueOrderControllerTest {
 	public ControllerFactory d_controller_factory = null;
 	public IContinentModel d_continent = null;
 	public ICountryModel d_country = null;
-	public ICountryModel d_us = null;
+	public ICountryModel d_usa = null;
 	public ICountryModel d_canada = null;
 	public Player d_player = null;
 	public IMapModel d_map = null;
@@ -57,10 +57,10 @@ public class IssueOrderControllerTest {
 		d_msg = (LogEntryBuffer) d_model_factory.getUserMessageModel();
 		d_continent = new Continent(1, "North_America", 3);
 		d_country = new Country(1, "Canada", d_continent, 0, 0, d_model_factory);
-		d_us = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
+		d_usa = new Country(1, "USA", d_continent, 0, 0, d_model_factory);
 		d_canada = new Country(2, "Canada", d_continent, 0, 0, d_model_factory);
 		d_map.addContinent(d_continent);
-		d_map.addCountry(d_us);
+		d_map.addCountry(d_usa);
 		d_map.addCountry(d_canada);
 		d_player = new Player("John", d_model_factory);
 	}
@@ -226,7 +226,7 @@ public class IssueOrderControllerTest {
 	public void test_processGamePlayCommand_bomb_valid() throws Exception {
 		String l_msg;
 		d_player.addPlayerCountry(d_canada);
-		d_canada.addNeighbor(d_us);
+		d_canada.addNeighbor(d_usa);
 		d_player.addCard(new Card(CardType.bomb));
 		d_gameplay_controller.processGamePlayCommand("bomb USA", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -260,7 +260,7 @@ public class IssueOrderControllerTest {
 		String l_msg;
 		d_player.addPlayerCountry(d_canada);
 		d_canada.setArmies(2);
-		d_canada.addNeighbor(d_us);
+		d_canada.addNeighbor(d_usa);
 		d_gameplay_controller.processGamePlayCommand("advance Canada USA 1", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("advance order successful"));
@@ -290,7 +290,7 @@ public class IssueOrderControllerTest {
 		assertTrue(l_msg.contains("is not a neighbor of"));
 
 		d_canada.setArmies(2);
-		d_canada.addNeighbor(d_us);
+		d_canada.addNeighbor(d_usa);
 		d_player.addPlayerCountry(d_canada);
 		d_gameplay_controller.processGamePlayCommand("advance Canada USA -1", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -333,4 +333,44 @@ public class IssueOrderControllerTest {
 		assertTrue(l_msg.contains("Invalid blockade option '"));
 	}
 
+	/**
+	 * test airlift valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_airlift_valid() throws Exception {
+		String l_msg;
+		d_player.addPlayerCountry(d_canada);
+		d_canada.setArmies(3);
+		d_usa.setArmies(1);
+		d_player.addPlayerCountry(d_usa);
+		d_player.addCard(new Card(CardType.airlift));
+		d_gameplay_controller.processGamePlayCommand("airlift Canada USA 3", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("airlift order successful"));
+		assertTrue(d_canada.getArmies() == 0);
+		assertTrue(d_usa.getArmies() == 4);
+	}
+
+	/**
+	 * test airlift invalid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_airlift_invalid() throws Exception {
+		String l_msg;
+		d_gameplay_controller.processGamePlayCommand("airlift", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+
+		d_gameplay_controller.processGamePlayCommand("airlift USA Canada -1", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid number of armies '-1'"));
+
+		d_gameplay_controller.processGamePlayCommand("airlift USA Canada 3 go", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid airlift option '"));
+	}
 }

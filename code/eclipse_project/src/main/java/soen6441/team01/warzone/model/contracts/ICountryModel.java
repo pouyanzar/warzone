@@ -45,4 +45,6 @@ public interface ICountryModel {
 	String toDominationMapString();
 	
 	String toDominationMapBorderString();
+	
+	void addArmies(int p_num_armies);
 }
