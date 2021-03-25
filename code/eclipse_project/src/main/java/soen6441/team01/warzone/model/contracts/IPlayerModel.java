@@ -51,4 +51,10 @@ public interface IPlayerModel {
 	void removeCard(CardType p_card);
 	
 	ModelFactory getPlayerModelFactory();
+	
+	void addDiplomacy(IPlayerModel p_friendly_player);
+	
+	void clearAllDiplomacy();
+	
+	boolean isDiplomatic(IPlayerModel p_other_player);
 }

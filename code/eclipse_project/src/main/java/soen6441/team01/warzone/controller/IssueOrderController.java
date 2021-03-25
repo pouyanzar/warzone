@@ -79,23 +79,24 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		ArrayList<IPlayerModel> l_players = d_gameplay_model.getPlayers();
 		Queue<IPlayerModel> l_queue = new LinkedList<IPlayerModel>();
 
-		// !!! START TEMP CODE !!!
-		// todo: used for testing cards - gives each player a free card after every turn
-		// todo: delete this code in final version
-		// !!! TEMP CODE !!!
+		// initialize per round state
 		for (IPlayerModel l_xplayer : l_players) {
-			l_xplayer.addCard(new Card(CardType.bomb));
-			l_xplayer.addCard(new Card(CardType.blockade));
+			l_xplayer.addCard(new Card(CardType.bomb));			// test code
+			l_xplayer.addCard(new Card(CardType.blockade));		// test code
+			l_xplayer.addCard(new Card(CardType.airlift));		// test code
+			l_xplayer.addCard(new Card(CardType.diplomacy));	// test code 
+			l_xplayer.clearAllDiplomacy();
 		}
-		// !!! END TEMP CODE !!!
 
-		// clone the players and their countries to simplify keeping track of
+		// clone the map, players and their countries to simplify keeping track of
 		// issuing orders before the execution phase and to isolate each players map
-		// from one another
+		// from one another.
 		for (int idx1 = 0; idx1 < l_players.size(); idx1++) {
 			ModelFactory l_cloned_sf_model = d_model_factory.getMapModel().deepCloneMap();
+			IGamePlayModel l_gpm = l_cloned_sf_model.getNewGamePlayModel();
 			for (int idx2 = 0; idx2 < l_players.size(); idx2++) {
 				IPlayerModel l_player_clone = l_players.get(idx2).deepClonePlayer(l_cloned_sf_model);
+				l_gpm.addPlayer(l_player_clone);
 				if (idx2 == idx1) {
 					l_player_clones.add(l_player_clone);
 					l_queue.add(l_player_clone);
@@ -116,11 +117,10 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_player_clone = l_queue.peek();
 		}
 
-		// copy orders from cloned players to real players for execution
+		// copy orders + necessary state information from cloned players to real players 
 		for (IPlayerModel l_player : l_players) {
 			IPlayerModel l_pclone = Player.FindPlayer(l_player.getName(), l_player_clones);
 			l_player.copyOrders(l_pclone);
-			;
 		}
 
 		if (d_next_phase == null) {
@@ -180,6 +180,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 
 		switch (l_cmd_params[0]) {
 		case "showmap":
+		case "sm":
 			showMap(p_player_clone);
 			break;
 		case "deploy":
@@ -198,7 +199,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_order = processAirliftCommand(l_cmd_params[1], p_player_clone);
 			break;
 		case "negotiate":
-			d_msg_model.setMessage(MsgType.Warning, "command '" + p_cmd + "' coming soon.");
+			l_order = processNegotiateCommand(l_cmd_params[1], p_player_clone);
 			break;
 		case "showcards":
 			showCards(p_player_clone);
@@ -215,6 +216,59 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 		default:
 			d_msg_model.setMessage(MsgType.Error, "invalid command '" + p_cmd + "'");
 			break;
+		}
+		return l_order;
+	}
+
+	/**
+	 * process the negotiate command.
+	 * <ul>
+	 * <li>negotiate playerName (requires the diplomacy card)</li>
+	 * </ul>
+	 * 
+	 * @param p_negotiate_params the airlift parameters (just the parameters without
+	 *                           the airlift command itself)
+	 * @param p_player           the player object who wishes to advance
+	 * @return the player's order or null if there was a problem creating the order
+	 * @throws Exception unexpected error encountered
+	 */
+	private IOrder processNegotiateCommand(String p_negotiate_params, IPlayerModel p_player) throws Exception {
+
+		IOrder l_order = null;
+		String l_params[] = Utl.getFirstWord(p_negotiate_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid negotiate command, no options specified");
+			return null;
+		}
+		try {
+			// parse the target player
+			String l_target_player = l_params[0];
+
+			IGamePlayModel l_gply = p_player.getPlayerModelFactory().getGamePlayModel();
+			IPlayerModel l_tplayer = Player.FindPlayer(l_target_player, l_gply.getPlayers());
+			if (l_tplayer == null) {
+				d_msg_model.setMessage(MsgType.Error, "Player '" + l_target_player + "' does not exist");
+				return null;
+			}
+			if (!Utl.isEmpty(l_params[1])) {
+				d_msg_model.setMessage(MsgType.Error, "Invalid negotiate option '" + l_params[1] + "'");
+				return null;
+			}
+			
+			// create the diplomacy order object. note that the order will throw an exception
+			// if it's not valid
+			l_order = new OrderDiplomacy(p_player, l_tplayer);
+
+			// execute the order on the cloned player to 1) see if it's valid 2) set the
+			// state of the cloned player for the next command
+			l_order.execute();
+
+			String l_msg = "negotiate order successful";
+			d_msg_model.setMessage(MsgType.Informational, l_msg);
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			return null;
 		}
 		return l_order;
 	}

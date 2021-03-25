@@ -105,6 +105,17 @@ public class OrderAdvance implements IOrder {
 		String l_msg = "";
 
 		IPlayerModel l_dest_owner = d_country_to.getOwner();
+		
+		// do we have diplomatic relations?
+		if (l_dest_owner != null) {
+			if(d_player.isDiplomatic(l_dest_owner)) {
+				l_msg = "no advancement on " + d_country_to.getName() + " permitted since " + d_player.getName() 
+				+ " and " + l_dest_owner.getName() + " have diplomatic relations.";
+				return l_msg;
+			}
+		}
+		
+		// decide if it's an attack or simply a move
 		if (d_country_to.getArmies() == 0) {
 			l_msg = doMoveArmies();
 		} else {
@@ -212,12 +223,14 @@ public class OrderAdvance implements IOrder {
 			// give the user a card!
 			Card l_card = new Card();
 			d_player.addCard(l_card);
-			
+
 			if (l_army_from_lost == 0) {
-				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " [+" + l_card.getCardName() + "]";
+				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " [+"
+						+ l_card.getCardName() + "]";
 			} else {
 				l_msg = d_player.getName() + " won the attack on " + d_country_to.getName() + " but lost "
-						+ l_army_from_lost + Utl.plural(l_army_from_lost, " army", " armies") + " [+" + l_card.getCardName() + "]";
+						+ l_army_from_lost + Utl.plural(l_army_from_lost, " army", " armies") + " [+"
+						+ l_card.getCardName() + "]";
 			}
 		}
 

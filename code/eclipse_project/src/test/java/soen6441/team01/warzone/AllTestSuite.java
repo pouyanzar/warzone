@@ -19,6 +19,7 @@ import soen6441.team01.warzone.model.OrderAirliftTest;
 import soen6441.team01.warzone.model.OrderBlockadeTest;
 import soen6441.team01.warzone.model.OrderBombTest;
 import soen6441.team01.warzone.model.OrderDeployTest;
+import soen6441.team01.warzone.model.OrderDiplomacyTest;
 import soen6441.team01.warzone.model.PlayerTest;
 import soen6441.team01.warzone.view.GamePlayConsoleTest;
 import soen6441.team01.warzone.view.MapEditorConsoleTest;
@@ -28,7 +29,8 @@ import soen6441.team01.warzone.view.MapEditorConsoleTest;
 @SuiteClasses({ ObserableTest.class, UtlTest.class, GameStartupControllerTest.class, IssueOrderControllerTest.class,
 		MapEditorControllerTest.class, CardTest.class, ContinentTest.class, CountryTest.class, GamePlayTest.class,
 		MapTest.class, OrderAdvanceTest.class, OrderBombTest.class, OrderDeployTest.class, PlayerTest.class,
-		MapEditorConsoleTest.class, OrderBlockadeTest.class, GamePlayConsoleTest.class, OrderAirliftTest.class })
+		MapEditorConsoleTest.class, OrderBlockadeTest.class, GamePlayConsoleTest.class, OrderAirliftTest.class, 
+		OrderDiplomacyTest.class })
 /**
  * Test Suite for all the classes
  * 

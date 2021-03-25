@@ -52,9 +52,9 @@ public class OrderAirlift implements IOrder {
 	}
 
 	/**
-	 * Checks if the condition for using bomb card does meet
+	 * Checks if the condition for using airlift card does meet
 	 * 
-	 * @throws Exception when any of the conditions to use bomb card does not meet
+	 * @throws Exception when any of the conditions to use airlift card does not meet
 	 */
 	private void isValid() throws Exception {
 		ICountryModel l_country;

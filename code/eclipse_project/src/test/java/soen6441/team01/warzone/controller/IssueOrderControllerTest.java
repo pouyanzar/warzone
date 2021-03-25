@@ -373,4 +373,60 @@ public class IssueOrderControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid airlift option '"));
 	}
+
+	/**
+	 * test diplomacy valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_diplomacy_valid() throws Exception {
+		String l_msg;
+		Player l_player1 = new Player("Player1", d_model_factory);
+		Player l_player2 = new Player("Player2", d_model_factory);
+		d_gameplay.addPlayer(l_player1);
+		d_gameplay.addPlayer(l_player2);
+		l_player1.addPlayerCountry(d_canada);
+		l_player2.addPlayerCountry(d_usa);
+		d_canada.setArmies(3);
+		d_usa.setArmies(1);
+		l_player1.addCard(new Card(CardType.diplomacy));
+
+		d_gameplay_controller.processGamePlayCommand("negotiate Player2", l_player1);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("negotiate order successful"));
+		assertTrue(l_player1.isDiplomatic(l_player2));
+		assertTrue(l_player2.isDiplomatic(l_player1));
+	}
+
+	/**
+	 * test diplomacy invalid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGamePlayCommand_diplomacy_invalid() throws Exception {
+		String l_msg;
+		Player l_player1 = new Player("Player1", d_model_factory);
+		Player l_player2 = new Player("Player2", d_model_factory);
+		d_gameplay.addPlayer(l_player1);
+		d_gameplay.addPlayer(l_player2);
+		l_player1.addPlayerCountry(d_canada);
+		l_player2.addPlayerCountry(d_usa);
+		d_canada.setArmies(3);
+		d_usa.setArmies(1);
+		l_player1.addCard(new Card(CardType.diplomacy));
+		
+		d_gameplay_controller.processGamePlayCommand("negotiate", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("no options specified"));
+
+		d_gameplay_controller.processGamePlayCommand("negotiate Player3", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("does not exist"));
+
+		d_gameplay_controller.processGamePlayCommand("negotiate Player2 go", d_player);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid negotiate option '"));
+	}
 }

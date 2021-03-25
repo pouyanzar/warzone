@@ -24,6 +24,7 @@ public class Player implements IPlayerModel {
 	private ArrayList<Card> d_cards;
 	private ModelFactory d_factory_model = null;
 	private boolean d_done_turn = false;
+	private ArrayList<IPlayerModel> d_diplomacy;
 
 	/**
 	 * Constructor for class Player. Don't use issue_order if using this constructor
@@ -57,6 +58,7 @@ public class Player implements IPlayerModel {
 		d_order_list = new ArrayList<IOrder>();
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
+		d_diplomacy = new ArrayList<IPlayerModel>();
 	}
 
 	/**
@@ -142,6 +144,38 @@ public class Player implements IPlayerModel {
 	 */
 	public ArrayList<IOrder> getOrders() {
 		return d_order_list;
+	}
+
+	/**
+	 * adds player to the list of diplomatic friends (can't attack each other for 1
+	 * turn).
+	 * 
+	 * @param p_friendly_player the player to have diplomatic relations with
+	 */
+	public void addDiplomacy(IPlayerModel p_friendly_player) {
+		d_diplomacy.add(p_friendly_player);
+	}
+
+	/**
+	 * clear all diplomacies
+	 */
+	public void clearAllDiplomacy() {
+		d_diplomacy.clear();
+	}
+
+	/**
+	 * checks if another play is diplomatic with us
+	 * 
+	 * @param p_other_player the other player to check
+	 * @return true if diplomatic
+	 */
+	public boolean isDiplomatic(IPlayerModel p_other_player) {
+		for (IPlayerModel l_player : d_diplomacy) {
+			if (l_player.getName().equals(p_other_player.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -279,6 +313,13 @@ public class Player implements IPlayerModel {
 		for (IOrder l_clone_order : l_clone_orders) {
 			l_clone_order.cloneToPlayer(this);
 			d_order_list.add(l_clone_order);
+		}
+		if (p_cloned_player.isDiplomatic(this)) {
+			IPlayerModel l_player = Player.FindPlayer(p_cloned_player.getName(),
+					d_factory_model.getGamePlayModel().getPlayers());
+			if (l_player != null) {
+				l_player.addDiplomacy(this);
+			}
 		}
 	}
 
