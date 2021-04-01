@@ -47,14 +47,16 @@ public interface IPlayerModel {
 	void setDoneTurn(boolean p_done_turn);
 
 	boolean hasCard(CardType p_card);
-	
+
 	void removeCard(CardType p_card);
-	
+
 	ModelFactory getPlayerModelFactory();
-	
+
 	void addDiplomacy(IPlayerModel p_friendly_player);
-	
+
 	void clearAllDiplomacy();
-	
+
 	boolean isDiplomatic(IPlayerModel p_other_player);
+
+	void setStrategy(IPlayerStrategy p_player_strategy);
 }

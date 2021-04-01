@@ -8,6 +8,7 @@ import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
+import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 import soen6441.team01.warzone.model.entities.*;
 
 /**
@@ -18,13 +19,13 @@ public class Player implements IPlayerModel {
 
 	private String d_name;
 	private int d_reinforcements = 0;
-	private IGameplayOrderDatasource d_order_datasource;
 	private ArrayList<ICountryModel> d_countries;
 	private ArrayList<IOrder> d_order_list;
 	private ArrayList<Card> d_cards;
 	private ModelFactory d_factory_model = null;
 	private boolean d_done_turn = false;
 	private ArrayList<IPlayerModel> d_diplomacy;
+	private IPlayerStrategy d_player_strategy;
 
 	/**
 	 * Constructor for class Player. Don't use issue_order if using this constructor
@@ -36,29 +37,15 @@ public class Player implements IPlayerModel {
 	 * @throws Exception general exceptions
 	 */
 	public Player(String p_name, ModelFactory p_factory_model) throws Exception {
-		this(p_name, null, p_factory_model);
-	}
-
-	/**
-	 * Constructor for class Player
-	 * 
-	 * @param p_name             the name of player
-	 * @param p_order_datasource used to get the player commands during
-	 *                           issue_order()
-	 * @param p_factory_model    the model software factory
-	 * @throws Exception general exceptions
-	 */
-	public Player(String p_name, IGameplayOrderDatasource p_order_datasource, ModelFactory p_factory_model)
-			throws Exception {
 		super();
 		setName(p_name);
 		d_reinforcements = 0;
-		d_order_datasource = p_order_datasource;
 		d_countries = new ArrayList<ICountryModel>();
 		d_order_list = new ArrayList<IOrder>();
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
 		d_diplomacy = new ArrayList<IPlayerModel>();
+		d_player_strategy = null;	// must be set before player can be used
 	}
 
 	/**
@@ -114,6 +101,15 @@ public class Player implements IPlayerModel {
 	 */
 	public ArrayList<ICountryModel> getPlayerCountries() {
 		return d_countries;
+	}
+	
+	
+	/**
+	 * set the players' gameplay strategy
+	 * @param p_player_strategy the player's strategy
+	 */
+	public void setStrategy(IPlayerStrategy p_player_strategy) {
+		d_player_strategy = p_player_strategy;
 	}
 
 	/**
@@ -179,21 +175,6 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
-	 * adds a new order to player's order list
-	 * 
-	 * @throws Exception unexpected error
-	 */
-	public void issue_order() throws Exception {
-		IOrder l_order = d_order_datasource.getOrder(this);
-		if (l_order != null) {
-			d_order_list.add(l_order);
-			d_done_turn = false;
-		} else {
-			d_done_turn = true;
-		}
-	}
-
-	/**
 	 * checks if the player is done with their turn
 	 * 
 	 * @return true if the player is done with their turn, false otherwise
@@ -209,39 +190,6 @@ public class Player implements IPlayerModel {
 	 */
 	public void setDoneTurn(boolean p_done_turn) {
 		d_done_turn = p_done_turn;
-	}
-
-	/**
-	 * finds the first order in order list returns it and removes it from the order
-	 * list
-	 * 
-	 * @return l_first_order the first order in order list, null if there are no
-	 *         more orders
-	 */
-	public IOrder next_order() {
-		if (d_order_list.size() < 1) {
-			return null;
-		}
-		IOrder l_next_order = d_order_list.get(0);
-		d_order_list.remove(0);
-		return l_next_order;
-	}
-
-	/**
-	 * find a player given a name
-	 * 
-	 * @param p_name    the country id of the neighboring country to find
-	 * @param p_players list of countries to search from
-	 * @return null if not found, otherwise return the first player with the
-	 *         specified name
-	 */
-	public static IPlayerModel FindPlayer(String p_name, ArrayList<IPlayerModel> p_players) {
-		for (IPlayerModel l_xplayer : p_players) {
-			if (l_xplayer.getName().equals(p_name)) {
-				return l_xplayer;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -301,6 +249,23 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
+	 * find a player given a name
+	 * 
+	 * @param p_name    the country id of the neighboring country to find
+	 * @param p_players list of countries to search from
+	 * @return null if not found, otherwise return the first player with the
+	 *         specified name
+	 */
+	public static IPlayerModel FindPlayer(String p_name, ArrayList<IPlayerModel> p_players) {
+		for (IPlayerModel l_xplayer : p_players) {
+			if (l_xplayer.getName().equals(p_name)) {
+				return l_xplayer;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * copies the orders from the specified player. used mainly when copying the
 	 * orders from cloned players used during the issue_orders() phase. Note: the
 	 * specified player must have the same name as this player.
@@ -332,7 +297,9 @@ public class Player implements IPlayerModel {
 	 */
 	public IPlayerModel deepClonePlayer(ModelFactory p_factory_model) throws Exception {
 		IMapModel l_map = p_factory_model.getMapModel();
-		Player l_player = new Player(d_name, d_order_datasource, p_factory_model);
+		Player l_player = new Player(d_name, p_factory_model);
+		IPlayerStrategy l_strategy = d_player_strategy.cloneStrategy(l_player);
+		l_player.setStrategy(l_strategy);
 
 		// map out the countries
 		for (ICountryModel l_src_country : d_countries) {
@@ -348,4 +315,39 @@ public class Player implements IPlayerModel {
 
 		return l_player;
 	}
+
+	/**
+	 * adds a new order to player's order list
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	public void issue_order() throws Exception {
+		if( d_player_strategy == null ) {
+			throw new Exception("Internal error, player " + getName() + " strategy not specified");
+		}
+		IOrder l_order = d_player_strategy.createOrder();
+		if (l_order != null) {
+			d_order_list.add(l_order);
+			d_done_turn = false;
+		} else {
+			d_done_turn = true;
+		}
+	}
+
+	/**
+	 * finds the first order in order list returns it and removes it from the order
+	 * list
+	 * 
+	 * @return l_first_order the first order in order list, null if there are no
+	 *         more orders
+	 */
+	public IOrder next_order() {
+		if (d_order_list.size() < 1) {
+			return null;
+		}
+		IOrder l_next_order = d_order_list.get(0);
+		d_order_list.remove(0);
+		return l_next_order;
+	}
+
 }

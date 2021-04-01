@@ -18,14 +18,6 @@ editmap ./src/test/resources/maps/canada/canada.map
 -----------------------------------------------------
 SOEN 6441: Joey Paquet 
 
-git tag build_2
-git push origin build_2
-
-Presentation: 2/25/2021 16:00:00
-https://docs.google.com/spreadsheets/d/1f4hwsS8cUegfIo72h2I2uP9iai4QasLUWEwrjAC5tzQ/
-
-https://us02web.zoom.us/j/72015712885?pwd=NUJheEtaRE5ZY2FLeXhNd3A1QUo2QT09
-08yf3G
 
 -----------------------------------------------------
 refactoring:
@@ -132,3 +124,6 @@ refactoring for build 3:
 
 1) move all comand parsing into respective Order class (MAYBE - THINK ABOUT IT)
 2) d_reinforcements + Utl.plural(d_reinforcements, " army", " armies")
+
+
+

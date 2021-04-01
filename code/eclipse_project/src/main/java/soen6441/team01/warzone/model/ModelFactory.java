@@ -95,7 +95,9 @@ public class ModelFactory {
 	 */
 	public IPlayerModel newHumanPlayerModel(String p_player_name, IGameplayOrderDatasource p_order_datasource)
 			throws Exception {
-		IPlayerModel l_player = new Player(p_player_name, p_order_datasource, this);
+		IPlayerModel l_player = new Player(p_player_name, this);
+		PlayerHumanStrategy l_player_human = new PlayerHumanStrategy(l_player, p_order_datasource);
+		l_player.setStrategy(l_player_human);
 		return l_player;
 
 	}

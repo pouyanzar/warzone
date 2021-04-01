@@ -81,10 +81,10 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 
 		// initialize per round state
 		for (IPlayerModel l_xplayer : l_players) {
-			l_xplayer.addCard(new Card(CardType.bomb));			// test code
-			l_xplayer.addCard(new Card(CardType.blockade));		// test code
-			l_xplayer.addCard(new Card(CardType.airlift));		// test code
-			l_xplayer.addCard(new Card(CardType.diplomacy));	// test code 
+			// l_xplayer.addCard(new Card(CardType.bomb)); // add cards for testing
+			// l_xplayer.addCard(new Card(CardType.blockade)); // add cards for testing
+			// l_xplayer.addCard(new Card(CardType.airlift)); // add cards for testing
+			// l_xplayer.addCard(new Card(CardType.diplomacy)); // add cards for testing
 			l_xplayer.clearAllDiplomacy();
 		}
 
@@ -117,7 +117,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 			l_player_clone = l_queue.peek();
 		}
 
-		// copy orders + necessary state information from cloned players to real players 
+		// copy orders + necessary state information from cloned players to real players
 		for (IPlayerModel l_player : l_players) {
 			IPlayerModel l_pclone = Player.FindPlayer(l_player.getName(), l_player_clones);
 			l_player.copyOrders(l_pclone);
@@ -255,8 +255,9 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 				d_msg_model.setMessage(MsgType.Error, "Invalid negotiate option '" + l_params[1] + "'");
 				return null;
 			}
-			
-			// create the diplomacy order object. note that the order will throw an exception
+
+			// create the diplomacy order object. note that the order will throw an
+			// exception
 			// if it's not valid
 			l_order = new OrderDiplomacy(p_player, l_tplayer);
 
