@@ -10,31 +10,27 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
  * A human player that requires user interaction to make decisions.
  *
  */
-public class PlayerHumanStrategy implements IPlayerStrategy {
+public class PlayerBenevolentStrategy implements IPlayerStrategy {
 
+	// the map is available from within the player object
 	IPlayerModel d_player = null;
-	IGameplayOrderDatasource d_order_datasource = null;
 
 	/**
 	 * constructor
 	 * 
-	 * @param p_player           the player requiring the human player strategy
-	 * @param p_order_datasource used to get the player commands during
-	 *                           issue_order()
+	 * @param p_player the player requiring the human player strategy
 	 */
-	public PlayerHumanStrategy(IPlayerModel p_player, IGameplayOrderDatasource p_order_datasource) {
+	public PlayerBenevolentStrategy(IPlayerModel p_player) {
 		d_player = p_player;
-		d_order_datasource = p_order_datasource;
 	}
 
 	/**
-	 * create the order by asking the user for the next order
+	 * create the order
 	 * 
 	 * @return the next order
-	 * 
 	 */
 	public IOrder createOrder() throws Exception {
-		IOrder l_order = d_order_datasource.getOrder(d_player);
+		IOrder l_order = null;
 		return l_order;
 	}
 
@@ -46,15 +42,15 @@ public class PlayerHumanStrategy implements IPlayerStrategy {
 	 * @return a new strategy object cloned from this object
 	 */
 	public IPlayerStrategy cloneStrategy(IPlayerModel p_player) throws Exception {
-		IPlayerStrategy l_player_strategy = new PlayerHumanStrategy(p_player, d_order_datasource);
+		IPlayerStrategy l_player_strategy = new PlayerBenevolentStrategy(p_player);
 		return l_player_strategy;
 	}
-
+	
 	/**
 	 * @return the name of this strategy
 	 */
 	@Override
 	public String toString() {
-		return "human";
+		return "benevolent";
 	}
 }

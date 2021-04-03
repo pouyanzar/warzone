@@ -59,4 +59,6 @@ public interface IPlayerModel {
 	boolean isDiplomatic(IPlayerModel p_other_player);
 
 	void setStrategy(IPlayerStrategy p_player_strategy);
+	
+	IPlayerStrategy getStrategy();
 }

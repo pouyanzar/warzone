@@ -3,16 +3,8 @@ package soen6441.team01.warzone.controller;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.model.GamePlay;
-import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IAppMsg;
+import soen6441.team01.warzone.model.*;
+import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 
@@ -62,7 +54,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			d_view.activate();
 			l_end_phase = d_controller_factory.getGameEndPhase();
 			d_view.displayGameStartupBanner();
-			
+
 			d_gameplay = d_model_factory.getNewGamePlayModel();
 			d_gameplay.setMap(d_model_factory.getMapModel());
 
@@ -85,7 +77,8 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	/**
 	 * Process the game startup command:
 	 * <ul>
-	 * <li>gameplayer -add playername -remove playername</li>
+	 * <li>gameplayer -add playername [human|aggr|bene|rand|cheat] -remove
+	 * playername</li>
 	 * <li>assigncountries</li>
 	 * <li>loadmap filename</li>
 	 * <li>exit</li>
@@ -177,7 +170,9 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	/**
 	 * process the gameplayer command
 	 * <p>
-	 * syntax: gameplayer -add playername -remove playername
+	 * syntax: gameplayer -add playername [human|aggr|bene|rand|cheat] -remove
+	 * playername <br>
+	 * [] = optional items - if not specified then human is the default
 	 * </p>
 	 * 
 	 * @param p_cmd_params the gameplayer parameters (just the parameters without
@@ -197,6 +192,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			switch (l_params[0]) {
 			case "-add":
 				try {
+					// parse player name
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_playerName = l_params[0];
 					if (!Utl.isValidMapName(l_playerName)) {
@@ -204,17 +200,13 @@ public class GameStartupController extends Phase implements IGameStartupControll
 								+ "', expecting a valid player name.");
 						return;
 					}
-					// for a human player the player model requires user input during issue_order();
-					// therefore setup the player datasource (which the Player model will use to
-					// retrieve user input) as a method in the GamePlayController which will request
-					// the command from the view and pass it back to the Player model. This sort of
-					// breaks the MVC symmetry but is required in this case in order to keep
-					// issue_order() as generic as possible (e.g. computer player).
-					IPlayerModel l_player = d_model_factory.newHumanPlayerModel(l_playerName,
-							d_controller_factory.getGamePlayOrderDatasource());
 
+					// parse for the optional player strategy and return the proper player object
+					IPlayerModel l_player = getPlayerWithStrategy(l_playerName, l_params);
 					d_gameplay.addPlayer(l_player);
-					d_msg_model.setMessage(MsgType.None, "player " + l_player.getName() + " added to game.");
+
+					d_msg_model.setMessage(MsgType.None,
+							"player " + l_player.getName() + " added to game [" + l_player.getStrategy() + "]");
 				} catch (Exception ex) {
 					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
 					return;
@@ -225,8 +217,8 @@ public class GameStartupController extends Phase implements IGameStartupControll
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_playerName = l_params[0];
 					if (!Utl.isValidMapName(l_playerName)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid gameplayer -remove playername '"
-								+ l_playerName + "', expecting a valid player name.");
+						d_msg_model.setMessage(MsgType.Error, "Invalid gameplayer -remove playername '" + l_playerName
+								+ "', expecting a valid player name.");
 						return;
 					}
 					d_gameplay.removePlayer(l_playerName);
@@ -243,6 +235,68 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
 		}
+	}
+
+	/**
+	 * parse for player strategy this is optional - if not provided then default is
+	 * human.<br>
+	 * note: that the tokens in l_param will be returned as follows: l_param[0] =
+	 * last word parsed (ie either the player strategy, or the playername,
+	 * l_param[1] the remaining part of the command-line, i.e. the next option
+	 * (-add..., -remove... or blank)
+	 * 
+	 * @param p_playerName the new player's name
+	 * @param p_params     l_param[0] the player strategy
+	 *                     [human|aggr|bene|rand|cheat], or the next option
+	 *                     (-add..., -remove... or blank)
+	 * @return the newly created player with the appropriate strategy
+	 * @throws Exception unexpected errir
+	 */
+	private IPlayerModel getPlayerWithStrategy(String p_player_name, String[] p_params) throws Exception {
+		String l_tmp_params[] = Utl.getFirstWord(p_params[1]);
+		boolean l_next_word = false;
+
+		IPlayerModel l_player = new Player(p_player_name, d_model_factory);
+		IPlayerStrategy l_strategy = null;
+
+		switch (l_tmp_params[0]) {
+		case "aggr":
+			l_strategy = null;
+			l_next_word = true;
+			break;
+		case "bene":
+			l_strategy = new PlayerBenevolentStrategy(l_player);
+			l_next_word = true;
+			break;
+		case "rand":
+			l_strategy = null;
+			l_next_word = true;
+			break;
+		case "cheat":
+			l_strategy = null;
+			l_next_word = true;
+			break;
+		case "human":
+			l_next_word = true;
+		default:
+			// for a human player the player model requires user input during issue_order();
+			// therefore setup the player datasource (which the Player model will use to
+			// retrieve user input) as a method in the GamePlayController which will request
+			// the command from the view and pass it back to the Player model. This sort of
+			// breaks the MVC symmetry but is required in this case in order to keep
+			// issue_order() as generic as possible (e.g. computer player).
+			IGameplayOrderDatasource l_order_datasource = d_controller_factory.getGamePlayOrderDatasource();
+			l_strategy = new PlayerHumanStrategy(l_player, l_order_datasource);
+		}
+		l_player.setStrategy(l_strategy);
+
+		// fixup the returning command-line params
+		if (l_next_word) {
+			p_params[0] = l_tmp_params[0];
+			p_params[1] = l_tmp_params[1];
+		}
+
+		return l_player;
 	}
 
 	/**
@@ -280,7 +334,10 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	private void GameStartupHelp() {
 		d_view.displayGameStartupBanner();
 		d_view.processMessage(MsgType.None, "Game startup commands:");
-		d_view.processMessage(MsgType.None, " - gameplayer -add playername -remove playername");
+		d_view.processMessage(MsgType.None,
+				" - gameplayer -add playername [human*|aggr|bene|rand|cheat] -remove playername");
+		d_view.processMessage(MsgType.None,
+				"              [] = optional items - if not specified then human is the default");
 		d_view.processMessage(MsgType.None, " - assigncountries");
 		d_view.processMessage(MsgType.None, " - loadmap filename");
 		d_view.processMessage(MsgType.None, " - exit");

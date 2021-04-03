@@ -6,6 +6,7 @@ loadmap ./src/test/resources/maps/world_small/world_small.map
 * players
 gameplayer -add John -add Pouyan -add Nazanin
 gameplayer -add John -add Pouyan
+gameplayer -add H1 -add B1 bene
 assigncountries
 
 
@@ -17,6 +18,25 @@ editmap ./src/test/resources/maps/canada/canada.map
 
 -----------------------------------------------------
 SOEN 6441: Joey Paquet 
+
+
+-----------------------------------------------------
+Q: loadmap/savemap should we choose the format based on the filename extension?
+A: loadmap -> autodetect from the map file
+A: savemap -> add parameter to command
+
+Q: for player behaviour can we add a param to the gameplayer command? e.g. gameplayer -add player1 human -add player2 random
+A: yes
+
+Q: in single player mode: can we add a command in startup to limit the number of turns (like in tournament mode), especially when all players are non-human? e.g. maxturns 100
+Q: should the single mode game limit the number of turns if all players are non-human?
+A: yes. the game should be able to show a winner during a presentation.
+
+S: tournament -> no human
+
+Q: cheater mode, works directly on the map during issue_order?
+
+
 
 
 -----------------------------------------------------

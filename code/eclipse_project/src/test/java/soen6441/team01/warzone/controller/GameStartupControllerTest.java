@@ -8,8 +8,12 @@ import org.junit.Test;
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.Phase;
+import soen6441.team01.warzone.model.Player;
+import soen6441.team01.warzone.model.PlayerBenevolentStrategy;
+import soen6441.team01.warzone.model.PlayerHumanStrategy;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
+import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.view.ViewFactory;
 
 /**
@@ -93,16 +97,16 @@ public class GameStartupControllerTest {
 	}
 
 	/**
-	 * test processGameStartupCommand_editcontinent valid commands
+	 * test gameplayer command valid options
 	 * 
 	 * @throws Exception unexpected error
 	 */
 	@Test
-	public void test_processGameStartupCommand_editcontinent_valid() throws Exception {
+	public void test_processGameStartupCommand_gameplayer_valid() throws Exception {
 		String l_msg;
 		d_startup_controller.processGameStartupCommand("gameplayer -add Player01", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("Player01 added to game"));
+		assertTrue(l_msg.contains("Player01 added to game [human]"));
 
 		d_startup_controller.processGameStartupCommand("gameplayer -remove Player01", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
@@ -125,6 +129,262 @@ public class GameStartupControllerTest {
 		assertTrue(l_msg.contains("Player03 removed from game"));
 	}
 
+	/**
+	 * test gameplayer command valid -add human options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer1_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add Player01", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Player01 added to game [human]"));
+		l_player = Player.FindPlayer("Player01", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add px1 human", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("px1 added to game [human]"));
+		
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add Player02 -add Player03 -add Player04 -remove Player03", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Player03 removed"));
+		l_player = Player.FindPlayer("Player02", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+		l_player = Player.FindPlayer("Player03", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("Player04", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add ph1 human", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph1 added to game"));
+		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add ph2 human -add ph3 human -add ph4 human -remove ph3", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph3 removed"));
+		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+	}
+
+	/**
+	 * test gameplayer command valid -add benevolent options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer2_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add ph1 bene", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph1 added to game [benevolent]"));
+		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add ph2 bene -add ph3 bene -add ph4 bene -remove ph3", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph3 removed"));
+		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+	}
+
+	/**
+	 * test gameplayer command valid -add aggressive options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer3_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add ph1 aggr", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph1 added to game"));
+		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add ph2 aggr -add ph3 aggr -add ph4 aggr -remove ph3", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph3 removed"));
+		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+	}
+
+	/**
+	 * test gameplayer command valid -add random options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer4_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add ph1 rand", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph1 added to game"));
+		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add ph2 rand -add ph3 rand -add ph4 rand -remove ph3", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph3 removed"));
+		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+	}
+
+	/**
+	 * test gameplayer command valid -add cheat options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer5_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add ph1 cheat", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph1 added to game"));
+		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add ph2 cheat -add ph3 cheat -add ph4 cheat -remove ph3", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("ph3 removed"));
+		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+	}
+
+	/**
+	 * test gameplayer command valid -add mixed options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer_mixed_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand("gameplayer -add pa1 cheat -add pa2 rand -add pa3 -add pa4 bene",
+				d_gameplay);
+		l_player = Player.FindPlayer("pa1", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+		l_player = Player.FindPlayer("pa2", d_model_factory.getGamePlayModel().getPlayers());
+		// assertTrue(l_player.getStrategy().getClass() ==
+		// PlayerBenevolentStrategy.class);
+		assertTrue(l_player.getStrategy() == null);
+		l_player = Player.FindPlayer("pa3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+		l_player = Player.FindPlayer("pa4", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+	}
+
+	/**
+	 * test gameplayer command valid -add mixed options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer_mixed_1_valid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add pa1 cheat -remove pa1 -add pa2 bene -add pa3 -remove pa3 -add pa4 -add pa5 bene", d_gameplay);
+		l_player = Player.FindPlayer("pa1", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("pa2", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+		l_player = Player.FindPlayer("pa3", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player == null);
+		l_player = Player.FindPlayer("pa4", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
+		l_player = Player.FindPlayer("pa5", d_model_factory.getGamePlayModel().getPlayers());
+		assertTrue(l_player.getStrategy().getClass() == PlayerBenevolentStrategy.class);
+	}
+
+	/**
+	 * test gameplayer command valid -add mixed options
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processGameStartupCommand_gameplayer_mixed_1_invalid() throws Exception {
+		String l_msg;
+		IPlayerModel l_player;
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add pa1 cheat remove pa1", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid gameplayer option 'remove'"));
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add pa2 benevolent", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid gameplayer option 'benevolent'"));
+
+		d_startup_controller.processGameStartupCommand(
+				"gameplayer -add pa3 bene -remove", d_gameplay);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("expecting a valid player name"));
+	}
+	
+	
 	/**
 	 * test loadmap invalid commands
 	 * 
@@ -154,7 +414,7 @@ public class GameStartupControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("loadmap processed successfully"));
 	}
-	
+
 	/**
 	 * test assigncountries command
 	 * 

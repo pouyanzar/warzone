@@ -25,7 +25,7 @@ public class Player implements IPlayerModel {
 	private ModelFactory d_factory_model = null;
 	private boolean d_done_turn = false;
 	private ArrayList<IPlayerModel> d_diplomacy;
-	private IPlayerStrategy d_player_strategy;
+	private IPlayerStrategy d_strategy;
 
 	/**
 	 * Constructor for class Player. Don't use issue_order if using this constructor
@@ -45,7 +45,7 @@ public class Player implements IPlayerModel {
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
 		d_diplomacy = new ArrayList<IPlayerModel>();
-		d_player_strategy = null;	// must be set before player can be used
+		d_strategy = null;	// must be set before player can be used
 	}
 
 	/**
@@ -109,9 +109,16 @@ public class Player implements IPlayerModel {
 	 * @param p_player_strategy the player's strategy
 	 */
 	public void setStrategy(IPlayerStrategy p_player_strategy) {
-		d_player_strategy = p_player_strategy;
+		d_strategy = p_player_strategy;
 	}
 
+	/**
+	 * @return the current players strategy
+	 */
+	public IPlayerStrategy getStrategy() {
+		return d_strategy;
+	}	
+	
 	/**
 	 * adds the appropriate country to the list of countries player controls
 	 * 
@@ -298,7 +305,7 @@ public class Player implements IPlayerModel {
 	public IPlayerModel deepClonePlayer(ModelFactory p_factory_model) throws Exception {
 		IMapModel l_map = p_factory_model.getMapModel();
 		Player l_player = new Player(d_name, p_factory_model);
-		IPlayerStrategy l_strategy = d_player_strategy.cloneStrategy(l_player);
+		IPlayerStrategy l_strategy = d_strategy.cloneStrategy(l_player);
 		l_player.setStrategy(l_strategy);
 
 		// map out the countries
@@ -322,10 +329,10 @@ public class Player implements IPlayerModel {
 	 * @throws Exception unexpected error
 	 */
 	public void issue_order() throws Exception {
-		if( d_player_strategy == null ) {
+		if( d_strategy == null ) {
 			throw new Exception("Internal error, player " + getName() + " strategy not specified");
 		}
-		IOrder l_order = d_player_strategy.createOrder();
+		IOrder l_order = d_strategy.createOrder();
 		if (l_order != null) {
 			d_order_list.add(l_order);
 			d_done_turn = false;

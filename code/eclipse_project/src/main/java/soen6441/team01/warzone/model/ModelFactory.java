@@ -85,24 +85,6 @@ public class ModelFactory {
 	}
 
 	/**
-	 * Create a new player model based on the specified name
-	 * 
-	 * @param p_player_name      the name of the player
-	 * @param p_order_datasource used to get the player commands during
-	 *                           issue_order()
-	 * @return an instance of the IPlayerModel
-	 * @throws Exception as defined by class Player
-	 */
-	public IPlayerModel newHumanPlayerModel(String p_player_name, IGameplayOrderDatasource p_order_datasource)
-			throws Exception {
-		IPlayerModel l_player = new Player(p_player_name, this);
-		PlayerHumanStrategy l_player_human = new PlayerHumanStrategy(l_player, p_order_datasource);
-		l_player.setStrategy(l_player_human);
-		return l_player;
-
-	}
-
-	/**
 	 * Get the existing game play model
 	 * 
 	 * @return an instance of the IGamePlayModel
