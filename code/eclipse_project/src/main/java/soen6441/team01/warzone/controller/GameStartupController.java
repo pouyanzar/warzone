@@ -261,7 +261,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 
 		switch (l_tmp_params[0]) {
 		case "aggr":
-			l_strategy = null;
+			l_strategy = new PlayerAggressiveStrategy(l_player);
 			l_next_word = true;
 			break;
 		case "bene":
