@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
@@ -30,8 +31,17 @@ public class PlayerBenevolentStrategy implements IPlayerStrategy {
 	 * @return the next order
 	 */
 	public IOrder createOrder() throws Exception {
-		IOrder l_order = null;
+		int l_min_army = d_player.getPlayerCountries().get(0).getArmies();
+		ICountryModel l_country = d_player.getPlayerCountries().get(0);
+		for(ICountryModel l_country_it : d_player.getPlayerCountries()) {
+			if(l_country.getArmies() <= l_min_army) {
+				l_min_army = l_country.getArmies();
+				l_country = l_country_it;
+			}
+		}
+		IOrder l_order = new OrderDeploy(l_country.getName(), d_player.getReinforcements(), d_player);
 		return l_order;
+		
 	}
 
 	/**
