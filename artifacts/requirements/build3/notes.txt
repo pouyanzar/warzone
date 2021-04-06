@@ -2,6 +2,9 @@
 loadmap ./src/test/resources/maps/canada/canada.map
 loadmap ./src/test/resources/maps/usa8/usa8regions.map
 loadmap ./src/test/resources/maps/world_small/world_small.map
+tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
+
+
 
 * players
 gameplayer -add John -add Pouyan -add Nazanin

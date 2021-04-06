@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.GameEngine;
 import soen6441.team01.warzone.model.ModelFactory;
@@ -77,7 +78,7 @@ public class MapEditorControllerTest {
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add -1 Europe");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid continent id '-1',"));
-		
+
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid continent name: ''"));
@@ -177,7 +178,7 @@ public class MapEditorControllerTest {
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada 1 add");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid editcountry option"));
-		
+
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Canada -1");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid continent id: '-1',"));
@@ -357,7 +358,7 @@ public class MapEditorControllerTest {
 		// invalid random text file
 		d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada_invalid/canada.map");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
-		assertTrue(l_msg.contains("loadmap error - map is not a valid map."));	
+		assertTrue(l_msg.contains("loadmap error - map is not a valid map."));
 	}
 
 	/**
@@ -368,7 +369,8 @@ public class MapEditorControllerTest {
 	@Test
 	public void test_processMapEditorCommand_loadmap_valid() throws Exception {
 		String l_msg;
-		Phase next_phase = d_map_editor_controller.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/canada.map");
+		Phase next_phase = d_map_editor_controller
+				.processMapEditorCommand("loadmap " + d_MAP_DIR + "canada/canada.map");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("loadmap processed successfully"));
 		assertTrue(next_phase instanceof GameStartupController);
@@ -454,5 +456,75 @@ public class MapEditorControllerTest {
 		assertFalse(d_model_factory.getMapModel().validatemap());
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.equals("Country 'France' is not fully connected to all other countries"));
+	}
+
+	/**
+	 * test tournament valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_tournament_valid() throws Exception {
+		String l_msg;
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("tournament command processed successfully"));
+
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map,"
+				+ " ./src/test/resources/maps/canada/canada.map ," + " ./src/test/resources/maps/usa8/usa8regions.map"
+				+ " -P benevolent ,benevolent -G 1 -D 10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("tournament command processed successfully"));
+	}
+
+	/**
+	 * test tournament invalid command: invalid
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_tournament_invalid_1() throws Exception {
+		String l_msg;
+		d_map_editor_controller
+				.processMapEditorCommand("tournament -M ./world_small/world_small.map -P benevolent -G 1 -D 10");
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid tournament command"));
+		assertTrue(Utl.logContains("invalid: Error loading map file"));
+
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P bene -G 1 -D 10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid tournament command"));
+		assertTrue(Utl.logContains("bene - invalid"));
+
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G -1 -D 10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid tournament command"));
+		assertTrue(Utl.logContains(": -1 error: invalid number of games should be between 1 and 99"));
+
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D -10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid tournament command"));
+		assertTrue(Utl.logContains("invalid number of max turns per game, should be between 1 and 999"));
+	}
+
+	/**
+	 * test tournament invalid command: invalid
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_tournament_invalid_2() throws Exception {
+		String l_msg;
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("Invalid tournament command"));
+		assertTrue(Utl.logContains("0 error: invalid number of games"));
+		assertTrue(Utl.logContains("error: invalid number of max turns per game"));
 	}
 }

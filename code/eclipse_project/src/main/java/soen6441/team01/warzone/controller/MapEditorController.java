@@ -1,7 +1,10 @@
 package soen6441.team01.warzone.controller;
 
+import java.util.ArrayList;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
+import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.Phase;
@@ -22,7 +25,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
 	private IMapEditorView d_view;
-	private IAppMsg d_msg_model;
+	private IAppMsg d_msg;
 
 	/**
 	 * Constructor with view and models defined.
@@ -36,7 +39,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		d_model_factory = p_controller_factory.getModelFactory();
 		d_view_factory = p_controller_factory.getViewFactory();
 		d_view = d_view_factory.getMapEditorConsoleView(this);
-		d_msg_model = d_model_factory.getUserMessageModel();
+		d_msg = d_model_factory.getUserMessageModel();
 	}
 
 	/**
@@ -87,6 +90,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * <li>editmap filename</li>
 	 * <li>loadmap filename (this command initiates game startup)</li>
 	 * <li>validatemap</li>
+	 * <li>tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames
+	 * -D maxnumberofturns</li>
 	 * <li>exit</li>
 	 * <li>help</li>
 	 * </ul>
@@ -126,20 +131,25 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			break;
 		case "validatemap":
 			if (d_model_factory.getMapModel().validatemap()) {
-				d_msg_model.setMessage(MsgType.None, "The current map is valid.");
+				d_msg.setMessage(MsgType.None, "The current map is valid.");
 			} else {
-				d_msg_model.setMessage(MsgType.None, "The current map is invalid.");
+				d_msg.setMessage(MsgType.None, "The current map is invalid.");
 			}
 			break;
 		case "loadmap":
 			// if the map is not a valid map then stay in the editor, otherwise move on to
-			// the game startup phase.
+			// the game startup phase (single game mode).
 			if (processLoadMap(l_cmd_params[1])) {
 				l_next_phase = d_controller_factory.getGameStartupPhase();
 			}
 			break;
+		case "tournament":
+			if (processTournament(l_cmd_params[1])) {
+				l_next_phase = d_controller_factory.getGameTournamentPhase();
+			}
+			break;
 		default:
-			d_msg_model.setMessage(MsgType.Error, "invalid command '" + p_command + "'");
+			d_msg.setMessage(MsgType.Error, "invalid command '" + p_command + "'");
 			break;
 		}
 		return l_next_phase;
@@ -168,10 +178,10 @@ public class MapEditorController extends Phase implements IMapEditorController {
 				d_model_factory.setMapModel(l_map_model);
 			}
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
-		d_msg_model.setMessage(MsgType.None, "editmap processed successfully");
+		d_msg.setMessage(MsgType.None, "editmap processed successfully");
 		return true;
 	}
 
@@ -190,13 +200,13 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
 			d_model_factory.setMapModel(l_map_model);
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
 		if (d_model_factory.getMapModel().validatemap()) {
-			d_msg_model.setMessage(MsgType.None, "loadmap processed successfully");
+			d_msg.setMessage(MsgType.None, "loadmap processed successfully");
 		} else {
-			d_msg_model.setMessage(MsgType.Error, "loadmap error - map is not a valid map.");
+			d_msg.setMessage(MsgType.Error, "loadmap error - map is not a valid map.");
 			return false;
 		}
 
@@ -221,10 +231,10 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			l_filename = l_params[0];
 			d_model_factory.getMapModel().saveMap(l_filename);
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
-		d_msg_model.setMessage(MsgType.None, "map saved successfully to file '" + l_filename + "'");
+		d_msg.setMessage(MsgType.None, "map saved successfully to file '" + l_filename + "'");
 		return true;
 	}
 
@@ -246,7 +256,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		String l_params[] = Utl.getFirstWord(p_editneighbor_params);
 
 		if (Utl.isEmpty(l_params[0])) {
-			d_msg_model.setMessage(MsgType.Error, "Invalid editneighbor, no options specified");
+			d_msg.setMessage(MsgType.Error, "Invalid editneighbor, no options specified");
 			return;
 		}
 
@@ -257,19 +267,18 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
 					if (!Utl.isValidMapName(l_neighbor_name)) {
-						d_msg_model.setMessage(MsgType.Error,
-								"Invalid country neighbor name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country neighbor name '" + l_countryName + "'");
 						return;
 					}
 					l_map.addNeighbor(l_countryName, l_neighbor_name);
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
@@ -278,30 +287,29 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_neighbor_name = l_params[0];
 					if (!Utl.isValidMapName(l_neighbor_name)) {
-						d_msg_model.setMessage(MsgType.Error,
-								"Invalid country neighbor name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country neighbor name '" + l_countryName + "'");
 						return;
 					}
 					l_map.removeNeighbor(l_countryName, l_neighbor_name);
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
 			default:
-				d_msg_model.setMessage(MsgType.Error,
+				d_msg.setMessage(MsgType.Error,
 						"Invalid editneighbor option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
 			Map.refreshCountriesOfAllContinents(l_map);
-			d_msg_model.setMessage(MsgType.None, "editneighbor processed successfully");
+			d_msg.setMessage(MsgType.None, "editneighbor processed successfully");
 		}
 	}
 
@@ -320,7 +328,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		String l_params[] = Utl.getFirstWord(p_editcountry_params);
 
 		if (Utl.isEmpty(l_params[0])) {
-			d_msg_model.setMessage(MsgType.Error, "Invalid editcountry, no options specified");
+			d_msg.setMessage(MsgType.Error, "Invalid editcountry, no options specified");
 			return;
 		}
 
@@ -331,23 +339,23 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000 || l_continentId < 0) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid continent id: '" + l_params[0]
+						d_msg.setMessage(MsgType.Error, "Invalid continent id: '" + l_params[0]
 								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					ICountryModel l_country = l_map.addCountry(l_countryName, l_continentId);
 					if (l_country == null) {
-						d_msg_model.setMessage(MsgType.Error, "Error adding country");
+						d_msg.setMessage(MsgType.Error, "Error adding country");
 						return;
 					}
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
@@ -356,28 +364,28 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_countryName = l_params[0];
 					if (!Utl.isValidMapName(l_countryName)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid country name '" + l_countryName + "'");
 						return;
 					}
 					ICountryModel l_country = l_map.removeCountry(l_countryName);
 					if (l_country == null) {
-						d_msg_model.setMessage(MsgType.Error, "Error removing country");
+						d_msg.setMessage(MsgType.Error, "Error removing country");
 						return;
 					}
 
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
 			default:
-				d_msg_model.setMessage(MsgType.Error,
+				d_msg.setMessage(MsgType.Error,
 						"Invalid editcountry option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
 			Map.refreshCountriesOfAllContinents(l_map);
-			d_msg_model.setMessage(MsgType.None, "editcountry processed successfully");
+			d_msg.setMessage(MsgType.None, "editcountry processed successfully");
 		}
 	}
 
@@ -397,7 +405,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		String l_params[] = Utl.getFirstWord(p_editcontinent_params);
 
 		if (Utl.isEmpty(l_params[0])) {
-			d_msg_model.setMessage(MsgType.Error, "Invalid editcontinent, no options specified");
+			d_msg.setMessage(MsgType.Error, "Invalid editcontinent, no options specified");
 			return;
 		}
 
@@ -408,23 +416,23 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000 || l_continentId < 0) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid continent id '" + l_params[0]
+						d_msg.setMessage(MsgType.Error, "Invalid continent id '" + l_params[0]
 								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentvalue = l_params[0];
 					if (!Utl.isValidMapName(l_continentvalue)) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid continent name: '" + l_params[0] + "'");
+						d_msg.setMessage(MsgType.Error, "Invalid continent name: '" + l_params[0] + "'");
 						return;
 					}
 					IContinentModel l_continent = l_map.addContinent(l_continentId, l_continentvalue, 0);
 					if (l_continent == null) {
-						d_msg_model.setMessage(MsgType.Error, "Error adding continent");
+						d_msg.setMessage(MsgType.Error, "Error adding continent");
 						return;
 					}
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
@@ -433,29 +441,160 @@ public class MapEditorController extends Phase implements IMapEditorController {
 					l_params = Utl.getFirstWord(l_params[1]);
 					l_continentId = Utl.convertToInteger(l_params[0]);
 					if (l_continentId > 1000) {
-						d_msg_model.setMessage(MsgType.Error, "Invalid continent id: '" + l_params[0]
+						d_msg.setMessage(MsgType.Error, "Invalid continent id: '" + l_params[0]
 								+ "', expecting a positive integer less than 1000");
 						return;
 					}
 					IContinentModel l_continent = l_map.removeContinent(l_continentId);
 					if (l_continent == null) {
-						d_msg_model.setMessage(MsgType.Error, "Error removing continent");
+						d_msg.setMessage(MsgType.Error, "Error removing continent");
 						return;
 					}
 
 				} catch (Exception ex) {
-					d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+					d_msg.setMessage(MsgType.Error, ex.getMessage());
 					return;
 				}
 				break;
 			default:
-				d_msg_model.setMessage(MsgType.Error,
+				d_msg.setMessage(MsgType.Error,
 						"Invalid editcontinent option '" + l_params[0] + "', expecting: -add, -remove");
 				return;
 			}
 			l_params = Utl.getFirstWord(l_params[1]);
-			d_msg_model.setMessage(MsgType.None, "editcontinent processed successfully");
+			d_msg.setMessage(MsgType.None, "editcontinent processed successfully");
 		}
+	}
+
+	/**
+	 * process the tournament command
+	 * <p>
+	 * syntax: <br>
+	 * tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D
+	 * maxnumberofturns<br>
+	 * </p>
+	 * 
+	 * @param p_cmd_params the tournament parameters
+	 * @return return true if successful
+	 * @throws Exception unexpected error encountered
+	 */
+	private boolean processTournament(String p_cmd_params) throws Exception {
+		ArrayList<String> l_map_filenames = new ArrayList<String>();
+		ArrayList<String> l_strategies = new ArrayList<String>();
+		int l_number_of_games = 0;
+		int l_max_turns = Integer.MAX_VALUE;
+
+		// 1) parse tournament command
+
+		String l_tmp_param;
+		String l_params[] = Utl.getFirstWord(p_cmd_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg.setMessage(MsgType.Error, "Invalid tournament, no options specified");
+			return false;
+		}
+
+		try {
+			while (!Utl.isEmpty(l_params[0])) {
+				switch (l_params[0]) {
+				case "-M":
+					l_tmp_param = parseTournamentList(l_params[1], l_map_filenames);
+					l_params = Utl.getFirstWord(l_tmp_param);
+					break;
+				case "-P":
+					l_tmp_param = parseTournamentList(l_params[1], l_strategies);
+					l_params = Utl.getFirstWord(l_tmp_param);
+					break;
+				case "-G":
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_number_of_games = Utl.convertToInteger(l_params[0]);
+					l_params = Utl.getFirstWord(l_params[1]);
+					break;
+				case "-D":
+					l_params = Utl.getFirstWord(l_params[1]);
+					l_max_turns = Utl.convertToInteger(l_params[0]);
+					l_params = Utl.getFirstWord(l_params[1]);
+					break;
+				default:
+					d_msg.setMessage(MsgType.Error,
+							"Invalid tournament option '" + l_params[0] + "', expecting: -M, -P, -G and -D");
+					return false;
+				}
+			}
+
+			// 2) create the tournament controller that will process the tournament
+			IGameTournamentController l_tour_ctrl = d_controller_factory.createGameTournamentController(l_map_filenames,
+					l_strategies, l_number_of_games, l_max_turns);
+
+			// 3) validate the parameters
+			ArrayList<String> l_val_out = new ArrayList<String>();
+			if (!l_tour_ctrl.validateTournamentParameters(l_val_out)) {
+				d_view.processMessages(l_val_out);
+				throw new Exception("Invalid tournament command");
+			}
+
+			d_msg.setMessage(MsgType.Error, "tournament command processed successfully");
+		} catch (Exception ex) {
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Parses out all the tokens associated with tournament commands that allow
+	 * lists of items i.e. -M, -P options.<br>
+	 * Each item must be separated by a comma.<br>
+	 * empty items are ignored (e.g. -M A,,B, -P...) <br>
+	 * On entry l_params should have -option in l_param[0]<br>
+	 * On exit l_param[0] should either be blank or contain the next tournament
+	 * -option.
+	 * 
+	 * @param l_params the tournament parameters to parse. must start with the first
+	 *                 token after the -option
+	 * @param p_list   the list to add the items to
+	 * @return the part of the parameters not yet parsed
+	 */
+	private String parseTournamentList(String p_params, ArrayList<String> p_list) {
+		String[] l_params = Utl.getFirstWord(p_params);
+		String l_reply = l_params[1];
+
+		// parse out all the items
+		String l_m_params = "";
+		while (!Utl.isEmpty(l_params[0]) && !isTournamentOption(l_params[0])) {
+			l_m_params += l_params[0] + " ";
+			l_reply = l_params[1];
+			l_params = Utl.getFirstWord(l_params[1]);
+		}
+
+		// each filename must be comma separated
+		String[] l_parts = l_m_params.split(",");
+		for (String l_part : l_parts) {
+			l_part = l_part.replace(',', ' ');
+			l_part = l_part.trim();
+			if (!Utl.isEmpty(l_part)) {
+				p_list.add(l_part);
+			}
+		}
+
+		return l_reply;
+	}
+
+	/**
+	 * 
+	 * @param l_param the tournament command option to analyze
+	 * @return true if l_param is one of the tournament options, ie: -M, -P, -G, -D
+	 */
+	private boolean isTournamentOption(String l_param) {
+		switch (l_param) {
+		case "-M":
+		case "-P":
+		case "-G":
+		case "-D":
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -482,8 +621,10 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		d_view.processMessage(MsgType.None, " - showmap");
 		d_view.processMessage(MsgType.None, " - savemap filename");
 		d_view.processMessage(MsgType.None, " - editmap filename");
-		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup)");
+		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup in single game mode)");
 		d_view.processMessage(MsgType.None, " - validatemap");
+		d_view.processMessage(MsgType.None,
+				" - tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns (starts tournament game mode)");
 		d_view.processMessage(MsgType.None, " - exit");
 		d_view.processMessage(MsgType.None, " - help");
 	}

@@ -16,6 +16,7 @@ import soen6441.team01.warzone.common.entities.MsgType;
  */
 public class Utl {
 	private static PrintWriter d_log = null;
+	public static ArrayList<String> d_log_buffer = new ArrayList<String>();
 	private static String LOG_PATH = "/tmp/warzone/output/";
 	private static String LOG_FILENAME = "warzone.log";
 
@@ -201,6 +202,7 @@ public class Utl {
 	public static void log(String p_message) {
 		try {
 			openLog();
+			d_log_buffer.add(p_message);
 			d_log.print(p_message);
 		} catch (Exception ex) {
 			System.out.println(
@@ -216,13 +218,30 @@ public class Utl {
 	public static void logln(String p_message) {
 		try {
 			openLog();
+			d_log_buffer.add(p_message);
 			d_log.println(p_message);
 		} catch (Exception ex) {
 			System.out.println(
 					"Exception writting to log '" + LOG_PATH + LOG_FILENAME + "', exception: " + ex.getMessage());
 		}
 	}
-	
+
+	/**
+	 * checks that the log buffer contains a specified string.<br>
+	 * used mainly for testing.
+	 * 
+	 * @param p_contains the text to check that the buffer contains
+	 * @return true if the specified text is contained in the buffer
+	 */
+	public static boolean logContains(String p_contains) {
+		for (String l_line : d_log_buffer) {
+			if (l_line.contains(p_contains)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * open the game log file (appended) if it's not already opened
 	 */
@@ -354,7 +373,7 @@ public class Utl {
 		int randomIdx = ThreadLocalRandom.current().nextInt(0, clazz.getEnumConstants().length);
 		return clazz.getEnumConstants()[randomIdx];
 	}
-	
+
 	/**
 	 * Get a random integer between 0 and p_max (inclusive)
 	 * 
@@ -368,16 +387,16 @@ public class Utl {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, p_max + 1);
 		return randomNum;
 	}
-	
+
 	/**
 	 * 
-	 * @param p_value the value to evaluate if to use singular or plural
+	 * @param p_value  the value to evaluate if to use singular or plural
 	 * @param p_single the string to return if the value is singular
 	 * @param p_plural the string to return if the valie is not singular
 	 * @return the sinlular or plural value
 	 */
 	public static String plural(int p_value, String p_single, String p_plural) {
-		if( p_value == 1) {
+		if (p_value == 1) {
 			return p_single;
 		} else {
 			return p_plural;

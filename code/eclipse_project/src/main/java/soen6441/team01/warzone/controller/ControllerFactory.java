@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.controller;
 
+import java.util.ArrayList;
+
 import soen6441.team01.warzone.controller.contracts.*;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
@@ -16,6 +18,7 @@ public class ControllerFactory {
 
 	private IMapEditorController d_map_editor_controller = null;
 	private IGameStartupController d_startup_controller = null;
+	private IGameTournamentController d_tournament_controller = null;
 	private IGameEndController d_gameend_controller = null;
 	private GamePlayController d_game_play_controller = null;
 	private ReinforcementController d_reinforcement_controller = null;
@@ -42,8 +45,7 @@ public class ControllerFactory {
 	 * @param p_view  the view software factory to use
 	 * @return newly create Warzone view software factory
 	 */
-	public static ControllerFactory CreateWarzoneBasicConsoleGameControllers(ModelFactory p_model,
-			ViewFactory p_view) {
+	public static ControllerFactory CreateWarzoneBasicConsoleGameControllers(ModelFactory p_model, ViewFactory p_view) {
 		ControllerFactory l_controller = new ControllerFactory(p_model, p_view);
 		return l_controller;
 	}
@@ -107,13 +109,51 @@ public class ControllerFactory {
 	}
 
 	/**
-	 * return the Game Startup phase controller
+	 * return the Game Startup phase controller - single game mode
 	 * 
 	 * @return map edit controller
 	 * @throws Exception unexpected error
 	 */
 	public Phase getGameStartupPhase() throws Exception {
 		return (Phase) getGameStartupController();
+	}
+
+	/**
+	 * return the Game Startup phase controller - tournament mode
+	 * 
+	 * @return map edit controller
+	 * @throws Exception unexpected error
+	 */
+	public Phase getGameTournamentPhase() throws Exception {
+		return (Phase) getGameTournamentController();
+	}
+
+	/**
+	 * return the current GameTournamentController
+	 * 
+	 * @return game tournament controller
+	 * @throws Exception unexpected error
+	 */
+	public IGameTournamentController getGameTournamentController() throws Exception {
+		return d_tournament_controller;
+	}
+
+	/**
+	 * Create the current GameTournamentController
+	 * 
+	 * @param p_map_filenames   the list of map filenames
+	 * @param p_strategies      the list of player strategies
+	 * @param p_number_of_games the number of games to play for each map
+	 * @param p_max_turns       the maximum nuber of turns to play before game is
+	 *                          stopped
+	 * @return the newly created controller
+	 * @throws Exception unexpected error
+	 */
+	public IGameTournamentController createGameTournamentController(ArrayList<String> p_map_filenames,
+			ArrayList<String> p_strategies, int p_number_of_games, int p_max_turns) throws Exception {
+		d_tournament_controller = new GameTournamentController(this, p_map_filenames, p_strategies, p_number_of_games,
+				p_max_turns);
+		return d_tournament_controller;
 	}
 
 	/**
@@ -213,8 +253,8 @@ public class ControllerFactory {
 			d_issue_order_controller = new IssueOrderController(this);
 		}
 		return d_issue_order_controller;
-	}	
-	
+	}
+
 	/**
 	 * return the current ReinforcementController
 	 * 

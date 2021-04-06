@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import soen6441.team01.warzone.common.Observable;
@@ -7,19 +8,20 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
+import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.UserMessage;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
+import soen6441.team01.warzone.view.contracts.IGameTournamentView;
 
 /**
  * Warzone game startup console based view. The view interacts with the user via
  * the system console.
  */
-public class GameStartupConsole implements Observer, IGameStartupView {
-	private IGameStartupController d_controller = null;
-	private Scanner d_keyboard = null;
-	private IAppMsg d_user_message_model = null;
+public class GameTournamentConsole implements Observer, IGameTournamentView {
+	private IGameTournamentController d_controller = null;
+	private IAppMsg d_message = null;
 	private ModelFactory d_factory_model = null;
 
 	/**
@@ -29,20 +31,19 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 * @param p_factory_model model factory
 	 * @throws Exception unexpected error
 	 */
-	public GameStartupConsole(IGameStartupController p_controller, ModelFactory p_factory_model)
+	public GameTournamentConsole(IGameTournamentController p_controller, ModelFactory p_factory_model)
 			throws Exception {
 		d_controller = p_controller;
-		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
-		d_user_message_model = d_factory_model.getUserMessageModel();
+		d_message = d_factory_model.getUserMessageModel();
 	}
 
 	/**
 	 * activate the view
 	 */
 	public void activate() {
-		if (d_user_message_model != null) {
-			d_user_message_model.attach(this);
+		if (d_message != null) {
+			d_message.attach(this);
 		}
 	}
 
@@ -50,8 +51,8 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 * do a clean shutdown of the view
 	 */
 	public void deactivate() {
-		if (d_user_message_model != null) {
-			d_user_message_model.detach(this);
+		if (d_message != null) {
+			d_message.detach(this);
 		}
 	}
 
@@ -61,21 +62,36 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	public void displayGameStartupBanner() {
 		Utl.lprintln("");
 		Utl.lprintln("***       Game Startup         ***");
-		Utl.lprintln("***     Single Game Mode       ***");
+		Utl.lprintln("***      Tournament Mode       ***");
 	}
 
 	/**
-	 * Get the next command typed in on the console from the user
-	 * 
-	 * @return the command text typed in by the user
+	 * Displays the tournament parameters
 	 */
-	public String getCommand() {
-		String l_prompt = "Game startup command> ";
-		System.out.println("");
-		System.out.print(l_prompt);
-		String l_user_command = d_keyboard.nextLine();
-		Utl.logln(l_prompt + l_user_command);
-		return l_user_command;
+	public void displayTournamentParameters(ArrayList<String> p_map_filenames, ArrayList<String> p_strategies,
+			int p_number_of_games, int p_max_turns) {
+		Utl.lprintln("");
+		Utl.lprintln(Utl.plural(p_map_filenames.size(), "Map: ", "Maps: "));
+		for (String l_str : p_map_filenames) {
+			Utl.lprintln("   " + l_str);
+		}
+		Utl.lprintln(Utl.plural(p_strategies.size(), "Strategy: ", "Strategies: "));
+		for (String l_str : p_strategies) {
+			Utl.lprintln("   " + l_str);
+		}
+		Utl.lprintln("Number of games for each map        : " + p_number_of_games);
+		Utl.lprintln("Maximum number of turns for each map: " + p_max_turns);
+	}
+
+	/**
+	 * Displays the tournament parameters
+	 */
+	public void displayTournamentErrors(ArrayList<String> p_output) {
+		Utl.lprintln("");
+		Utl.lprintln("! Tournament Error(s): ");
+		for (String l_str : p_output) {
+			Utl.lprintln("   " + l_str);
+		}
 	}
 
 	/**
@@ -105,10 +121,8 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 */
 	@Override
 	public void update(Observable p_obserable) {
-		if (p_obserable == d_user_message_model) {
-			processMessage(d_user_message_model.getLastMessage());
+		if (p_obserable == d_message) {
+			processMessage(d_message.getLastMessage());
 		}
-
 	}
-
 }

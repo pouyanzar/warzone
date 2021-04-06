@@ -310,13 +310,13 @@ public class MapTest {
 	@Test
 	public void test_saveMap_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		File myObj = new File("c:\\tmp\\test_1_map.map");
+		File myObj = new File("\\tmp\\test_1_map.map");
 		myObj.delete();
 		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		l_map.saveMap("c:\\tmp\\test_1_map.map");
+		l_map.saveMap("\\tmp\\test_1_map.map");
 		l_map = new Map(d_model_factory);
 		d_model_factory.setMapModel(l_map);
-		l_map = (Map) Map.loadMapFromFile("c:\\tmp\\test_1_map.map", d_model_factory);
+		l_map = (Map) Map.loadMapFromFile("\\tmp\\test_1_map.map", d_model_factory);
 		assertTrue(l_map.validatemap());
 	}
 
@@ -328,11 +328,11 @@ public class MapTest {
 	@Test
 	public void test_saveMap_2() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		File myObj = new File("c:\\tmp\\test_2_map.map");
+		File myObj = new File("\\tmp\\test_2_map.map");
 		myObj.delete();
 		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		l_map.saveMap("c:\\tmp\\test_2_map.map");
-		l_map.saveMap("c:\\tmp\\test_2_map.map");
+		l_map.saveMap("\\tmp\\test_2_map.map");
+		l_map.saveMap("\\tmp\\test_2_map.map");
 	}
 
 }

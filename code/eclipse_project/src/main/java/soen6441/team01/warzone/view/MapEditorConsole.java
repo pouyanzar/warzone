@@ -118,6 +118,17 @@ public class MapEditorConsole implements Observer, IMapEditorView {
 	}
 
 	/**
+	 * process message helper function
+	 * 
+	 * @param p_lines the output lines to display
+	 */
+	public void processMessages(ArrayList<String> p_lines ) {
+		for( String p_line : p_lines ) {
+			Utl.lprintln(p_line);
+		}
+	}	
+	
+	/**
 	 * called by Observable whenever the system adds a new user message that needs
 	 * to be communicated to the user.
 	 */
