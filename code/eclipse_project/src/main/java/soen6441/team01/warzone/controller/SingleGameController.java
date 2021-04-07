@@ -2,7 +2,7 @@ package soen6441.team01.warzone.controller;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.*;
@@ -14,7 +14,7 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class GamePlayController extends Phase implements IGamePlayController {
+public class SingleGameController extends Phase implements ISingleGameController {
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -30,7 +30,7 @@ public class GamePlayController extends Phase implements IGamePlayController {
 	 * @param p_controller_factory predefined SoftwareFactoryController.
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayController(ControllerFactory p_controller_factory) throws Exception {
+	public SingleGameController(ControllerFactory p_controller_factory) throws Exception {
 		super(p_controller_factory.getModelFactory().getGameEngine());
 		d_controller_factory = p_controller_factory;
 		d_model_factory = p_controller_factory.getModelFactory();

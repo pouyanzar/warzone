@@ -1,8 +1,8 @@
 package soen6441.team01.warzone.view;
 
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
+import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.ModelFactory;
@@ -73,7 +73,7 @@ public class ViewFactory {
 	 * @return an IGameTournamentView object
 	 * @throws Exception if there is a problem creating the view
 	 */
-	public IGameTournamentView getGameTournamentConsoleView(IGameTournamentController p_controller) throws Exception {
+	public IGameTournamentView getGameTournamentConsoleView(ITournamentController p_controller) throws Exception {
 		return new GameTournamentConsole(p_controller, d_model_factory);
 	}
 
@@ -85,7 +85,7 @@ public class ViewFactory {
 	 * @return an IGamePlayView object
 	 * @throws Exception if there is a problem creating the view
 	 */
-	public IGamePlayView getGamePlayConsoleView(IGamePlayController p_controller) throws Exception {
+	public IGamePlayView getGamePlayConsoleView(ISingleGameController p_controller) throws Exception {
 		return new GamePlayConsole(p_controller, d_model_factory);
 	}
 }

@@ -18,12 +18,13 @@ public class ControllerFactory {
 
 	private IMapEditorController d_map_editor_controller = null;
 	private IGameStartupController d_startup_controller = null;
-	private IGameTournamentController d_tournament_controller = null;
+	private ITournamentController d_tournament_controller = null;
 	private IGameEndController d_gameend_controller = null;
-	private GamePlayController d_game_play_controller = null;
+	private SingleGameController d_game_play_controller = null;
 	private ReinforcementController d_reinforcement_controller = null;
 	private IssueOrderController d_issue_order_controller = null;
 	private OrderExecController d_order_exec_controller = null;
+	private Phase d_gameplay_phase = null;
 
 	/**
 	 * Constructor with views defined. Views passed as null will result in the
@@ -119,44 +120,6 @@ public class ControllerFactory {
 	}
 
 	/**
-	 * return the Game Startup phase controller - tournament mode
-	 * 
-	 * @return map edit controller
-	 * @throws Exception unexpected error
-	 */
-	public Phase getGameTournamentPhase() throws Exception {
-		return (Phase) getGameTournamentController();
-	}
-
-	/**
-	 * return the current GameTournamentController
-	 * 
-	 * @return game tournament controller
-	 * @throws Exception unexpected error
-	 */
-	public IGameTournamentController getGameTournamentController() throws Exception {
-		return d_tournament_controller;
-	}
-
-	/**
-	 * Create the current GameTournamentController
-	 * 
-	 * @param p_map_filenames   the list of map filenames
-	 * @param p_strategies      the list of player strategies
-	 * @param p_number_of_games the number of games to play for each map
-	 * @param p_max_turns       the maximum nuber of turns to play before game is
-	 *                          stopped
-	 * @return the newly created controller
-	 * @throws Exception unexpected error
-	 */
-	public IGameTournamentController createGameTournamentController(ArrayList<String> p_map_filenames,
-			ArrayList<String> p_strategies, int p_number_of_games, int p_max_turns) throws Exception {
-		d_tournament_controller = new GameTournamentController(this, p_map_filenames, p_strategies, p_number_of_games,
-				p_max_turns);
-		return d_tournament_controller;
-	}
-
-	/**
 	 * Create or return the current GameEndController
 	 * 
 	 * @return game end controller
@@ -199,11 +162,39 @@ public class ControllerFactory {
 	 * @return game play controller
 	 * @throws Exception unexpected error
 	 */
-	public IGamePlayController getGamePlayController() throws Exception {
+	public ISingleGameController getSingleGameController() throws Exception {
 		if (d_game_play_controller == null) {
-			d_game_play_controller = new GamePlayController(this);
+			d_game_play_controller = new SingleGameController(this);
 		}
 		return d_game_play_controller;
+	}
+
+	/**
+	 * return the current GameTournamentController
+	 * 
+	 * @return game tournament controller
+	 * @throws Exception unexpected error
+	 */
+	public ITournamentController getGameTournamentController() throws Exception {
+		return d_tournament_controller;
+	}
+
+	/**
+	 * Create the current GameTournamentController
+	 * 
+	 * @param p_map_filenames   the list of map filenames
+	 * @param p_strategies      the list of player strategies
+	 * @param p_number_of_games the number of games to play for each map
+	 * @param p_max_turns       the maximum nuber of turns to play before game is
+	 *                          stopped
+	 * @return the newly created controller
+	 * @throws Exception unexpected error
+	 */
+	public ITournamentController createGameTournamentController(ArrayList<String> p_map_filenames,
+			ArrayList<String> p_strategies, int p_number_of_games, int p_max_turns) throws Exception {
+		d_tournament_controller = new TournamentController(this, p_map_filenames, p_strategies, p_number_of_games,
+				p_max_turns);
+		return d_tournament_controller;
 	}
 
 	/**
@@ -213,7 +204,17 @@ public class ControllerFactory {
 	 * @throws Exception unexpected error
 	 */
 	public Phase getGamePlayPhase() throws Exception {
-		return (Phase) getGamePlayController();
+		return d_gameplay_phase;
+	}
+
+	/**
+	 * set the current GamePlayController phase (either Single or Tournament game)
+	 * 
+	 * @param p_gameplay_phase the phase to set as the gameplay phase
+	 * @throws Exception unexpected error
+	 */
+	public void setGamePlayPhase(Phase p_gameplay_phase) throws Exception {
+		d_gameplay_phase = p_gameplay_phase;
 	}
 
 	/**

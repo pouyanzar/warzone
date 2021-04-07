@@ -405,6 +405,6 @@ public class GameStartupControllerTest {
 		Phase next_phase = d_startup_controller.processGameStartupCommand("assigncountries");
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("assigncountries processed successfully"));
-		assertTrue(next_phase instanceof GamePlayController);
+		assertTrue(next_phase instanceof SingleGameController);
 	}
 }

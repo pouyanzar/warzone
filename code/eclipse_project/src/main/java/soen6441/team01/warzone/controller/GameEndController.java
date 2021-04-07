@@ -7,7 +7,7 @@ import java.util.Queue;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameEndController;
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;

@@ -41,7 +41,7 @@ public abstract class Phase {
 	}
 
 	// required to be defined by all subclasses
-	abstract public void execPhase();
+	abstract public void execPhase() throws Exception;
 	
 	/**
 	 * set the next phase of the game

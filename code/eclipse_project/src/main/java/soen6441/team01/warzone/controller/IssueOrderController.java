@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
@@ -16,7 +16,7 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class IssueOrderController extends GamePlayController implements IGamePlayController, IGameplayOrderDatasource {
+public class IssueOrderController extends SingleGameController implements ISingleGameController, IGameplayOrderDatasource {
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;

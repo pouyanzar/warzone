@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import soen6441.team01.warzone.controller.GamePlayController;
+import soen6441.team01.warzone.controller.SingleGameController;
 import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;

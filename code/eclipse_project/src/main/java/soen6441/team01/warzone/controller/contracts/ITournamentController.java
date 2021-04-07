@@ -8,8 +8,6 @@ import soen6441.team01.warzone.model.contracts.IGamePlayModel;
  * Defines the interface used to support the Warzone game startup controller
  *
  */
-public interface IGameTournamentController {
-	void execGameStartup();
-	
+public interface ITournamentController {
 	boolean validateTournamentParameters(ArrayList<String> p_val_out);
 }

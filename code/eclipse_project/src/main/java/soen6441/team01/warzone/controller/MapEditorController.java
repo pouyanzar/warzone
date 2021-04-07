@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
+import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.Phase;
@@ -145,7 +145,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			break;
 		case "tournament":
 			if (processTournament(l_cmd_params[1])) {
-				l_next_phase = d_controller_factory.getGameTournamentPhase();
+				l_next_phase = (Phase)d_controller_factory.getGameTournamentController();
+				d_controller_factory.setGamePlayPhase(l_next_phase);
 			}
 			break;
 		default:
@@ -523,7 +524,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			}
 
 			// 2) create the tournament controller that will process the tournament
-			IGameTournamentController l_tour_ctrl = d_controller_factory.createGameTournamentController(l_map_filenames,
+			ITournamentController l_tour_ctrl = d_controller_factory.createGameTournamentController(l_map_filenames,
 					l_strategies, l_number_of_games, l_max_turns);
 
 			// 3) validate the parameters

@@ -7,7 +7,7 @@ import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.IGamePlayController;
+import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.Card;
 import soen6441.team01.warzone.model.ModelFactory;
@@ -23,7 +23,7 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * the system console.
  */
 public class GamePlayConsole implements Observer, IGamePlayView {
-	private IGamePlayController d_controller = null;
+	private ISingleGameController d_controller = null;
 	private Scanner d_keyboard = null;
 	private IAppMsg d_user_message_model = null;
 	private ModelFactory d_factory_model = null;
@@ -35,7 +35,7 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 * @param p_factory_model model factory
 	 * @throws Exception unexpected error
 	 */
-	public GamePlayConsole(IGamePlayController p_controller, ModelFactory p_factory_model)
+	public GamePlayConsole(ISingleGameController p_controller, ModelFactory p_factory_model)
 			throws Exception {
 		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);

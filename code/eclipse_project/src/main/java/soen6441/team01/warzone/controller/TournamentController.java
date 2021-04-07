@@ -3,7 +3,7 @@ package soen6441.team01.warzone.controller;
 import java.util.ArrayList;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
+import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.GameState;
@@ -14,18 +14,20 @@ import soen6441.team01.warzone.view.contracts.IGameTournamentView;
  * Warzone game tournament controller. Manages the coordination and progression
  * of a game tournament phase.
  */
-public class GameTournamentController extends Phase implements IGameTournamentController {
+public class TournamentController extends Phase implements ITournamentController {
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
 	private IGameTournamentView d_view;
 	private IAppMsg d_msg;
-	private IGamePlayModel d_gameplay;
 	private ArrayList<String> d_map_filenames;
 	private ArrayList<String> d_strategies;
 	private int d_number_of_games;
 	private int d_max_turns;
-	private boolean d_exit_tournament_sw;
+	private boolean d_start_tournament_sw = true;
+	private int d_current_map_idx;
+	private int d_current_game_idx;
+	private int d_current_round;
 
 	/**
 	 * Constructor with view and models defined.
@@ -38,7 +40,7 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	 *                             stopped
 	 * @throws Exception unexpected error
 	 */
-	public GameTournamentController(ControllerFactory p_controller_factory, ArrayList<String> p_map_filenames,
+	public TournamentController(ControllerFactory p_controller_factory, ArrayList<String> p_map_filenames,
 			ArrayList<String> p_strategies, int p_number_of_games, int p_max_turns) throws Exception {
 		super(p_controller_factory.getModelFactory().getGameEngine());
 		d_controller_factory = p_controller_factory;
@@ -53,36 +55,65 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	}
 
 	/**
-	 * invoked by the game engine as part of the game startup phase of the game.
+	 * invoked by the game engine as the main part of the tournament phase
+	 * 
+	 * @throws Exception unexpected error
 	 */
 	@Override
-	public void execPhase() {
-		execGameStartup();
+	public void execPhase() throws Exception {
+		try {
+			if (d_start_tournament_sw) {
+				startTournament();
+				d_start_tournament_sw = false;
+			}
+			if (isEndOfCurrentGame()) {
+				if (isEndOfTournament()) {
+					processEndOfTournament();
+				} else {
+					startNextGame();
+					nextPhase(this);
+				}
+			} else {
+				d_msg.setMessage(MsgType.None,
+						"\n-- game " + (d_current_game_idx + 1) + ", round " + (++d_current_round) + " --");
+				nextPhase(d_controller_factory.getReinforcementPhase());
+			}
+		} catch (Exception ex) {
+			endTournament(MsgType.Error, "exception encountered during game tournament: " + ex.getMessage(), null);
+		}
 	}
 
 	/**
-	 * Starts executing the game startup dynamics
+	 * Process the end of the tournament
+	 * 
+	 * @throws Exception unexpected error
 	 */
-	public void execGameStartup() {
-		try {
-			nextPhase(d_controller_factory.getGameEndPhase());
-			d_view.activate();
-			d_view.displayTournamentGameplayBanner();
+	private void processEndOfTournament() throws Exception {
+		endTournament(MsgType.None, "\n*** End of Tournament ***", d_controller_factory.getGameEndPhase());
+	}
 
-			ArrayList<String> l_val_out = new ArrayList<String>();
-			if (!validateTournamentParameters(l_val_out)) {
-				d_view.displayTournamentErrors(l_val_out);
-				nextPhase(d_controller_factory.getGameStartupPhase());
-			} else {
-				startTournament();
-			}
-		} catch (Exception ex) {
-			Utl.lprintln("Fatal error during game tournament, exception: " + ex.getMessage());
+	/**
+	 * checks if the it's the end of the tournament
+	 * 
+	 * @return true if the tournament has ended; otherwise false
+	 */
+	private boolean isEndOfTournament() {
+		if (d_current_map_idx >= d_map_filenames.size()) {
+			return true;
 		}
+		return false;
+	}
 
-		if (d_view != null) {
-			d_view.deactivate();
+	/**
+	 * checks if the it's the end of the current game
+	 * 
+	 * @return true if the current game has ended; otherwise false
+	 */
+	private boolean isEndOfCurrentGame() {
+		if (d_current_round >= d_max_turns) {
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -91,69 +122,65 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	 * @throws Exception unexpected error
 	 */
 	private void startTournament() throws Exception {
+		nextPhase(d_controller_factory.getGameEndPhase());
+		d_view.activate();
+		d_view.displayTournamentGameplayBanner();
 
-		d_view.displayTournamentParameters(d_map_filenames, d_strategies, d_number_of_games, d_max_turns);
-		// new views will be created as needed - disable our view otherwise we'll see
-		// messages twice
-		d_view.deactivate();
-		d_view = null;
-
-		d_gameplay = d_model_factory.getNewGamePlayModel();
-		d_gameplay.setMap(d_model_factory.getMapModel());
-
-		d_exit_tournament_sw = false;
-
-		try {
-			for (String l_map_filename : d_map_filenames) {
-				playGame(l_map_filename, d_strategies, d_max_turns);
-			}
-		} catch (Exception ex) {
-			d_msg.setMessage(MsgType.Error,
-					"Error during tournament play, aborting tournament, exception: " + ex.getMessage());
+		ArrayList<String> l_val_out = new ArrayList<String>();
+		if (!validateTournamentParameters(l_val_out)) {
+			d_view.displayTournamentErrors(l_val_out);
+			endTournament(MsgType.Error, "tournament aborted", d_controller_factory.getMapEditorPhase());
+			return;
+		} else {
+			d_view.displayTournamentParameters(d_map_filenames, d_strategies, d_number_of_games, d_max_turns);
 		}
 
-		d_msg.setMessage(MsgType.None, "Tournament over.");
-
-		nextPhase(d_controller_factory.getGameEndPhase());
+		d_current_map_idx = -1;
+		d_current_game_idx = d_number_of_games;
+		d_current_round = d_max_turns + 1; // forces an end of current game
 	}
 
 	/**
+	 * Start a new tournament game
 	 * 
-	 * @param p_map_filename
-	 * @param p_strategies2
-	 * @param p_number_of_games
-	 * @param p_max_turns
-	 * @throws Exception
+	 * @throws Exception unexpected error
 	 */
-	private void playGame(String p_map_filename, ArrayList<String> p_strategies, int p_max_turns) throws Exception {
-		// create new world map
-		ModelFactory l_new_factory_model = new ModelFactory(d_msg);
-		IMapModel l_map = Map.loadMapFromFile(p_map_filename, l_new_factory_model);
-		l_new_factory_model.setMapModel(l_map);
+	private void startNextGame() throws Exception {
+		d_current_game_idx++;
+		if (d_current_game_idx >= d_number_of_games) {
+			// completed all the games for the current map. start on the next map
+			d_current_map_idx++;
+			if (d_current_map_idx >= d_map_filenames.size()) {
+				// we're done with the tournament
+				return;
+			}
+			d_current_game_idx = 0;
+		}
+		d_current_round = 0;
+
+		String l_map_filename = d_map_filenames.get(d_current_map_idx);
+		d_msg.setMessage(MsgType.None,
+				"\n== starting game " + (d_current_game_idx + 1) + " on map " + l_map_filename + " ==\n");
+
+		// create new map
+		IMapModel l_map = Map.loadMapFromFile(l_map_filename, d_model_factory);
+		d_model_factory.setMapModel(l_map);
 
 		// create players
-		IGamePlayModel l_gpm = l_new_factory_model.getNewGamePlayModel();
+		IGamePlayModel l_gpm = d_model_factory.getNewGamePlayModel();
 		int l_player_num = 1;
-		for (String l_strategy_str : p_strategies) {
-			IPlayerModel l_player = new Player("Player" + l_player_num++, l_new_factory_model);
+		for (String l_strategy_str : d_strategies) {
+			IPlayerModel l_player = new Player("Player" + l_player_num++, d_model_factory);
 			IPlayerStrategy l_strategy = getTournamentStrategy(l_strategy_str, l_player);
 			l_player.setStrategy(l_strategy);
 			l_gpm.addPlayer(l_player);
 		}
 
-		// assign countries
-		ControllerFactory l_controller_factory = new ControllerFactory(l_new_factory_model, d_view_factory);
+		// assign countries to players
 		l_gpm.assignCountries();
 		l_gpm.setGameState(GameState.GamePlay);
 
-		// start and execute a game starting at gameplay
-		GameEngine l_game_engine = new GameEngine(l_new_factory_model, d_view_factory, l_controller_factory);
-		l_new_factory_model.setGameEngine(l_game_engine);
-		l_controller_factory.getGamePlayController().setMaxRounds(p_max_turns);
-		// l_game_engine.setNextPhase(l_controller_factory.getReinforcementPhase());
-		l_game_engine.setNextPhase(l_controller_factory.getGamePlayPhase());
-		l_game_engine.startNewGame();
-		// john - *ici* - need to fix end game phase in gameplaycontroller
+		return;
 	}
 
 	/**
@@ -250,7 +277,7 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 		case "random":
 			return new PlayerRandomStrategy(p_player, l_msg_model);
 		case "cheater":
-			return new PlayerCheaterStrategy(p_player, l_msg_model); 
+			return new PlayerCheaterStrategy(p_player, l_msg_model);
 		}
 
 		return null;
@@ -277,6 +304,26 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	public static void validateMaxTurnsPerGame(int p_max_turns) throws Exception {
 		if (p_max_turns < 1 || p_max_turns > 999) {
 			throw new Exception("invalid number of max turns per game, should be between 1 and 999");
+		}
+	}
+
+	/**
+	 * call this method to end the tournament. it sets up the closing message and
+	 * well as the next phase and does some necessary cleanup
+	 * 
+	 * @param p_msg_type   the end message type
+	 * @param p_msg        the end message to display
+	 * @param p_next_phase the next phase to invoke
+	 * @throws Exception unexpected error
+	 */
+	private void endTournament(MsgType p_msg_type, String p_msg, Phase p_next_phase) throws Exception {
+		d_view.processMessage(p_msg_type, p_msg);
+		if (p_next_phase == null) {
+			p_next_phase = d_controller_factory.getGameEndPhase();
+		}
+		nextPhase(p_next_phase);
+		if (d_view != null) {
+			d_view.deactivate();
 		}
 	}
 }

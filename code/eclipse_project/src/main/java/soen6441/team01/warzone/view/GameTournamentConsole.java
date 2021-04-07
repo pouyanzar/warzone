@@ -8,7 +8,7 @@ import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
-import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
+import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.entities.UserMessage;
@@ -20,7 +20,7 @@ import soen6441.team01.warzone.view.contracts.IGameTournamentView;
  * the system console.
  */
 public class GameTournamentConsole implements Observer, IGameTournamentView {
-	private IGameTournamentController d_controller = null;
+	private ITournamentController d_controller = null;
 	private IAppMsg d_message = null;
 	private ModelFactory d_factory_model = null;
 
@@ -31,7 +31,7 @@ public class GameTournamentConsole implements Observer, IGameTournamentView {
 	 * @param p_factory_model model factory
 	 * @throws Exception unexpected error
 	 */
-	public GameTournamentConsole(IGameTournamentController p_controller, ModelFactory p_factory_model)
+	public GameTournamentConsole(ITournamentController p_controller, ModelFactory p_factory_model)
 			throws Exception {
 		d_controller = p_controller;
 		d_factory_model = p_factory_model;
@@ -88,7 +88,7 @@ public class GameTournamentConsole implements Observer, IGameTournamentView {
 	 */
 	public void displayTournamentErrors(ArrayList<String> p_output) {
 		Utl.lprintln("");
-		Utl.lprintln("! Tournament Error(s): ");
+		Utl.lprintln("! Encountered errors in the tournament parameters: ");
 		for (String l_str : p_output) {
 			Utl.lprintln("   " + l_str);
 		}
