@@ -6,6 +6,7 @@ import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameTournamentController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
+import soen6441.team01.warzone.model.entities.GameState;
 import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGameTournamentView;
 
@@ -24,16 +25,17 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	private ArrayList<String> d_strategies;
 	private int d_number_of_games;
 	private int d_max_turns;
+	private boolean d_exit_tournament_sw;
 
 	/**
 	 * Constructor with view and models defined.
 	 * 
 	 * @param p_controller_factory predefined SoftwareFactoryController.
-	 * @param p_map_filenames   the list of map filenames
-	 * @param p_strategies      the list of player strategies
-	 * @param p_number_of_games the number of games to play for each map
-	 * @param p_max_turns       the maximum nuber of turns to play before game is
-	 *                          stopped
+	 * @param p_map_filenames      the list of map filenames
+	 * @param p_strategies         the list of player strategies
+	 * @param p_number_of_games    the number of games to play for each map
+	 * @param p_max_turns          the maximum nuber of turns to play before game is
+	 *                             stopped
 	 * @throws Exception unexpected error
 	 */
 	public GameTournamentController(ControllerFactory p_controller_factory, ArrayList<String> p_map_filenames,
@@ -65,7 +67,7 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 		try {
 			nextPhase(d_controller_factory.getGameEndPhase());
 			d_view.activate();
-			d_view.displayGameStartupBanner();
+			d_view.displayTournamentGameplayBanner();
 
 			ArrayList<String> l_val_out = new ArrayList<String>();
 			if (!validateTournamentParameters(l_val_out)) {
@@ -91,19 +93,67 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	private void startTournament() throws Exception {
 
 		d_view.displayTournamentParameters(d_map_filenames, d_strategies, d_number_of_games, d_max_turns);
+		// new views will be created as needed - disable our view otherwise we'll see
+		// messages twice
+		d_view.deactivate();
+		d_view = null;
 
 		d_gameplay = d_model_factory.getNewGamePlayModel();
 		d_gameplay.setMap(d_model_factory.getMapModel());
 
-		String l_cmd;
-//	while (l_next_phase == null) {
-//		l_cmd = d_view.getCommand();
-//		l_next_phase = processGameStartupCommand(l_cmd);
-//	}
-//	nextPhase(l_next_phase);
-		d_msg.setMessage(MsgType.Warning, "Tournaments coming soon...");
+		d_exit_tournament_sw = false;
+
+		try {
+			for (String l_map_filename : d_map_filenames) {
+				playGame(l_map_filename, d_strategies, d_max_turns);
+			}
+		} catch (Exception ex) {
+			d_msg.setMessage(MsgType.Error,
+					"Error during tournament play, aborting tournament, exception: " + ex.getMessage());
+		}
+
+		d_msg.setMessage(MsgType.None, "Tournament over.");
 
 		nextPhase(d_controller_factory.getGameEndPhase());
+	}
+
+	/**
+	 * 
+	 * @param p_map_filename
+	 * @param p_strategies2
+	 * @param p_number_of_games
+	 * @param p_max_turns
+	 * @throws Exception
+	 */
+	private void playGame(String p_map_filename, ArrayList<String> p_strategies, int p_max_turns) throws Exception {
+		// create new world map
+		ModelFactory l_new_factory_model = new ModelFactory(d_msg);
+		IMapModel l_map = Map.loadMapFromFile(p_map_filename, l_new_factory_model);
+		l_new_factory_model.setMapModel(l_map);
+
+		// create players
+		IGamePlayModel l_gpm = l_new_factory_model.getNewGamePlayModel();
+		int l_player_num = 1;
+		for (String l_strategy_str : p_strategies) {
+			IPlayerModel l_player = new Player("Player" + l_player_num++, l_new_factory_model);
+			IPlayerStrategy l_strategy = getTournamentStrategy(l_strategy_str, l_player);
+			l_player.setStrategy(l_strategy);
+			l_gpm.addPlayer(l_player);
+		}
+
+		// assign countries
+		ControllerFactory l_controller_factory = new ControllerFactory(l_new_factory_model, d_view_factory);
+		l_gpm.assignCountries();
+		l_gpm.setGameState(GameState.GamePlay);
+
+		// start and execute a game starting at gameplay
+		GameEngine l_game_engine = new GameEngine(l_new_factory_model, d_view_factory, l_controller_factory);
+		l_new_factory_model.setGameEngine(l_game_engine);
+		l_controller_factory.getGamePlayController().setMaxRounds(p_max_turns);
+		// l_game_engine.setNextPhase(l_controller_factory.getReinforcementPhase());
+		l_game_engine.setNextPhase(l_controller_factory.getGamePlayPhase());
+		l_game_engine.startNewGame();
+		// john - *ici* - need to fix end game phase in gameplaycontroller
 	}
 
 	/**
@@ -182,15 +232,21 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 	 *                   benevolent, random, cheater
 	 * @param p_player   the player to set the strategy to
 	 * @return the newly created strategy
+	 * @throws Exception unexpected error
 	 */
-	public static IPlayerStrategy getTournamentStrategy(String p_strategy, IPlayerModel p_player) {
+	public static IPlayerStrategy getTournamentStrategy(String p_strategy, IPlayerModel p_player) throws Exception {
 		String l_strategy = p_strategy.trim().toLowerCase();
+		IAppMsg l_msg_model = null;
+
+		if (p_player != null) {
+			l_msg_model = p_player.getPlayerModelFactory().getUserMessageModel();
+		}
 
 		switch (l_strategy) {
 		case "aggressive":
 			return null;
 		case "benevolent":
-			return new PlayerBenevolentStrategy(p_player);
+			return new PlayerBenevolentStrategy(p_player, l_msg_model);
 		case "random":
 			return null;
 		case "cheater":

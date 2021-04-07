@@ -59,9 +59,9 @@ public class GameTournamentConsole implements Observer, IGameTournamentView {
 	/**
 	 * Displays the startup banner
 	 */
-	public void displayGameStartupBanner() {
+	public void displayTournamentGameplayBanner() {
 		Utl.lprintln("");
-		Utl.lprintln("***       Game Startup         ***");
+		Utl.lprintln("***         Game Play          ***");
 		Utl.lprintln("***      Tournament Mode       ***");
 	}
 

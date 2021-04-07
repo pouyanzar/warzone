@@ -2,6 +2,7 @@ package soen6441.team01.warzone.controller;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
+import soen6441.team01.warzone.controller.contracts.IGamePlayController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
@@ -19,6 +20,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	private IGameStartupView d_view;
 	private IAppMsg d_msg_model;
 	private IGamePlayModel d_gameplay;
+	private int d_num_rounds = Integer.MAX_VALUE;
 
 	/**
 	 * Constructor with view and models defined.
@@ -51,6 +53,8 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		Phase l_end_phase = null;
 
 		try {
+			d_num_rounds = Integer.MAX_VALUE;
+			
 			d_view.activate();
 			l_end_phase = d_controller_factory.getGameEndPhase();
 			d_view.displayGameStartupBanner();
@@ -79,6 +83,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	 * <ul>
 	 * <li>gameplayer -add playername [human|aggr|bene|rand|cheat] -remove
 	 * playername</li>
+	 * <li>maxrounds num_rounds</li>
 	 * <li>assigncountries</li>
 	 * <li>loadmap filename</li>
 	 * <li>exit</li>
@@ -111,10 +116,14 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		case "gameplayer":
 			processGameplayer(l_cmd_params[1]);
 			break;
+		case "maxrounds":
+			processMaxRounds(l_cmd_params[1]);
+			break;
 		case "assigncountries":
 			if (processAssignCountries(d_gameplay)) {
 				// move on to gameplay
 				l_next_phase = d_controller_factory.getGamePlayPhase();
+				d_controller_factory.getGamePlayController().setMaxRounds(d_num_rounds);
 			}
 			break;
 		default:
@@ -144,6 +153,35 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		}
 
 		return "";
+	}
+
+	/**
+	 * process the maxrounds command
+	 * <p>
+	 * syntax: maxrounds num_rounds <br>
+	 * </p>
+	 * 
+	 * @param p_cmd_params the maxrounds parameters
+	 * @throws Exception unexpected error encountered
+	 */
+	private void processMaxRounds(String p_cmd_params) throws Exception {
+		String l_params[] = Utl.getFirstWord(p_cmd_params);
+
+		if (Utl.isEmpty(l_params[0])) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid maxrounds no options specified");
+			return;
+		}
+
+		// get num_rounds
+		String l_num_rounds_str = l_params[0];
+		d_num_rounds = Utl.convertToInteger(l_num_rounds_str);
+
+		if (d_num_rounds == Integer.MAX_VALUE) {
+			d_msg_model.setMessage(MsgType.Error, "Invalid num_rounds specified.");
+			return;
+		}
+		
+		d_msg_model.setMessage(MsgType.Informational, "maxrounds successful");
 	}
 
 	/**
@@ -250,7 +288,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 	 *                     [human|aggr|bene|rand|cheat], or the next option
 	 *                     (-add..., -remove... or blank)
 	 * @return the newly created player with the appropriate strategy
-	 * @throws Exception unexpected errir
+	 * @throws Exception unexpected error
 	 */
 	private IPlayerModel getPlayerWithStrategy(String p_player_name, String[] p_params) throws Exception {
 		String l_tmp_params[] = Utl.getFirstWord(p_params[1]);
@@ -261,11 +299,11 @@ public class GameStartupController extends Phase implements IGameStartupControll
 
 		switch (l_tmp_params[0]) {
 		case "aggr":
-			l_strategy = new PlayerAggressiveStrategy(l_player);
+			l_strategy = new PlayerAggressiveStrategy(l_player, d_msg_model);
 			l_next_word = true;
 			break;
 		case "bene":
-			l_strategy = new PlayerBenevolentStrategy(l_player);
+			l_strategy = new PlayerBenevolentStrategy(l_player, d_msg_model);
 			l_next_word = true;
 			break;
 		case "rand":
@@ -338,6 +376,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 				" - gameplayer -add playername [human*|aggr|bene|rand|cheat] -remove playername");
 		d_view.processMessage(MsgType.None,
 				"              [] = optional items - if not specified then human is the default");
+		d_view.processMessage(MsgType.None, " - maxrounds num_rounds");
 		d_view.processMessage(MsgType.None, " - assigncountries");
 		d_view.processMessage(MsgType.None, " - loadmap filename");
 		d_view.processMessage(MsgType.None, " - exit");

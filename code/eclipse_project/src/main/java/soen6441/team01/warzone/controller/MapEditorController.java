@@ -533,7 +533,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 				throw new Exception("Invalid tournament command");
 			}
 
-			d_msg.setMessage(MsgType.Error, "tournament command processed successfully");
+			d_msg.setMessage(MsgType.Informational, "tournament command processed successfully");
 		} catch (Exception ex) {
 			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;

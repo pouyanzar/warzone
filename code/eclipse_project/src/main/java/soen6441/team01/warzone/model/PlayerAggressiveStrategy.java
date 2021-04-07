@@ -3,6 +3,7 @@ package soen6441.team01.warzone.model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
@@ -16,8 +17,9 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy {
 	 * constructor
 	 * 
 	 * @param p_player the player requiring the human player strategy
+	 * @param p_msg_model the message model
 	 */
-	public PlayerAggressiveStrategy(IPlayerModel p_player) {
+	public PlayerAggressiveStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {
 		d_player = p_player;
 	}
 
@@ -65,7 +67,8 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy {
 	 * @return a new strategy object cloned from this object
 	 */
 	public IPlayerStrategy cloneStrategy(IPlayerModel p_player) throws Exception {
-		IPlayerStrategy l_player_strategy = new PlayerAggressiveStrategy(p_player);
+		IAppMsg l_msg_model = p_player.getPlayerModelFactory().getUserMessageModel();
+		IPlayerStrategy l_player_strategy = new PlayerAggressiveStrategy(p_player, l_msg_model);
 		return l_player_strategy;
 	}
 

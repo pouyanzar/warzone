@@ -14,7 +14,7 @@ public interface IGameTournamentView {
 
 	void deactivate();
 
-	void displayGameStartupBanner();
+	void displayTournamentGameplayBanner();
 
 	void processMessage(MsgType none, String string);
 

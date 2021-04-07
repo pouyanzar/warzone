@@ -6,4 +6,6 @@ package soen6441.team01.warzone.controller.contracts;
  */
 public interface IGamePlayController {
 	void endGamePlayPhase();
+
+	void setMaxRounds(int p_max_rounds);
 }

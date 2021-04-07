@@ -238,14 +238,4 @@ public class GamePlay implements IGamePlayModel {
 			}
 		}
 	}
- 
-	public void assignCard() {
-		for (IPlayerModel l_player : d_players) {
-//			if(l_player.conquer()) {
-			if (true) {
-				// Card l_card = new Card();
-				// l_player.addCard(l_card);
-			}
-		}
-	}
 }

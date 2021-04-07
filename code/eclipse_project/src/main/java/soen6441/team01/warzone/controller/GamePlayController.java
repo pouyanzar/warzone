@@ -14,7 +14,7 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class GamePlayController extends Phase implements IGamePlayController{
+public class GamePlayController extends Phase implements IGamePlayController {
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -22,6 +22,7 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	private IGamePlayModel d_gameplay_model;
 	private IAppMsg d_msg_model;
 	private int d_round = 1;
+	private int d_max_rounds = Integer.MAX_VALUE;
 
 	/**
 	 * Constructor with view and models defined.
@@ -44,20 +45,33 @@ public class GamePlayController extends Phase implements IGamePlayController{
 	@Override
 	public void execPhase() {
 		try {
-			if( d_round == 1 ) {
+			if (d_round == 1) {
 				d_view.activate();
 				d_view.displayGamePlayBanner();
 				d_gameplay_model = d_model_factory.getGamePlayModel();
 				d_gameplay_model.setGameState(GameState.GamePlay);
 			}
-			d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
-			Phase l_gameplay_start_phase = d_controller_factory.getReinforcementPhase();
-			nextPhase(l_gameplay_start_phase);
+			if (d_round > d_max_rounds) {
+				d_msg_model.setMessage(MsgType.None, "\n-- max rounds reached - stopping game --");
+				nextPhase(d_controller_factory.getGameEndPhase());
+			} else {
+				d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
+				nextPhase(d_controller_factory.getReinforcementPhase());
+			}
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
 		}
 	}
-	
+
+	/**
+	 * 
+	 * @param p_max_rounds the maximum number of rounds to play before game play
+	 *                     ends.
+	 */
+	public void setMaxRounds(int p_max_rounds) {
+		d_max_rounds = p_max_rounds;
+	}
+
 	/**
 	 * setups the game to end the game play phase
 	 */

@@ -1,8 +1,8 @@
 * maps:
-loadmap ./src/test/resources/maps/canada/canada.map
-loadmap ./src/test/resources/maps/usa8/usa8regions.map
 loadmap ./src/test/resources/maps/world_small/world_small.map
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
+loadmap ./src/test/resources/maps/canada/canada.map
+loadmap ./src/test/resources/maps/usa8/usa8regions.map
 
 
 
@@ -18,9 +18,21 @@ editcountry -add Canada 1 -add USA 1
 editneighbor -add Canada USA -add USA Canada
 editmap ./src/test/resources/maps/canada/canada.map
 
+loadmap ./src/test/resources/maps/world_small/world_small.map
+gameplayer -add H1 -add B1 bene
+assigncountries
+
+tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, benevolent -G 1 -D 10
 
 -----------------------------------------------------
 SOEN 6441: Joey Paquet 
+
+From Discord:
+
+Q: "Random player deploys armies on a random country"
+Here, is the country selected randomly from the countries owned by that player or randomly selected from any country in the map?
+A: Owned by the player
+
 
 
 -----------------------------------------------------

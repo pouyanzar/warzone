@@ -464,7 +464,7 @@ public class MapEditorControllerTest {
 	 * @throws Exception unexpected error
 	 */
 	@Test
-	public void test_processCommand_tournament_valid() throws Exception {
+	public void test_processCommand_tournament_valid_1() throws Exception {
 		String l_msg;
 		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10";
 		d_map_editor_controller.processMapEditorCommand(l_msg);
@@ -474,6 +474,20 @@ public class MapEditorControllerTest {
 		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map,"
 				+ " ./src/test/resources/maps/canada/canada.map ," + " ./src/test/resources/maps/usa8/usa8regions.map"
 				+ " -P benevolent ,benevolent -G 1 -D 10";
+		d_map_editor_controller.processMapEditorCommand(l_msg);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("tournament command processed successfully"));
+	}
+
+	/**
+	 * test tournament valid commands
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_tournament_valid_2() throws Exception {
+		String l_msg;
+		l_msg = "tournament  -D 10 -G 1 -P benevolent, benevolent -M ./src/test/resources/maps/world_small/world_small.map";
 		d_map_editor_controller.processMapEditorCommand(l_msg);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("tournament command processed successfully"));

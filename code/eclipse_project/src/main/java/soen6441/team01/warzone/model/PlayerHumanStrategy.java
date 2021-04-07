@@ -28,7 +28,15 @@ public class PlayerHumanStrategy implements IPlayerStrategy {
 	}
 
 	/**
-	 * create the order by asking the user for the next order
+	 * Create the order by asking the user for the next order. <br>
+	 * The order requires user input, which is not possible in a model based class
+	 * without breaking the MVC pattern; therefore we'll invoke the getOrder()
+	 * method which has been defined as a generic interface into a data source class
+	 * that will provide the order. In theory the data source can be another model
+	 * based class that gets the input via a file for example; however in our case
+	 * the data source is a controller class that is currently managing the view
+	 * that is responsible for getting user input. In theory this doesn't not break
+	 * the MVC pattern.
 	 * 
 	 * @return the next order
 	 * 

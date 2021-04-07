@@ -132,7 +132,7 @@ public class IssueOrderController extends GamePlayController implements IGamePla
 
 	/**
 	 * This method acts as a datasource for those Player (model) classes that
-	 * require the user to provide an order.
+	 * require the user to provide an order via user input (e.g. Human Player).
 	 * 
 	 * @return the next order, or null if the player is done with this round
 	 * @throws Exception invalid command or unexpected error
