@@ -238,4 +238,23 @@ public class GamePlay implements IGamePlayModel {
 			}
 		}
 	}
+	
+	/**
+	 * Detects winner who owns all the territories on the map
+	 * 
+	 * @return l_winner the winner of the game
+	 */
+	public IPlayerModel detectWinner() {
+		IPlayerModel l_winner = null;
+		ArrayList<IPlayerModel> l_players = new ArrayList<>();
+		ArrayList<ICountryModel> l_countries = d_map.getCountries();
+		for (IPlayerModel l_player : l_players) {
+			if (l_player.getPlayerCountries().size() == l_countries.size()) {
+				l_winner = l_player;
+				break;
+			}
+		}
+
+		return l_winner;
+	}
 }
