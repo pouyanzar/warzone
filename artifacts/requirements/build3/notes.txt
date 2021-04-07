@@ -20,6 +20,7 @@ editmap ./src/test/resources/maps/canada/canada.map
 
 loadmap ./src/test/resources/maps/world_small/world_small.map
 gameplayer -add H1 -add B1 bene
+gameplayer -add R1 rand -add B1 bene
 assigncountries
 
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, benevolent -G 1 -D 10

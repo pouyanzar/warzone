@@ -9,6 +9,11 @@ import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 
+/**
+ * Supports the aggressive player strategy. <br>
+ * A computer based player that does not require user interaction to make decisions.
+ *
+ */
 public class PlayerAggressiveStrategy implements IPlayerStrategy {
 	// the map is available from within the player object
 	IPlayerModel d_player = null;
@@ -16,7 +21,7 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy {
 	/**
 	 * constructor
 	 * 
-	 * @param p_player the player requiring the human player strategy
+	 * @param p_player    the cloned player to which to apply this order strategy 
 	 * @param p_msg_model the message model
 	 */
 	public PlayerAggressiveStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {

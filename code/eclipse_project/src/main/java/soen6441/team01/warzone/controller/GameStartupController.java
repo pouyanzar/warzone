@@ -54,7 +54,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 
 		try {
 			d_num_rounds = Integer.MAX_VALUE;
-			
+
 			d_view.activate();
 			l_end_phase = d_controller_factory.getGameEndPhase();
 			d_view.displayGameStartupBanner();
@@ -180,7 +180,7 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			d_msg_model.setMessage(MsgType.Error, "Invalid num_rounds specified.");
 			return;
 		}
-		
+
 		d_msg_model.setMessage(MsgType.Informational, "maxrounds successful");
 	}
 
@@ -307,11 +307,11 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			l_next_word = true;
 			break;
 		case "rand":
-			l_strategy = null;
+			l_strategy = new PlayerRandomStrategy(l_player, d_msg_model);
 			l_next_word = true;
 			break;
 		case "cheat":
-			l_strategy = null;
+			l_strategy = new PlayerCheaterStrategy(l_player, d_msg_model);
 			l_next_word = true;
 			break;
 		case "human":

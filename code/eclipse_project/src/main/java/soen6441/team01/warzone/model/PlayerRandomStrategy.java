@@ -12,8 +12,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 
 /**
- * Supports the human player strategy. <br>
- * A human player that requires user interaction to make decisions.
+ * Supports the random player strategy. <br>
+ * A computer based player that does not require user interaction to make decisions.
  *
  */
 public class PlayerRandomStrategy implements IPlayerStrategy {
@@ -27,7 +27,7 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	/**
 	 * constructor
 	 * 
-	 * @param p_player    the player requiring the human player strategy
+	 * @param p_player    the cloned player to which to apply this order strategy 
 	 * @param p_msg_model the message model used to send messages to the view
 	 */
 	public PlayerRandomStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {

@@ -244,13 +244,13 @@ public class GameTournamentController extends Phase implements IGameTournamentCo
 
 		switch (l_strategy) {
 		case "aggressive":
-			return null;
+			return new PlayerAggressiveStrategy(p_player, l_msg_model);
 		case "benevolent":
 			return new PlayerBenevolentStrategy(p_player, l_msg_model);
 		case "random":
-			return null;
+			return new PlayerRandomStrategy(p_player, l_msg_model);
 		case "cheater":
-			return null;
+			return new PlayerCheaterStrategy(p_player, l_msg_model); 
 		}
 
 		return null;

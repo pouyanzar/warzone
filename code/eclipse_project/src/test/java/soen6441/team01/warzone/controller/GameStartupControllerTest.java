@@ -1,18 +1,9 @@
 package soen6441.team01.warzone.controller;
 
 import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import soen6441.team01.warzone.model.Continent;
-import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.Player;
-import soen6441.team01.warzone.model.PlayerAggressiveStrategy;
-import soen6441.team01.warzone.model.PlayerBenevolentStrategy;
-import soen6441.team01.warzone.model.PlayerHumanStrategy;
-import soen6441.team01.warzone.model.LogEntryBuffer;
+import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.view.ViewFactory;
@@ -253,24 +244,19 @@ public class GameStartupControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("ph1 added to game"));
 		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerRandomStrategy.class);
 
 		d_startup_controller.processGameStartupCommand(
 				"gameplayer -add ph2 rand -add ph3 rand -add ph4 rand -remove ph3", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("ph3 removed"));
 		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerRandomStrategy.class);
+
 		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
 		assertTrue(l_player == null);
 		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerRandomStrategy.class);
 	}
 
 	/**
@@ -287,24 +273,18 @@ public class GameStartupControllerTest {
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("ph1 added to game"));
 		l_player = Player.FindPlayer("ph1", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerCheaterStrategy.class);
 
 		d_startup_controller.processGameStartupCommand(
 				"gameplayer -add ph2 cheat -add ph3 cheat -add ph4 cheat -remove ph3", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("ph3 removed"));
 		l_player = Player.FindPlayer("ph2", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerCheaterStrategy.class);
 		l_player = Player.FindPlayer("ph3", d_model_factory.getGamePlayModel().getPlayers());
 		assertTrue(l_player == null);
 		l_player = Player.FindPlayer("ph4", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerCheaterStrategy.class);
 	}
 
 	/**
@@ -317,16 +297,12 @@ public class GameStartupControllerTest {
 		String l_msg;
 		IPlayerModel l_player;
 
-		d_startup_controller.processGameStartupCommand("gameplayer -add pa1 cheat -add pa2 rand -add pa3 -add pa4 bene",
+		d_startup_controller.processGameStartupCommand("gameplayer -add pa1 aggr -add pa2 rand -add pa3 -add pa4 bene",
 				d_gameplay);
 		l_player = Player.FindPlayer("pa1", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerAggressiveStrategy.class);
 		l_player = Player.FindPlayer("pa2", d_model_factory.getGamePlayModel().getPlayers());
-		// assertTrue(l_player.getStrategy().getClass() ==
-		// PlayerBenevolentStrategy.class);
-		assertTrue(l_player.getStrategy() == null);
+		assertTrue(l_player.getStrategy().getClass() == PlayerRandomStrategy.class);
 		l_player = Player.FindPlayer("pa3", d_model_factory.getGamePlayModel().getPlayers());
 		assertTrue(l_player.getStrategy().getClass() == PlayerHumanStrategy.class);
 		l_player = Player.FindPlayer("pa4", d_model_factory.getGamePlayModel().getPlayers());
@@ -344,7 +320,7 @@ public class GameStartupControllerTest {
 		IPlayerModel l_player;
 
 		d_startup_controller.processGameStartupCommand(
-				"gameplayer -add pa1 cheat -remove pa1 -add pa2 bene -add pa3 -remove pa3 -add pa4 -add pa5 bene", d_gameplay);
+				"gameplayer -add pa1 rand -remove pa1 -add pa2 bene -add pa3 -remove pa3 -add pa4 -add pa5 bene", d_gameplay);
 		l_player = Player.FindPlayer("pa1", d_model_factory.getGamePlayModel().getPlayers());
 		assertTrue(l_player == null);
 		l_player = Player.FindPlayer("pa2", d_model_factory.getGamePlayModel().getPlayers());
@@ -368,7 +344,7 @@ public class GameStartupControllerTest {
 		IPlayerModel l_player;
 
 		d_startup_controller.processGameStartupCommand(
-				"gameplayer -add pa1 cheat remove pa1", d_gameplay);
+				"gameplayer -add pa1 rand remove pa1", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid gameplayer option 'remove'"));
 
