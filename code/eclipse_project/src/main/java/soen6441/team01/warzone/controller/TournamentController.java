@@ -28,6 +28,7 @@ public class TournamentController extends Phase implements ITournamentController
 	private int d_current_map_idx;
 	private int d_current_game_idx;
 	private int d_current_round;
+	private ArrayList<String> d_tournament_stats;
 
 	/**
 	 * Constructor with view and models defined.
@@ -52,6 +53,7 @@ public class TournamentController extends Phase implements ITournamentController
 		d_strategies = p_strategies;
 		d_number_of_games = p_number_of_games;
 		d_max_turns = p_max_turns;
+		d_tournament_stats = new ArrayList<String>();
 	}
 
 	/**
@@ -64,12 +66,14 @@ public class TournamentController extends Phase implements ITournamentController
 		try {
 			if (d_start_tournament_sw) {
 				startTournament();
+				startNextGame();
 				d_start_tournament_sw = false;
 			}
 			if (isEndOfCurrentGame()) {
 				if (isEndOfTournament()) {
 					processEndOfTournament();
 				} else {
+					processEndOfGame();
 					startNextGame();
 					nextPhase(this);
 				}
@@ -81,39 +85,6 @@ public class TournamentController extends Phase implements ITournamentController
 		} catch (Exception ex) {
 			endTournament(MsgType.Error, "exception encountered during game tournament: " + ex.getMessage(), null);
 		}
-	}
-
-	/**
-	 * Process the end of the tournament
-	 * 
-	 * @throws Exception unexpected error
-	 */
-	private void processEndOfTournament() throws Exception {
-		endTournament(MsgType.None, "\n*** End of Tournament ***", d_controller_factory.getGameEndPhase());
-	}
-
-	/**
-	 * checks if the it's the end of the tournament
-	 * 
-	 * @return true if the tournament has ended; otherwise false
-	 */
-	private boolean isEndOfTournament() {
-		if (d_current_map_idx >= d_map_filenames.size()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * checks if the it's the end of the current game
-	 * 
-	 * @return true if the current game has ended; otherwise false
-	 */
-	private boolean isEndOfCurrentGame() {
-		if (d_current_round >= d_max_turns) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -184,6 +155,92 @@ public class TournamentController extends Phase implements ITournamentController
 	}
 
 	/**
+	 * Process the end of the game just played
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	private void processEndOfGame() throws Exception {
+		String l_msg = "\n== end of game - ";
+		String l_stats = "map " + (d_current_map_idx + 1) + ":game " + (d_current_game_idx + 1) + ":";
+
+		IPlayerModel l_winner = d_model_factory.getGamePlayModel().detectWinner();
+		if (l_winner == null) {
+			l_msg += "draw";
+			l_stats += "draw";
+		} else {
+			String l_plyer = l_winner.getName() + " [" + l_winner.getStrategy().toString() + "]";
+			l_msg += "player " + l_plyer + " has won the game";
+			l_stats += l_plyer;
+		}
+
+		d_tournament_stats.add(l_stats);
+		l_msg += " ==";
+		d_msg.setMessage(MsgType.None, l_msg);
+	}
+
+	/**
+	 * Process the end of the tournament
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	private void processEndOfTournament() throws Exception {
+		d_msg.setMessage(MsgType.None, "\n*** Tournament Stats:");
+		for (String l_stat : d_tournament_stats) {
+			d_msg.setMessage(MsgType.None, l_stat);
+		}
+		endTournament(MsgType.None, "\n*** End of Tournament ***", d_controller_factory.getGameEndPhase());
+	}
+
+	/**
+	 * call this method to end the tournament. it sets up the closing message and
+	 * well as the next phase and does some necessary cleanup
+	 * 
+	 * @param p_msg_type   the end message type
+	 * @param p_msg        the end message to display
+	 * @param p_next_phase the next phase to invoke
+	 * @throws Exception unexpected error
+	 */
+	private void endTournament(MsgType p_msg_type, String p_msg, Phase p_next_phase) throws Exception {
+		d_view.processMessage(p_msg_type, p_msg);
+		if (p_next_phase == null) {
+			p_next_phase = d_controller_factory.getGameEndPhase();
+		}
+		nextPhase(p_next_phase);
+		if (d_view != null) {
+			d_view.deactivate();
+		}
+	}
+
+	/**
+	 * checks if the it's the end of the tournament
+	 * 
+	 * @return true if the tournament has ended; otherwise false
+	 */
+	private boolean isEndOfTournament() {
+		if (d_current_map_idx >= d_map_filenames.size()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * checks if the it's the end of the current game
+	 * 
+	 * @return true if the current game has ended; otherwise false
+	 * @throws Exception
+	 */
+	private boolean isEndOfCurrentGame() throws Exception {
+		if (d_current_round >= d_max_turns) {
+			return true;
+		}
+		IPlayerModel l_winner = d_model_factory.getGamePlayModel().detectWinner();
+		if (l_winner != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Validate that the tournament parameters are valid. <br>
 	 * 
 	 * @param p_val_out validation output status information suitable for output to
@@ -194,6 +251,10 @@ public class TournamentController extends Phase implements ITournamentController
 		boolean l_reply = true;
 
 		p_val_out.add(Utl.plural(d_map_filenames.size(), "Map:", "Maps:"));
+		if(d_map_filenames.size() < 1 || d_map_filenames.size() > 5) {
+			p_val_out.add("   invalid number of map files, should be between 1 to 5 maps");
+			l_reply = false;
+		}
 		for (String l_map : d_map_filenames) {
 			try {
 				validateTournamentMapFile(l_map);
@@ -206,6 +267,10 @@ public class TournamentController extends Phase implements ITournamentController
 		}
 
 		p_val_out.add(Utl.plural(d_strategies.size(), "Strategy:", "Strategies:"));
+		if(d_strategies.size() < 2 || d_strategies.size() > 4) {
+			p_val_out.add("   invalid number of strategies, should be between 2 to 4 players");
+			l_reply = false;
+		}
 		for (String l_str : d_strategies) {
 			try {
 				if (getTournamentStrategy(l_str, null) != null) {
@@ -284,46 +349,26 @@ public class TournamentController extends Phase implements ITournamentController
 	}
 
 	/**
-	 * validate that the number of games is between 1 and 99.
+	 * validate that the number of games is between 1 and 5.
 	 * 
 	 * @param p_num_games the number of games to check
 	 * @throws Exception if the number of games is invalid
 	 */
 	public static void validateNumberOfGames(int p_num_games) throws Exception {
-		if (p_num_games < 1 || p_num_games > 99) {
-			throw new Exception("invalid number of games should be between 1 and 99");
+		if (p_num_games < 1 || p_num_games > 5) {
+			throw new Exception("invalid number of games should be between 1 and 5");
 		}
 	}
 
 	/**
-	 * validate that the maximum number of turns per game is between 1 and 999.
+	 * validate that the maximum number of turns per game is between 10 and 50.
 	 * 
 	 * @param p_max_turns the number of games to check
 	 * @throws Exception if the max number of turns per game is invalid
 	 */
 	public static void validateMaxTurnsPerGame(int p_max_turns) throws Exception {
-		if (p_max_turns < 1 || p_max_turns > 999) {
-			throw new Exception("invalid number of max turns per game, should be between 1 and 999");
-		}
-	}
-
-	/**
-	 * call this method to end the tournament. it sets up the closing message and
-	 * well as the next phase and does some necessary cleanup
-	 * 
-	 * @param p_msg_type   the end message type
-	 * @param p_msg        the end message to display
-	 * @param p_next_phase the next phase to invoke
-	 * @throws Exception unexpected error
-	 */
-	private void endTournament(MsgType p_msg_type, String p_msg, Phase p_next_phase) throws Exception {
-		d_view.processMessage(p_msg_type, p_msg);
-		if (p_next_phase == null) {
-			p_next_phase = d_controller_factory.getGameEndPhase();
-		}
-		nextPhase(p_next_phase);
-		if (d_view != null) {
-			d_view.deactivate();
+		if (p_max_turns < 10 || p_max_turns > 50) {
+			throw new Exception("invalid number of max turns per game, should be between 10 and 50");
 		}
 	}
 }

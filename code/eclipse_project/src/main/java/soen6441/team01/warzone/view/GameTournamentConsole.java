@@ -79,8 +79,8 @@ public class GameTournamentConsole implements Observer, IGameTournamentView {
 		for (String l_str : p_strategies) {
 			Utl.lprintln("   " + l_str);
 		}
-		Utl.lprintln("Number of games for each map        : " + p_number_of_games);
-		Utl.lprintln("Maximum number of turns for each map: " + p_max_turns);
+		Utl.lprintln("Number of games for each map         : " + p_number_of_games);
+		Utl.lprintln("Maximum number of turns for each game: " + p_max_turns);
 	}
 
 	/**

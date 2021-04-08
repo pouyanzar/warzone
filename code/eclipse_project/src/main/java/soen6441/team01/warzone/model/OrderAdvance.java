@@ -275,8 +275,8 @@ public class OrderAdvance implements IOrder {
 	 */
 	@Override
 	public String toString() {
-		String l_str = "advance " + d_num_armies + Utl.plural(d_num_armies, "army", "armies") + " from country "
-				+ d_country_from.getName() + " to country " + d_country_to.getName();
+		String l_str = "advance " + d_num_armies + Utl.plural(d_num_armies, " army", " armies") + " from "
+				+ d_country_from.getName() + " to " + d_country_to.getName();
 		return l_str;
 	}
 }

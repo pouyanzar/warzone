@@ -16,7 +16,8 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class IssueOrderController extends SingleGameController implements ISingleGameController, IGameplayOrderDatasource {
+public class IssueOrderController extends SingleGameController
+		implements ISingleGameController, IGameplayOrderDatasource {
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -47,7 +48,7 @@ public class IssueOrderController extends SingleGameController implements ISingl
 		try {
 			processIssueOrdersGamePlay();
 		} catch (Exception ex) {
-			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
+			d_msg_model.setMessage(MsgType.Error, "exception in IssueOrderController: " + ex.getMessage());
 			endGamePlayPhase();
 		}
 	}

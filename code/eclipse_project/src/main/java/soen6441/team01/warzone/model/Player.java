@@ -45,7 +45,7 @@ public class Player implements IPlayerModel {
 		d_cards = new ArrayList<Card>();
 		d_factory_model = p_factory_model;
 		d_diplomacy = new ArrayList<IPlayerModel>();
-		d_strategy = null;	// must be set before player can be used
+		d_strategy = null; // must be set before player can be used
 	}
 
 	/**
@@ -102,10 +102,10 @@ public class Player implements IPlayerModel {
 	public ArrayList<ICountryModel> getPlayerCountries() {
 		return d_countries;
 	}
-	
-	
+
 	/**
 	 * set the players' gameplay strategy
+	 * 
 	 * @param p_player_strategy the player's strategy
 	 */
 	public void setStrategy(IPlayerStrategy p_player_strategy) {
@@ -117,8 +117,8 @@ public class Player implements IPlayerModel {
 	 */
 	public IPlayerStrategy getStrategy() {
 		return d_strategy;
-	}	
-	
+	}
+
 	/**
 	 * adds the appropriate country to the list of countries player controls
 	 * 
@@ -324,20 +324,49 @@ public class Player implements IPlayerModel {
 	}
 
 	/**
+	 * checks if the current player has won a game by owning all the countries on
+	 * the map.
+	 * 
+	 * @return true = is a winner
+	 */
+	public boolean isWinner() {
+		if (getPlayerCountries().size() == d_factory_model.getMapModel().getCountries().size()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * checks if the current player has lost a game by not owning any countries.
+	 * 
+	 * @return true = is a winner
+	 */
+	public boolean isLoser() {
+		if (getPlayerCountries().size() < 1) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * adds a new order to player's order list
 	 * 
 	 * @throws Exception unexpected error
 	 */
 	public void issue_order() throws Exception {
-		if( d_strategy == null ) {
+		if (d_strategy == null) {
 			throw new Exception("Internal error, player " + getName() + " strategy not specified");
 		}
-		IOrder l_order = d_strategy.createOrder();
-		if (l_order != null) {
-			d_order_list.add(l_order);
-			d_done_turn = false;
-		} else {
+		if (isLoser()) {
 			d_done_turn = true;
+		} else {
+			IOrder l_order = d_strategy.createOrder();
+			if (l_order != null) {
+				d_order_list.add(l_order);
+				d_done_turn = false;
+			} else {
+				d_done_turn = true;
+			}
 		}
 	}
 

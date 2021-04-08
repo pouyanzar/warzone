@@ -25,4 +25,6 @@ public interface IGamePlayModel {
 	void assignReinforcements() throws Exception;
 
 	void executeOrders() throws Exception;
+	
+	IPlayerModel detectWinner();
 }

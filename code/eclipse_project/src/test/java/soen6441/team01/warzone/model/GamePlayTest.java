@@ -22,6 +22,8 @@ public class GamePlayTest {
 	public Map d_map = null;
 	public ArrayList<IPlayerModel> d_players = null;
 	public ModelFactory d_factory_model = null;
+	public ICountryModel d_canada = null;
+	public ICountryModel d_usa = null;
 
 	/**
 	 * setup test classes before each test is executed
@@ -33,8 +35,8 @@ public class GamePlayTest {
 		d_factory_model = ModelFactory.createWarzoneBasicConsoleGameModels();
 		d_map = (Map) d_factory_model.getMapModel();
 		d_map.addContinent(1, "North_America", 3);
-		d_map.addCountry(1, "Canada", 1);
-		d_map.addCountry(2, "USA", 1);
+		d_canada = d_map.addCountry(1, "Canada", 1);
+		d_usa = d_map.addCountry(2, "USA", 1);
 		d_gameplay = new GamePlay(d_factory_model);
 	}
 
@@ -53,31 +55,26 @@ public class GamePlayTest {
 		d_gameplay.setGameState(GameState.GamePlay);
 		Map.refreshCountriesOfAllContinents(d_map);
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 3);
-		assertTrue(l_p2.getReinforcements() == 3);
+		assertTrue(l_p1.getReinforcements() == 0);
+		assertTrue(l_p2.getReinforcements() == 0);
 		
-		ICountryModel l_country = Country.findCountry("Canada", d_map.getCountries());
-		l_country.setOwner(l_p1);
+		l_p1.addPlayerCountry(d_canada);
 		d_gameplay.assignReinforcements();
 		assertTrue(l_p1.getReinforcements() == 3);
-		assertTrue(l_p2.getReinforcements() == 3);
+		assertTrue(l_p2.getReinforcements() == 0);
 
-		l_country = Country.findCountry("USA", d_map.getCountries());
-		l_country.setOwner(l_p2);
+		l_p2.addPlayerCountry(d_usa);
 		d_gameplay.assignReinforcements();
 		assertTrue(l_p1.getReinforcements() == 3);
 		assertTrue(l_p2.getReinforcements() == 3);
 		
-		l_country = Country.findCountry("USA", d_map.getCountries());
-		l_country.setOwner(l_p1);
+		l_p1.addPlayerCountry(d_usa);
 		d_gameplay.assignReinforcements();
 		assertTrue(l_p1.getReinforcements() == 6);
 		assertTrue(l_p2.getReinforcements() == 3);
 		
-		l_country = Country.findCountry("Canada", d_map.getCountries());
-		l_country.setOwner(l_p2);
-		l_country = Country.findCountry("USA", d_map.getCountries());
-		l_country.setOwner(l_p2);
+		l_p2.addPlayerCountry(d_usa);
+		l_p2.addPlayerCountry(d_canada);
 		d_gameplay.assignReinforcements();
 		assertTrue(l_p1.getReinforcements() == 3);
 		assertTrue(l_p2.getReinforcements() == 6);
@@ -113,7 +110,7 @@ public class GamePlayTest {
 		Map.refreshCountriesOfAllContinents(d_map);
 		
 		d_gameplay.assignReinforcements();
-		assertTrue(l_p1.getReinforcements() == 3);
+		assertTrue(l_p1.getReinforcements() == 0);
 		
 		l_country = Country.findCountry("Canada", d_map.getCountries());
 		l_p1.addPlayerCountry(l_country);

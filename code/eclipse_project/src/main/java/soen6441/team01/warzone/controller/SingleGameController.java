@@ -51,12 +51,17 @@ public class SingleGameController extends Phase implements ISingleGameController
 				d_gameplay_model = d_model_factory.getGamePlayModel();
 				d_gameplay_model.setGameState(GameState.GamePlay);
 			}
-			if (d_round > d_max_rounds) {
-				d_msg_model.setMessage(MsgType.None, "\n-- max rounds reached - stopping game --");
-				nextPhase(d_controller_factory.getGameEndPhase());
+			if (d_gameplay_model.detectWinner() == null) {
+				if (d_round > d_max_rounds) {
+					d_msg_model.setMessage(MsgType.None, "\n-- max rounds reached - stopping game --");
+					nextPhase(d_controller_factory.getGameEndPhase());
+				} else {
+					d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
+					nextPhase(d_controller_factory.getReinforcementPhase());
+				}
 			} else {
-				d_msg_model.setMessage(MsgType.None, "\n-- round " + d_round++ + " --");
-				nextPhase(d_controller_factory.getReinforcementPhase());
+				d_msg_model.setMessage(MsgType.None, "\n** Player " + d_gameplay_model.detectWinner().getName() + " has won the game **\n");
+				nextPhase(d_controller_factory.getGameEndPhase());
 			}
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());

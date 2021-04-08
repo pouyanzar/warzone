@@ -77,7 +77,6 @@ public class OrderExecController extends SingleGameController {
 		d_gameplay_model.executeOrders();
 
 		// end gameplay round - goback to the game play controller to start a new round
-		// (if applicable)
 		Phase l_phase = d_controller_factory.getGamePlayPhase();
 		nextPhase(l_phase);
 	}

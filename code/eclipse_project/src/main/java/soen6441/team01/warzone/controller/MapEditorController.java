@@ -90,8 +90,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * <li>editmap filename</li>
 	 * <li>loadmap filename (this command initiates game startup)</li>
 	 * <li>validatemap</li>
-	 * <li>tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames
-	 * -D maxnumberofturns</li>
+	 * <li>tournament -M listofmapfiles(1-5) -P listofplayerstrategies (2-4) -G
+	 * numberofgames (1-5) -D maxnumberofturns (10-50)</li>
 	 * <li>exit</li>
 	 * <li>help</li>
 	 * </ul>
@@ -145,7 +145,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			break;
 		case "tournament":
 			if (processTournament(l_cmd_params[1])) {
-				l_next_phase = (Phase)d_controller_factory.getGameTournamentController();
+				l_next_phase = (Phase) d_controller_factory.getGameTournamentController();
 				d_controller_factory.setGamePlayPhase(l_next_phase);
 			}
 			break;
@@ -471,8 +471,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * process the tournament command
 	 * <p>
 	 * syntax: <br>
-	 * tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D
-	 * maxnumberofturns<br>
+	 * tournament -M listofmapfiles (1-5) -P listofplayerstrategies (2-4) -G
+	 * numberofgames (1-5) -D maxnumberofturns (10-50)<br>
 	 * </p>
 	 * 
 	 * @param p_cmd_params the tournament parameters
@@ -625,7 +625,9 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup in single game mode)");
 		d_view.processMessage(MsgType.None, " - validatemap");
 		d_view.processMessage(MsgType.None,
-				" - tournament -M listofmapfiles -P listofplayerstrategies -G numberofgames -D maxnumberofturns (starts tournament game mode)");
+				" - tournament -M listofmapfiles(1-5) -P listofplayerstrategies(2-4) -G numberofgames(1-5) -D maxnumberofturns(10-50)");
+		d_view.processMessage(MsgType.None,
+				"              (starts tournament game mode)");
 		d_view.processMessage(MsgType.None, " - exit");
 		d_view.processMessage(MsgType.None, " - help");
 	}

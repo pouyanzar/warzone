@@ -159,12 +159,16 @@ public class GamePlay implements IGamePlayModel {
 
 		// calc the number of starting reinforcement armies for each player
 		for (IPlayerModel l_player : d_players) {
-			int l_num_countries = l_player.getPlayerCountries().size();
-			l_num_countries = l_num_countries / 3;
-			if (l_num_countries < 3) {
-				l_num_countries = 3;
+			if (l_player.isLoser()) {
+				l_player.setReinforcements(0);
+			} else {
+				int l_num_countries = l_player.getPlayerCountries().size();
+				l_num_countries = l_num_countries / 3;
+				if (l_num_countries < 3) {
+					l_num_countries = 3;
+				}
+				l_player.setReinforcements(l_num_countries);
 			}
-			l_player.setReinforcements(l_num_countries);
 		}
 
 		// scan all the countries for every continent, and if all the countries owner
@@ -238,7 +242,7 @@ public class GamePlay implements IGamePlayModel {
 			}
 		}
 	}
-	
+
 	/**
 	 * Detects winner who owns all the territories on the map
 	 * 
@@ -246,15 +250,12 @@ public class GamePlay implements IGamePlayModel {
 	 */
 	public IPlayerModel detectWinner() {
 		IPlayerModel l_winner = null;
-		ArrayList<IPlayerModel> l_players = new ArrayList<>();
-		ArrayList<ICountryModel> l_countries = d_map.getCountries();
-		for (IPlayerModel l_player : l_players) {
-			if (l_player.getPlayerCountries().size() == l_countries.size()) {
+		for (IPlayerModel l_player : d_players) {
+			if (l_player.isWinner()) {
 				l_winner = l_player;
 				break;
 			}
 		}
-
 		return l_winner;
 	}
 }

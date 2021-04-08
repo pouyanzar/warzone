@@ -466,7 +466,7 @@ public class MapEditorControllerTest {
 	@Test
 	public void test_processCommand_tournament_valid_1() throws Exception {
 		String l_msg;
-		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10";
+		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, aggressive -G 1 -D 10";
 		d_map_editor_controller.processMapEditorCommand(l_msg);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("tournament command processed successfully"));
@@ -517,13 +517,13 @@ public class MapEditorControllerTest {
 		d_map_editor_controller.processMapEditorCommand(l_msg);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid tournament command"));
-		assertTrue(Utl.logContains(": -1 error: invalid number of games should be between 1 and 99"));
+		assertTrue(Utl.logContains(": -1 error: invalid number of games should be between 1 and 5"));
 
 		l_msg = "tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D -10";
 		d_map_editor_controller.processMapEditorCommand(l_msg);
 		l_msg = d_msg.getLastMessageAndClear().d_message;
 		assertTrue(l_msg.contains("Invalid tournament command"));
-		assertTrue(Utl.logContains("invalid number of max turns per game, should be between 1 and 999"));
+		assertTrue(Utl.logContains("invalid number of max turns per game, should be between 10 and 50"));
 	}
 
 	/**

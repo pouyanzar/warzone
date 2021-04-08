@@ -61,4 +61,8 @@ public interface IPlayerModel {
 	void setStrategy(IPlayerStrategy p_player_strategy);
 	
 	IPlayerStrategy getStrategy();
+	
+	boolean isWinner();
+	
+	boolean isLoser();
 }

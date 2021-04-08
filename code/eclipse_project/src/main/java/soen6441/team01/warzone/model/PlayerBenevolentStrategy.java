@@ -45,18 +45,26 @@ public class PlayerBenevolentStrategy implements IPlayerStrategy {
 
 	 */
 	public IOrder createOrder() throws Exception {
+		IOrder l_order = null;
+		IAppMsg l_msg = d_player.getPlayerModelFactory().getUserMessageModel();
 		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [benevolent] issuing order> ";  
 
-		IOrder l_order = doDeploy();
-		
+		try {
+			l_order = doDeploy();
+			if (l_order != null) {
+				l_order.execute(); // see why - method comment above
+			}
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Warning, "exception encountered while creating [benevolent] order: " + ex.getMessage());
+		}
+
 		if (l_order != null) {
 			d_msg_model.setMessage(MsgType.Informational, l_msg_header + l_order.toString());
-			l_order.execute(); // see method comment above
 		} else {
 			d_msg_model.setMessage(MsgType.Informational, l_msg_header + "end turn");
 		}
 
-		return l_order;
+		return l_order;		
 	}
 
 	/**
