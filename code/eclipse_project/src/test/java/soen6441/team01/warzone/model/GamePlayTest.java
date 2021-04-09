@@ -34,7 +34,7 @@ public class GamePlayTest {
 	public void class_instance_setup() throws Exception {
 		d_factory_model = ModelFactory.createWarzoneBasicConsoleGameModels();
 		d_map = (Map) d_factory_model.getMapModel();
-		d_map.addContinent(1, "North_America", 3);
+		d_map.addContinent(1, "North_America", 3, null);
 		d_canada = d_map.addCountry(1, "Canada", 1);
 		d_usa = d_map.addCountry(2, "USA", 1);
 		d_gameplay = new GamePlay(d_factory_model);
@@ -98,7 +98,7 @@ public class GamePlayTest {
 		d_map.addCountry(9, "Canada4", 1);
 		d_map.addCountry(10, "USA4", 1);
 
-		d_map.addContinent(2, "Europe", 5);
+		d_map.addContinent(2, "Europe", 5, null);
 		d_map.addCountry(11, "Italy1", 2);
 		d_map.addCountry(12, "France1", 2);
 		d_map.addCountry(13, "Italy2", 2);

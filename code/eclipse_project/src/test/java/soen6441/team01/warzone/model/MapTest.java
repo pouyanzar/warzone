@@ -12,6 +12,7 @@ import org.junit.Test;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.entities.DominationMap;
 
 /**
  * Tests for the Map model class
@@ -87,8 +88,8 @@ public class MapTest {
 	@Test
 	public void test_add_continent_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		IContinentModel l_europe = l_map.addContinent(2, "Europe", 4);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
+		IContinentModel l_europe = l_map.addContinent(2, "Europe", 4, null);
 		ArrayList<IContinentModel> l_continents = l_map.getContinents();
 		assertTrue(l_continents.size() == 2);
 		assertTrue(l_continents.get(0).getId() == 1);
@@ -103,8 +104,8 @@ public class MapTest {
 	@Test(expected = Exception.class)
 	public void test_add_dup_continent_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		IContinentModel l_europe = l_map.addContinent(1, "Europe", 4);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
+		IContinentModel l_europe = l_map.addContinent(1, "Europe", 4, null);
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class MapTest {
 	@Test
 	public void test_add_country_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
 		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("USA", l_north_america, 0, 0);
 		ArrayList<ICountryModel> l_countries = l_map.getCountries();
@@ -132,7 +133,7 @@ public class MapTest {
 	@Test(expected = Exception.class)
 	public void test_add_dup_country_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
 		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
 		ICountryModel l_usa = l_map.addCountry("Canada", l_north_america, 0, 0);
 	}
@@ -275,17 +276,18 @@ public class MapTest {
 		Map l_map = new Map(d_model_factory);
 		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
 		l_map.validatemap();
-		ArrayList<String> l_xmap = l_map.getMapAsDominationMapFormat();
+		MapIoDomination l_dmap = new MapIoDomination();
+		ArrayList<String> l_xmap = l_dmap.getMapAsDominationMapFormat(l_map);
 		assertTrue(l_xmap.get(0).equals("[files]"));
 		assertTrue(l_xmap.get(2).equals("[continents]"));
 		assertTrue(l_xmap.get(3).equals("Atlantic_Provinces 3 white"));
 		assertTrue(l_xmap.get(8).equals("Northwestern_Territories 2 white"));
 		assertTrue(l_xmap.get(10).equals("[countries]"));
-		assertTrue(l_xmap.get(11).equals("1 New_Brunswick 1 0 0"));
-		assertTrue(l_xmap.get(20).equals("10 Ontario-West 2 0 0"));
-		assertTrue(l_xmap.get(30).equals("20 Manitoba-North 4 0 0"));
-		assertTrue(l_xmap.get(40).equals("30 Northwest_Territories-Continental 6 0 0"));
-		assertTrue(l_xmap.get(41).equals("31 Yukon_Territory 6 0 0"));
+		assertTrue(l_xmap.get(11).equals("1 New_Brunswick 1 501 350"));
+		assertTrue(l_xmap.get(20).equals("10 Ontario-West 2 345 337"));
+		assertTrue(l_xmap.get(30).equals("20 Manitoba-North 4 296 277"));
+		assertTrue(l_xmap.get(40).equals("30 Northwest_Territories-Continental 6 217 178"));
+		assertTrue(l_xmap.get(41).equals("31 Yukon_Territory 6 147 145"));
 		assertTrue(l_xmap.get(43).equals("[borders]"));
 		assertTrue(l_xmap.get(44).equals("1 8 2 3"));
 		assertTrue(l_xmap.get(54).equals("11 7 9 10 20 22"));
@@ -295,7 +297,7 @@ public class MapTest {
 		assertTrue(l_xmap.get(74).equals("31 17 30"));
 		Map l_map_model = (Map) Map.loadMap(l_xmap, d_model_factory);
 		l_map_model.validatemap();
-		ArrayList<String> l_ymap = l_map_model.getMapAsDominationMapFormat();
+		ArrayList<String> l_ymap  = l_dmap.getMapAsDominationMapFormat(l_map_model);
 		assertTrue(l_xmap.size() == l_ymap.size());
 		for (int i = 0; i < l_xmap.size(); i++) {
 			assertTrue(l_xmap.get(i).equals(l_ymap.get(i)));

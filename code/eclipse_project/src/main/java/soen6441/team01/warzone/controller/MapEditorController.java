@@ -427,7 +427,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 						d_msg.setMessage(MsgType.Error, "Invalid continent name: '" + l_params[0] + "'");
 						return;
 					}
-					IContinentModel l_continent = l_map.addContinent(l_continentId, l_continentvalue, 0);
+					IContinentModel l_continent = l_map.addContinent(l_continentId, l_continentvalue, 0, null);
 					if (l_continent == null) {
 						d_msg.setMessage(MsgType.Error, "Error adding continent");
 						return;

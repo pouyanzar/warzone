@@ -194,18 +194,4 @@ public class Continent implements IContinentModel {
 	public ArrayList<ICountryModel> getCountries() {
 		return d_countries;
 	}
-
-	/**
-	 * Format the continents data into a string be saved to a domination style map
-	 * file. Note that this implementation of Warzone does not process the continent
-	 * color which is part of the domination map file format. In it's place white is
-	 * used as the color of all continents.
-	 * 
-	 * @return the current continent as it would be saved to a domination stype map
-	 *         file
-	 */
-	public String toDominationMapString() {
-		String l_smap = d_continent_name + " " + d_extra_army + " white";
-		return l_smap;
-	}
 }

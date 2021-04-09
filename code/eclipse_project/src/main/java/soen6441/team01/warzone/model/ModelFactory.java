@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.util.List;
+
 import soen6441.team01.warzone.model.contracts.*;
 
 /**
@@ -119,6 +121,19 @@ public class ModelFactory {
 		if (d_user_message_model == null)
 			d_user_message_model = new LogEntryBuffer();
 		return d_user_message_model;
+	}
+
+	/**
+	 * Detect from p_records what type of map definition is being specified and
+	 * create the appropriate map io object.
+	 * 
+	 * @param p_records the records of either a domination or conquest type map
+	 * @return an instance of the MapIoDomination
+	 * @throws Exception unexpected error
+	 */
+	public MapIoDomination getMapIo(List<String> p_records) throws Exception {
+		MapIoDomination l_mapio = new MapIoDomination();
+		return l_mapio;
 	}
 
 }

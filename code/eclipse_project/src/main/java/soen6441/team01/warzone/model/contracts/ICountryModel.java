@@ -24,6 +24,14 @@ public interface ICountryModel {
 
 	void setContinent(IContinentModel p_continent);
 
+	int getX();
+
+	void setX(int l_x);
+
+	int getY();
+
+	void setY(int l_y);
+
 	ArrayList<ICountryModel> getNeighbors();
 
 	void addNeighbor(ICountryModel p_country) throws Exception;
@@ -31,20 +39,16 @@ public interface ICountryModel {
 	void removeNeighbor(String p_neighbor_name);
 
 	void setArmies(int p_num_armies);
-	
+
 	void removeArmies(int p_num_armies);
-	
+
 	int getArmies();
-	
+
 	void setOwner(IPlayerModel p_player);
-	
+
 	public IPlayerModel getOwner();
-	
+
 	CountrySummary getSummary();
-	
-	String toDominationMapString();
-	
-	String toDominationMapBorderString();
-	
+
 	void addArmies(int p_num_armies);
 }

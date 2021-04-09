@@ -108,8 +108,8 @@ public class ContinentTest {
 	@Test
 	public void test_getCountriesOfContinent_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4);
-		IContinentModel l_europe = l_map.addContinent(2, "Europe", 3);
+		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
+		IContinentModel l_europe = l_map.addContinent(2, "Europe", 3, null);
 		l_map.addCountry("Canada", l_north_america, 0, 0);
 		l_map.addCountry("USA", l_north_america, 0, 0);
 		l_map.addCountry("Italy", l_europe, 0, 0);

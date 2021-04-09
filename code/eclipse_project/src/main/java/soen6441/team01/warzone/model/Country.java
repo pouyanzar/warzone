@@ -172,6 +172,36 @@ public class Country implements ICountryModel {
 	}
 
 	/**
+	 * @return the X coordinate of the country
+	 */
+	public int getX() {
+		return d_x;
+	}
+	
+	/**
+	 * 
+	 * @param l_x the X coordinate of the country
+	 */
+	public void setX(int l_x) {
+		d_x = l_x;
+	}
+	
+	/**
+	 * @return the Y coordinate of the country
+	 */
+	public int getY() {
+		return d_y;
+	}
+	
+	/**
+	 * 
+	 * @param l_y the Y coordinate of the country
+	 */
+	public void setY(int l_y) {
+		d_y = l_y;
+	}
+	
+	/**
 	 * set the player owns owns this country
 	 * 
 	 * @param p_player player to make the owner of this country
@@ -282,32 +312,5 @@ public class Country implements ICountryModel {
 		}
 		l_sum.d_player_owns_countries_of_continent = l_owns_ctr + "/" + l_continent_countries.size();
 		return l_sum;
-	}
-
-	/**
-	 * Format the country data into a string be saved to a domination style map
-	 * file.
-	 * 
-	 * @return the current country as it would be saved to a domination stype map
-	 *         file
-	 */
-	public String toDominationMapString() {
-		String l_smap = d_country_id + " " + d_country_name + " " + d_continent.getId() + " " + d_x + " " + d_y;
-		return l_smap;
-	}
-
-	/**
-	 * Format the country neighbor data into a string be saved to a domination style
-	 * map file as a border.
-	 * 
-	 * @return the current border as it would be saved to a domination stype map
-	 *         file
-	 */
-	public String toDominationMapBorderString() {
-		String l_smap = d_country_id + " ";
-		for (ICountryModel d_neighbor : d_neighbors) {
-			l_smap += d_neighbor.getId() + " ";
-		}
-		return l_smap;
 	}
 }
