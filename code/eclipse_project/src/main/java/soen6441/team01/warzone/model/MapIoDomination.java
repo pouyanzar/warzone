@@ -83,7 +83,7 @@ public class MapIoDomination {
 	 * @return the current map in the domination game style map file. Each string of
 	 *         the array is a line in the map file.
 	 */
-	public ArrayList<String> getMapAsDominationMapFormat(IMapModel p_map) {
+	public ArrayList<String> getMapAsTextArray(IMapModel p_map) {
 		ArrayList<String> l_dmap = new ArrayList<String>();
 		l_dmap.add("[files]");
 

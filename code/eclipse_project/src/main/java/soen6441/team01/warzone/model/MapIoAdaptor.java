@@ -45,6 +45,15 @@ public class MapIoAdaptor extends MapIoDomination {
 	}
 
 	/**
+	 * adapter method into DominationMap
+	 * 
+	 * @param p_map the warzome map
+	 */
+	public ArrayList<String> getMapAsTextArray(IMapModel p_map) {
+		return d_map_conquest.getMapAsConquestMapFormat(p_map);
+	}
+
+	/**
 	 * translate the conquest map into a domination map
 	 * 
 	 * @param p_cmap the conquest map to translate

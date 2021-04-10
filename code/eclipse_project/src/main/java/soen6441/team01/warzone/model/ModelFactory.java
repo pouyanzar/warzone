@@ -3,6 +3,7 @@ package soen6441.team01.warzone.model;
 import java.util.List;
 
 import soen6441.team01.warzone.model.contracts.*;
+import soen6441.team01.warzone.model.entities.SaveMapFormat;
 
 /**
  * This class implements the Software Factory design pattern to manage the set
@@ -132,13 +133,29 @@ public class ModelFactory {
 	 * @throws Exception unexpected error
 	 */
 	public MapIoDomination getMapIo(List<String> p_records) throws Exception {
-		if( MapIoDomination.isDominationFileFormat(p_records)) {
+		if (MapIoDomination.isDominationFileFormat(p_records)) {
 			return new MapIoDomination();
 		}
-		if( MapIoConquest.isConquestFileFormat(p_records)) {
+		if (MapIoConquest.isConquestFileFormat(p_records)) {
 			return new MapIoAdaptor(new MapIoConquest());
 		}
-		return new MapIoDomination();	// assume as default
+		return new MapIoDomination(); // assume as default
 	}
 
+	/**
+	 * create an appropriate map io object.
+	 * 
+	 * @param p_format the type of map format required
+	 * @return an instance of the MapIoDomination
+	 * @throws Exception unexpected error
+	 */
+	public MapIoDomination getMapIo(SaveMapFormat p_format) throws Exception {
+		switch (p_format) {
+		case Domination:
+			return new MapIoDomination();
+		case Conquest:
+			return new MapIoAdaptor(new MapIoConquest());
+		}
+		return new MapIoDomination();
+	}
 }

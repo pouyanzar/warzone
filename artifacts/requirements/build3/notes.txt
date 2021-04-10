@@ -31,6 +31,7 @@ editcontinent -add 1 North_America
 editcountry -add Canada 1 -add USA 1
 editneighbor -add Canada USA -add USA Canada
 editmap ./src/test/resources/maps/canada/canada.map
+editmap ./src/test/resources/maps/conquest_maps/Earth.map
 
 
 -----------------------------------------------------

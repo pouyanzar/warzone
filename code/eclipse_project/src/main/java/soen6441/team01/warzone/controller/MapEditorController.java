@@ -12,6 +12,7 @@ import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
+import soen6441.team01.warzone.model.entities.SaveMapFormat;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IMapEditorView;
@@ -86,7 +87,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * neighborcountryID (countryID = country name, neighborcountryID = country
 	 * name)</li>
 	 * <li>showmap</li>
-	 * <li>savemap filename</li>
+	 * <li>savemap [-d|-c] filename</li>
 	 * <li>editmap filename</li>
 	 * <li>loadmap filename (this command initiates game startup)</li>
 	 * <li>validatemap</li>
@@ -157,6 +158,34 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	}
 
 	/**
+	 * process the loadmap command. if the map is not a valid map then stay in the
+	 * editor, otherwise move on to the game startup phase.
+	 * 
+	 * @param p_loadmap_params the loadmap parameters (just the parameters without
+	 *                         the loadmap command itself)
+	 * @return true if successful
+	 * @throws Exception unexpected error encountered
+	 */
+	public boolean processLoadMap(String p_loadmap_params) throws Exception {
+		try {
+			String l_params[] = Utl.getFirstWord(p_loadmap_params);
+			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
+			d_model_factory.setMapModel(l_map_model);
+		} catch (Exception ex) {
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
+			return false;
+		}
+		if (d_model_factory.getMapModel().validatemap()) {
+			d_msg.setMessage(MsgType.None, "loadmap processed successfully");
+		} else {
+			d_msg.setMessage(MsgType.Error, "loadmap error - map is not a valid map.");
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * process the editmap command
 	 * <p>
 	 * editmap filename
@@ -187,54 +216,45 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	}
 
 	/**
-	 * process the loadmap command. if the map is not a valid map then stay in the
-	 * editor, otherwise move on to the game startup phase.
-	 * 
-	 * @param p_loadmap_params the loadmap parameters (just the parameters without
-	 *                         the loadmap command itself)
-	 * @return true if successful
-	 * @throws Exception unexpected error encountered
-	 */
-	public boolean processLoadMap(String p_loadmap_params) throws Exception {
-		try {
-			String l_params[] = Utl.getFirstWord(p_loadmap_params);
-			IMapModel l_map_model = Map.processLoadMapCommand(l_params[0], d_model_factory);
-			d_model_factory.setMapModel(l_map_model);
-		} catch (Exception ex) {
-			d_msg.setMessage(MsgType.Error, ex.getMessage());
-			return false;
-		}
-		if (d_model_factory.getMapModel().validatemap()) {
-			d_msg.setMessage(MsgType.None, "loadmap processed successfully");
-		} else {
-			d_msg.setMessage(MsgType.Error, "loadmap error - map is not a valid map.");
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * process the savemap command.
 	 * <p>
-	 * syntax: savemap filename
+	 * syntax: savemap [-d|-c] filename<br>
+	 * -d = domination map format, -c = conquest map format
 	 * </p>
 	 * 
-	 * @param p_editmap_params the savemap parameters (just the parameters without
-	 *                         the savemap command itself)
+	 * @param p_savemap_params the savemap parameters
 	 * @return true if successful
 	 * @throws Exception unexpected error encountered
 	 */
-	public boolean processSaveMap(String p_editmap_params) throws Exception {
+	public boolean processSaveMap(String p_savemap_params) throws Exception {
+		SaveMapFormat l_map_format = SaveMapFormat.Domination; 
 		String l_filename = "";
+
 		try {
-			String l_params[] = Utl.getFirstWord(p_editmap_params);
+			String l_params[] = Utl.getFirstWord(p_savemap_params);
+			String l_token = l_params[0];
+			l_params = Utl.getFirstWord(l_params[1]);
 			l_filename = l_params[0];
-			d_model_factory.getMapModel().saveMap(l_filename);
+			
+			switch(l_token.toLowerCase()) {
+			case "-d":
+				l_map_format = SaveMapFormat.Domination;
+				break;
+			case "-c":
+				l_map_format = SaveMapFormat.Conquest;
+				break;
+			default:
+				l_map_format = SaveMapFormat.Domination;
+				l_filename = l_token;
+				break;
+			}
+
+			d_model_factory.getMapModel().saveMap(l_filename, l_map_format);
 		} catch (Exception ex) {
 			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
+		
 		d_msg.setMessage(MsgType.None, "map saved successfully to file '" + l_filename + "'");
 		return true;
 	}
@@ -620,14 +640,15 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		d_view.processMessage(MsgType.None,
 				" - editneighbor -add countryName neighborcountryName -remove countryName neighborcountryName");
 		d_view.processMessage(MsgType.None, " - showmap");
-		d_view.processMessage(MsgType.None, " - savemap filename");
+
+		d_view.processMessage(MsgType.None, " - savemap [-d|-c] filename");
+		d_view.processMessage(MsgType.None, " -         where -d = domination map format, -c = conquest map format");
 		d_view.processMessage(MsgType.None, " - editmap filename");
 		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup in single game mode)");
 		d_view.processMessage(MsgType.None, " - validatemap");
 		d_view.processMessage(MsgType.None,
 				" - tournament -M listofmapfiles(1-5) -P listofplayerstrategies(2-4) -G numberofgames(1-5) -D maxnumberofturns(10-50)");
-		d_view.processMessage(MsgType.None,
-				"              (starts tournament game mode)");
+		d_view.processMessage(MsgType.None, "              (starts tournament game mode)");
 		d_view.processMessage(MsgType.None, " - exit");
 		d_view.processMessage(MsgType.None, " - help");
 	}

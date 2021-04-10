@@ -13,6 +13,7 @@ import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.entities.DominationMap;
+import soen6441.team01.warzone.model.entities.SaveMapFormat;
 
 /**
  * Tests for the Map model class
@@ -277,7 +278,7 @@ public class MapTest {
 		File myObj = new File("\\tmp\\test_1_map.map");
 		myObj.delete();
 		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		l_map.saveMap("\\tmp\\test_1_map.map");
+		l_map.saveMap("\\tmp\\test_1_map.map", SaveMapFormat.Domination);
 		l_map = new Map(d_model_factory);
 		d_model_factory.setMapModel(l_map);
 		l_map = (Map) Map.loadMapFromFile("\\tmp\\test_1_map.map", d_model_factory);

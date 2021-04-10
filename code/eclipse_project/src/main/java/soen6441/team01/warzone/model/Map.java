@@ -17,6 +17,7 @@ import soen6441.team01.warzone.model.entities.DominationBorder;
 import soen6441.team01.warzone.model.entities.DominationContinent;
 import soen6441.team01.warzone.model.entities.DominationCountry;
 import soen6441.team01.warzone.model.entities.DominationMap;
+import soen6441.team01.warzone.model.entities.SaveMapFormat;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 
 /**
@@ -427,29 +428,29 @@ public class Map implements IMapModel {
 		// create continents
 		for (DominationContinent d_continent : l_xmap.d_continents) {
 			int l_id = Utl.convertToInteger(d_continent.d_id);
-            if (l_id >= Integer.MAX_VALUE || l_id < 0) {
-                throw new Exception("Invalid continent id value '" + d_continent.d_id + "' specified for country '");
-            }
-            if (!Utl.isValidMapName(d_continent.d_name)) {
-                throw new Exception("Invalid continent  name '" + d_continent.d_name + "'");
-            }
+			if (l_id >= Integer.MAX_VALUE || l_id < 0) {
+				throw new Exception("Invalid continent id value '" + d_continent.d_id + "' specified for country '");
+			}
+			if (!Utl.isValidMapName(d_continent.d_name)) {
+				throw new Exception("Invalid continent  name '" + d_continent.d_name + "'");
+			}
 			l_map.addContinent(l_id, d_continent.d_name, d_continent.d_extra_armies, d_continent.d_color);
 		}
 
 		// create countries
 		for (DominationCountry d_country : l_xmap.d_countries) {
 			int l_id = Utl.convertToInteger(d_country.d_id);
-            if (l_id >= Integer.MAX_VALUE || l_id < 0) {
-                throw new Exception("Invalid country id value '" + d_country.d_id + "' specified");
-            }
-            if (!Utl.isValidMapName(d_country.d_name)) {
-                throw new Exception("Invalid country name '" + d_country.d_name + "'");
-            }
+			if (l_id >= Integer.MAX_VALUE || l_id < 0) {
+				throw new Exception("Invalid country id value '" + d_country.d_id + "' specified");
+			}
+			if (!Utl.isValidMapName(d_country.d_name)) {
+				throw new Exception("Invalid country name '" + d_country.d_name + "'");
+			}
 			int l_contid = Utl.convertToInteger(d_country.d_continent_id);
-            if (l_contid >= Integer.MAX_VALUE || l_contid < 0) {
-                throw new Exception("Invalid continent id value '" + d_country.d_continent_id + "' specified for country '"
-                                + d_country.d_name + "'");
-            }
+			if (l_contid >= Integer.MAX_VALUE || l_contid < 0) {
+				throw new Exception("Invalid continent id value '" + d_country.d_continent_id
+						+ "' specified for country '" + d_country.d_name + "'");
+			}
 			ICountryModel l_tmp_country = l_map.addCountry(l_id, d_country.d_name, l_contid);
 			int l_xy = Utl.convertToInteger(d_country.d_x);
 			l_tmp_country.setX(l_xy);
@@ -460,9 +461,9 @@ public class Map implements IMapModel {
 		// create neighbors
 		for (DominationBorder l_border : l_xmap.d_borders) {
 			int l_country_id = Utl.convertToInteger(l_border.d_country_id);
-            if (l_country_id >= Integer.MAX_VALUE || l_country_id < 0) {
-                throw new Exception("Invalid border country id value '" + l_border.d_country_id + "' specified");
-            }
+			if (l_country_id >= Integer.MAX_VALUE || l_country_id < 0) {
+				throw new Exception("Invalid border country id value '" + l_border.d_country_id + "' specified");
+			}
 			for (String l_border_id_str : l_border.d_border_country_id) {
 				int l_border_id = Utl.convertToInteger(l_border_id_str);
 				if (l_border_id >= Integer.MAX_VALUE || l_border_id < 0) {
@@ -568,18 +569,18 @@ public class Map implements IMapModel {
 	}
 
 	/**
-	 * Save a map to a text file exactly as edited (using the "domination" game map
-	 * format). Note that the map is validated before it is saved, and a warning is
-	 * issued to the user if it's invalid; however the map is still saved if it's
-	 * invalid to give the user a chance to reload it and finish editing it at a
-	 * later time.
+	 * Save a map to a text file in the indicated format. Note that the map is
+	 * validated before it is saved, and a warning is issued to the user if it's
+	 * invalid; however the map is still saved if it's invalid to give the user a
+	 * chance to reload it and finish editing it at a later time.
 	 * 
-	 * @param p_filename the filaname of the map file
+	 * @param p_filename the filename of the map file
 	 * @throws Exception unexpected error
 	 */
-	public void saveMap(String p_filename) throws Exception {
+	public void saveMap(String p_filename, SaveMapFormat p_format) throws Exception {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(p_filename));
-		ArrayList<String> l_map_data = new MapIoDomination().getMapAsDominationMapFormat(this);
+		MapIoDomination l_mapio = d_factory_model.getMapIo(p_format);
+		ArrayList<String> l_map_data = l_mapio.getMapAsTextArray(this);
 		for (String l_map_rec : l_map_data) {
 			pw.println(l_map_rec);
 		}
@@ -599,7 +600,7 @@ public class Map implements IMapModel {
 	 */
 	public ModelFactory deepCloneMap() throws Exception {
 		ModelFactory l_new_factory_model = new ModelFactory(d_factory_model);
-		ArrayList<String> l_map_data = new MapIoDomination().getMapAsDominationMapFormat(this);
+		ArrayList<String> l_map_data = new MapIoDomination().getMapAsTextArray(this);
 		IMapModel l_map_model = loadMap(l_map_data, l_new_factory_model);
 		l_new_factory_model.setMapModel(l_map_model);
 		for (ICountryModel l_country_src : d_countries) {

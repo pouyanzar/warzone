@@ -47,7 +47,7 @@ public class MapIoDominationTest {
 		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
 		l_map.validatemap();
 		MapIoDomination l_dmap = new MapIoDomination();
-		ArrayList<String> l_xmap = l_dmap.getMapAsDominationMapFormat(l_map);
+		ArrayList<String> l_xmap = l_dmap.getMapAsTextArray(l_map);
 		assertTrue(l_xmap.get(0).equals("[files]"));
 		assertTrue(l_xmap.get(2).equals("[continents]"));
 		assertTrue(l_xmap.get(3).equals("Atlantic_Provinces 3 white"));
@@ -67,7 +67,7 @@ public class MapIoDominationTest {
 		assertTrue(l_xmap.get(74).equals("31 17 30"));
 		Map l_map_model = (Map) Map.loadMap(l_xmap, d_model_factory);
 		l_map_model.validatemap();
-		ArrayList<String> l_ymap  = l_dmap.getMapAsDominationMapFormat(l_map_model);
+		ArrayList<String> l_ymap  = l_dmap.getMapAsTextArray(l_map_model);
 		assertTrue(l_xmap.size() == l_ymap.size());
 		for (int i = 0; i < l_xmap.size(); i++) {
 			assertTrue(l_xmap.get(i).equals(l_ymap.get(i)));

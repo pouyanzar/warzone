@@ -145,7 +145,7 @@ public class MapIoConquest {
 		l_dmap.add("");
 		l_dmap.add("[continents]");
 		for (IContinentModel l_continent : p_map.getContinents()) {
-			String l_smap = l_continent.getName() + " " + l_continent.getExtraArmy() + " white";
+			String l_smap = l_continent.getName() + "=" + l_continent.getExtraArmy();
 			l_dmap.add(l_smap);
 		}
 
@@ -153,8 +153,11 @@ public class MapIoConquest {
 		l_dmap.add("");
 		l_dmap.add("[Territories]");
 		for (ICountryModel l_country : p_map.getCountries()) {
-			String l_smap = l_country.getId() + " " + l_country.getName() + " " + l_country.getContinent().getId() + " "
-					+ l_country.getX() + " " + l_country.getY();
+			String l_smap = l_country.getName() + "," + l_country.getX() + "," + l_country.getY() + ","
+					+ l_country.getContinent().getName();
+			for (ICountryModel l_neighbor : l_country.getNeighbors()) {
+				l_smap += "," + l_neighbor.getName();
+			}
 			l_dmap.add(l_smap);
 		}
 
@@ -162,8 +165,8 @@ public class MapIoConquest {
 	}
 
 	/**
-	 * scans the supplied map and checks if the format conforms to a conquest
-	 * style file format.
+	 * scans the supplied map and checks if the format conforms to a conquest style
+	 * file format.
 	 * 
 	 * @param p_map_records the map file to check
 	 * @return true if the p_map_records contain a format that conforms to a

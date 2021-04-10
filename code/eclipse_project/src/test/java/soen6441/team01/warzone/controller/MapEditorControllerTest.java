@@ -2,6 +2,11 @@ package soen6441.team01.warzone.controller;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,7 +15,12 @@ import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.GameEngine;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.Phase;
+import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.LogEntryBuffer;
+import soen6441.team01.warzone.model.Map;
+import soen6441.team01.warzone.model.MapIoAdaptor;
+import soen6441.team01.warzone.model.MapIoConquest;
+import soen6441.team01.warzone.model.MapIoDomination;
 import soen6441.team01.warzone.view.ViewFactory;
 
 /**
@@ -541,4 +551,124 @@ public class MapEditorControllerTest {
 		assertTrue(Utl.logContains("0 error: invalid number of games"));
 		assertTrue(Utl.logContains("error: invalid number of max turns per game"));
 	}
+
+	/**
+	 * deletes a file
+	 * 
+	 * @param p_filename filename to delete
+	 */
+	private void deleteFile(String p_filename) {
+		try {
+			File file = new File(p_filename);
+			if (file.exists()) {
+				file.delete();
+			}
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	/**
+	 * test savemap domination to domination 
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_savemap_valid_1() throws Exception {
+		String l_msg;
+		String l_save_fn = "";
+		d_map_editor_controller.processMapEditorCommand("editmap " + d_MAP_DIR + "canada/canada.map");
+
+		l_save_fn = "\\tmp\\savemap_domdom_1.map";
+		deleteFile(l_save_fn);
+		d_map_editor_controller.processMapEditorCommand("savemap " + l_save_fn);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("map saved successfully"));
+		IMapModel l_map = Map.loadMapFromFile(l_save_fn, d_model_factory);
+		assertTrue(l_map.getContinents().size() == 6);
+		assertTrue(l_map.getCountries().size() == 31);
+		List<String> l_records = Files.readAllLines(new File(l_save_fn).toPath(), Charset.defaultCharset());
+		assertTrue( MapIoDomination.isDominationFileFormat(l_records));
+		
+		l_save_fn = "\\tmp\\savemap_domdom_2.map";
+		deleteFile(l_save_fn);
+		d_map_editor_controller.processMapEditorCommand("savemap -d " + l_save_fn);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("map saved successfully"));
+		l_map = Map.loadMapFromFile(l_save_fn, d_model_factory);
+		assertTrue(l_map.getContinents().size() == 6);
+		assertTrue(l_map.getCountries().size() == 31);
+		l_records = Files.readAllLines(new File(l_save_fn).toPath(), Charset.defaultCharset());
+		assertTrue( MapIoDomination.isDominationFileFormat(l_records));
+	}
+
+	/**
+	 * test savemap conquest to domination 
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_savemap_valid_2() throws Exception {
+		String l_msg;
+		String l_save_fn = "";
+		d_map_editor_controller.processMapEditorCommand("editmap " + d_MAP_DIR + "conquest_maps/Earth.map");
+
+		l_save_fn = "\\tmp\\savemap_condom_1.map";
+		deleteFile(l_save_fn);
+		d_map_editor_controller.processMapEditorCommand("savemap -d " + l_save_fn);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("map saved successfully"));
+		IMapModel l_map = Map.loadMapFromFile(l_save_fn, d_model_factory);
+		assertTrue(l_map.getContinents().size() == 7);
+		assertTrue(l_map.getCountries().size() == 42);
+		List<String> l_records = Files.readAllLines(new File(l_save_fn).toPath(), Charset.defaultCharset());
+		assertTrue( MapIoDomination.isDominationFileFormat(l_records));
+	}
+
+	/**
+	 * test savemap conquest to conquest 
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_savemap_valid_3() throws Exception {
+		String l_msg;
+		String l_save_fn = "";
+		d_map_editor_controller.processMapEditorCommand("editmap " + d_MAP_DIR + "conquest_maps/Earth.map");
+
+		l_save_fn = "\\tmp\\savemap_concon_1.map";
+		deleteFile(l_save_fn);
+		d_map_editor_controller.processMapEditorCommand("savemap -c " + l_save_fn);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("map saved successfully"));
+		IMapModel l_map = Map.loadMapFromFile(l_save_fn, d_model_factory);
+		assertTrue(l_map.getContinents().size() == 7);
+		assertTrue(l_map.getCountries().size() == 42);
+		List<String> l_records = Files.readAllLines(new File(l_save_fn).toPath(), Charset.defaultCharset());
+		assertTrue( MapIoConquest.isConquestFileFormat(l_records));
+	}
+	
+	/**
+	 * test savemap domination to conquest 
+	 * 
+	 * @throws Exception unexpected error
+	 */
+	@Test
+	public void test_processCommand_savemap_valid_4() throws Exception {
+		String l_msg;
+		String l_save_fn = "";
+		d_map_editor_controller.processMapEditorCommand("editmap " + d_MAP_DIR + "canada/canada.map");
+
+		l_save_fn = "\\tmp\\savemap_domcon_1.map";
+		deleteFile(l_save_fn);
+		d_map_editor_controller.processMapEditorCommand("savemap -c " + l_save_fn);
+		l_msg = d_msg.getLastMessageAndClear().d_message;
+		assertTrue(l_msg.contains("map saved successfully"));
+		IMapModel l_map = Map.loadMapFromFile(l_save_fn, d_model_factory);
+		assertTrue(l_map.getContinents().size() == 6);
+		assertTrue(l_map.getCountries().size() == 31);
+		List<String> l_records = Files.readAllLines(new File(l_save_fn).toPath(), Charset.defaultCharset());
+		assertTrue( MapIoConquest.isConquestFileFormat(l_records));
+	}
+	
 }
