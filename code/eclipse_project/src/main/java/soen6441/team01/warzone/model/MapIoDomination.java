@@ -121,13 +121,13 @@ public class MapIoDomination {
 	/**
 	 * Parse country borders
 	 * 
-	 * @param l_rec     the country record to parse
+	 * @param p_rec     the country record to parse
 	 * @param p_borders the map borders
 	 * @throws Exception error parsing the neighbor record, unexpected error
 	 */
-	private void parseMapFileBorders(String l_rec, ArrayList<DominationBorder> p_borders) throws Exception {
+	private void parseMapFileBorders(String p_rec, ArrayList<DominationBorder> p_borders) throws Exception {
 		DominationBorder l_border = new DominationBorder();
-		String[] l_tokens = Utl.getFirstWord(l_rec);
+		String[] l_tokens = Utl.getFirstWord(p_rec);
 
 		String l_country_id_str = l_tokens[0];
 		int l_country_id = Utl.convertToInteger(l_country_id_str);
@@ -153,12 +153,12 @@ public class MapIoDomination {
 	/**
 	 * Parse a country specification from the map file
 	 * 
-	 * @param l_rec       the country record to parse
+	 * @param p_rec       the country record to parse
 	 * @param p_countries the map countries
 	 * @throws Exception error parsing the country record, unexpected error
 	 */
-	private void parseMapFileCountry(String l_rec, ArrayList<DominationCountry> p_countries) throws Exception {
-		String[] l_tokens = Utl.getFirstWord(l_rec);
+	private void parseMapFileCountry(String p_rec, ArrayList<DominationCountry> p_countries) throws Exception {
+		String[] l_tokens = Utl.getFirstWord(p_rec);
 
 		String l_country_id_str = l_tokens[0];
 		int l_country_id = Utl.convertToInteger(l_country_id_str);
@@ -209,7 +209,7 @@ public class MapIoDomination {
 
 		String l_continent_name = l_tokens[0];
 		if (!Utl.isValidMapName(l_continent_name)) {
-			throw new Exception("Invalid continent  name '" + l_continent_name + "'");
+			throw new Exception("Invalid continent name '" + l_continent_name + "'");
 		}
 
 		l_tokens = Utl.getFirstWord(l_tokens[1]);
@@ -230,5 +230,46 @@ public class MapIoDomination {
 		l_continent.d_extra_armies = l_continent_xtra_army;
 		l_continent.d_color = l_color;
 		p_continents.add(l_continent);
+	}
+
+	/**
+	 * scans the supplied map and checks if the format conforms to a domination
+	 * style file format.
+	 * 
+	 * @param p_map_records the map file to check
+	 * @return true if the p_map_records contain a format that conforms to a
+	 *         domination style file format.
+	 */
+	public static boolean isDominationFileFormat(List<String> p_map_records) {
+		int l_line_ctr = 0;
+		String l_rec;
+		boolean l_has_continents = false;
+		boolean l_has_countries = false;
+		boolean l_has_borders = false;
+
+		try {
+			for (l_line_ctr = 0; l_line_ctr < p_map_records.size(); l_line_ctr++) {
+				l_rec = p_map_records.get(l_line_ctr);
+				switch (l_rec.toLowerCase()) {
+				case "[continents]":
+					l_has_continents = true;
+					break;
+				case "[countries]":
+					l_has_countries = true;
+					break;
+				case "[borders]":
+					l_has_borders = true;
+					break;
+				}
+			}
+		} catch (Exception ex) {
+			return false;
+		}
+
+		if (l_has_continents && l_has_countries && l_has_borders) {
+			return true;
+		}
+
+		return false;
 	}
 }

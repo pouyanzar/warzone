@@ -267,44 +267,6 @@ public class MapTest {
 	}
 
 	/**
-	 * tests the getMapAsDominationMapFormat function
-	 * 
-	 * @throws Exception when there is an exception
-	 */
-	@Test
-	public void test_getMapAsDominationMapFormat_1() throws Exception {
-		Map l_map = new Map(d_model_factory);
-		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		l_map.validatemap();
-		MapIoDomination l_dmap = new MapIoDomination();
-		ArrayList<String> l_xmap = l_dmap.getMapAsDominationMapFormat(l_map);
-		assertTrue(l_xmap.get(0).equals("[files]"));
-		assertTrue(l_xmap.get(2).equals("[continents]"));
-		assertTrue(l_xmap.get(3).equals("Atlantic_Provinces 3 white"));
-		assertTrue(l_xmap.get(8).equals("Northwestern_Territories 2 white"));
-		assertTrue(l_xmap.get(10).equals("[countries]"));
-		assertTrue(l_xmap.get(11).equals("1 New_Brunswick 1 501 350"));
-		assertTrue(l_xmap.get(20).equals("10 Ontario-West 2 345 337"));
-		assertTrue(l_xmap.get(30).equals("20 Manitoba-North 4 296 277"));
-		assertTrue(l_xmap.get(40).equals("30 Northwest_Territories-Continental 6 217 178"));
-		assertTrue(l_xmap.get(41).equals("31 Yukon_Territory 6 147 145"));
-		assertTrue(l_xmap.get(43).equals("[borders]"));
-		assertTrue(l_xmap.get(44).equals("1 8 2 3"));
-		assertTrue(l_xmap.get(54).equals("11 7 9 10 20 22"));
-		assertTrue(l_xmap.get(58).equals("15 14 16 17"));
-		assertTrue(l_xmap.get(64).equals("21 20 22 23 24 25 30"));
-		assertTrue(l_xmap.get(73).equals("30 17 18 19 21 28 29 31"));
-		assertTrue(l_xmap.get(74).equals("31 17 30"));
-		Map l_map_model = (Map) Map.loadMap(l_xmap, d_model_factory);
-		l_map_model.validatemap();
-		ArrayList<String> l_ymap  = l_dmap.getMapAsDominationMapFormat(l_map_model);
-		assertTrue(l_xmap.size() == l_ymap.size());
-		for (int i = 0; i < l_xmap.size(); i++) {
-			assertTrue(l_xmap.get(i).equals(l_ymap.get(i)));
-		}
-	}
-
-	/**
 	 * tests the saveMap function
 	 * 
 	 * @throws Exception when there is an exception
@@ -323,18 +285,43 @@ public class MapTest {
 	}
 
 	/**
-	 * tests the saveMap overwrite existing file
+	 * tests loading a domination style map
 	 * 
 	 * @throws Exception when there is an exception
 	 */
 	@Test
-	public void test_saveMap_2() throws Exception {
-		Map l_map = new Map(d_model_factory);
-		File myObj = new File("\\tmp\\test_2_map.map");
-		myObj.delete();
-		l_map = (Map) Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
-		l_map.saveMap("\\tmp\\test_2_map.map");
-		l_map.saveMap("\\tmp\\test_2_map.map");
+	public void test_loadmap_domination_file_1() throws Exception {
+		IMapModel l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/canada.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 6);
+		assertTrue(l_map.getCountries().size() == 31);
+
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "world_small/world_small.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 4);
+		assertTrue(l_map.getCountries().size() == 11);
+	}
+
+	/**
+	 * tests loading a conquest style map
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_loadmap_conquest_file_1() throws Exception {
+		IMapModel l_map = Map.loadMapFromFile(d_MAP_DIR + "conquest_maps/Earth.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 7);
+		assertTrue(l_map.getCountries().size() == 42);
+
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "conquest_maps/Europe.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 7);
+		assertTrue(l_map.getCountries().size() == 50);
+
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "conquest_maps/USA.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 7);
+		assertTrue(l_map.getCountries().size() == 58);
+
+		l_map = Map.loadMapFromFile(d_MAP_DIR + "conquest_maps/world_small_conquest.map", d_model_factory);
+		assertTrue(l_map.getContinents().size() == 4);
+		assertTrue(l_map.getCountries().size() == 11);
 	}
 
 }

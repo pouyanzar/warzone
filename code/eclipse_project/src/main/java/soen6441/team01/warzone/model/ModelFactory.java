@@ -132,8 +132,13 @@ public class ModelFactory {
 	 * @throws Exception unexpected error
 	 */
 	public MapIoDomination getMapIo(List<String> p_records) throws Exception {
-		MapIoDomination l_mapio = new MapIoDomination();
-		return l_mapio;
+		if( MapIoDomination.isDominationFileFormat(p_records)) {
+			return new MapIoDomination();
+		}
+		if( MapIoConquest.isConquestFileFormat(p_records)) {
+			return new MapIoAdaptor(new MapIoConquest());
+		}
+		return new MapIoDomination();	// assume as default
 	}
 
 }

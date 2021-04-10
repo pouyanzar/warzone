@@ -1,0 +1,22 @@
+[Map]
+author=John Sekeres
+
+[Continents]
+NAmerica=4
+SAmerica=3
+Europe=4
+Asia=3
+
+[Territories]
+Ontario,519,328,NAmerica,Alberta,Maryland,Spain
+Alberta,545,349,NAmerica,Ontario
+Maryland,496,270,NAmerica,Ontario,Florida
+Florida,430,261,NAmerica,Alberta,Peru
+Peru,391,363,SAmerica,Chile,Italy
+Chile,345,337,SAmerica,Peru
+Italy,283,328,Europe,Peru,Spain,France
+Spain,238,319,Europe,Ontario,France
+France,238,319,Europe,Spain,Italy,China
+Japan,144,288,Asia,China
+China,104,283,Asia,Japan,France
+

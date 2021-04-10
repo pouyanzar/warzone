@@ -1,31 +1,37 @@
+* single games
+loadmap ./src/test/resources/maps/conquest_maps/world_small_conquest.map
+gameplayer -add H1 -add B1 bene
+assigncountries
+maxrounds 10
+
+* tournaments
+tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
+tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, aggressive -G 2 -D 25
+tournament -M ./src/test/resources/maps/world_small/world_small.map, ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive -G 5 -D 30
+
 * maps:
 loadmap ./src/test/resources/maps/world_small/world_small.map
-tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
 loadmap ./src/test/resources/maps/canada/canada.map
 loadmap ./src/test/resources/maps/usa8/usa8regions.map
-
-
+loadmap ./src/test/resources/maps/solar/solar.map
+loadmap ./src/test/resources/maps/conquest_maps/world_small_conquest.map
+loadmap ./src/test/resources/maps/conquest_maps/Earth.map
+loadmap ./src/test/resources/maps/conquest_maps/Europe.map
+loadmap ./src/test/resources/maps/conquest_maps/USA.map
 
 * players
 gameplayer -add John -add Pouyan -add Nazanin
-gameplayer -add John -add Pouyan
+gameplayer -add H1 -add H2
 gameplayer -add H1 -add B1 bene
+gameplayer -add R1 aggr -add B1 bene
 assigncountries
 
-
+* map editor
 editcontinent -add 1 North_America
 editcountry -add Canada 1 -add USA 1
 editneighbor -add Canada USA -add USA Canada
 editmap ./src/test/resources/maps/canada/canada.map
 
-loadmap ./src/test/resources/maps/world_small/world_small.map
-gameplayer -add H1 -add B1 bene
-gameplayer -add R1 aggr -add B1 bene
-maxrounds 10
-assigncountries
-
-tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, aggressive -G 2 -D 25
-tournament -M ./src/test/resources/maps/world_small/world_small.map, ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive -G 5 -D 30
 
 -----------------------------------------------------
 SOEN 6441: Joey Paquet 

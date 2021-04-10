@@ -421,7 +421,7 @@ public class Map implements IMapModel {
 	public static IMapModel loadMap(List<String> p_records, ModelFactory p_factory_model) throws Exception {
 		IMapModel l_map = new Map(p_factory_model);
 
-		MapIoDomination l_mapio = new MapIoDomination();
+		MapIoDomination l_mapio = p_factory_model.getMapIo(p_records);
 		DominationMap l_xmap = l_mapio.parseMap(p_records);
 
 		// create continents
