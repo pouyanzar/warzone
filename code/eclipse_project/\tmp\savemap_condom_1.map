@@ -1,0 +1,98 @@
+[files]
+
+[continents]
+North_America 5 white
+South_America 2 white
+Africa 3 white
+Europe 5 white
+North_Asia 3 white
+South_Asia 4 white
+Australia 2 white
+
+[countries]
+1 Alaska 1 90 101
+2 Northwest_Territory 1 161 102
+3 Alberta 1 159 138
+4 Greenland 1 340 51
+5 Ontario 1 215 142
+6 Quebec 1 269 141
+7 Western_United_States 1 171 179
+8 Eastern_United_States 1 231 191
+9 Central_America 1 195 232
+10 Venezuala 2 276 278
+11 Peru 2 278 324
+12 Argentina 2 275 382
+13 Brazil 2 323 316
+14 North_Africa 3 439 240
+15 Congo 3 489 293
+16 South_Africa 3 497 346
+17 Madagascar 3 552 336
+18 East_Africa 3 533 273
+19 Egypt 3 494 224
+20 Iceland 4 394 103
+21 Great_Britain 4 433 141
+22 Western_Europe 4 440 176
+23 Scandinavia 4 480 102
+24 Northern_Europe 4 477 149
+25 Southern_Europe 4 490 173
+26 Ukraine 4 544 132
+27 Middle_East 6 548 208
+28 Ural 6 626 111
+29 Afghanistan 6 597 168
+30 India 6 626 226
+31 Siberia 5 680 85
+32 China 6 680 194
+33 Siam 6 685 245
+34 Mongolia 5 721 164
+35 Irkutsk 5 714 128
+36 Yatusk 5 754 95
+37 Kamchatka 5 820 102
+38 Japan 5 774 198
+39 Indonesia 7 709 290
+40 New_Guinea 7 783 301
+41 Western_Australia 7 745 348
+42 Eastern_Australia 7 791 356
+
+[borders]
+1 2 3 37
+2 1 3 5 4
+3 1 2 5 7
+4 2 5 6 20
+5 2 3 4 6 7 8
+6 4 5 8
+7 3 5 8 9
+8 5 6 7 9
+9 7 8 10
+10 9 11 13
+11 10 13 12
+12 11 13
+13 10 11 12 14
+14 13 22 25 19 18 15
+15 14 18 16
+16 15 18 17
+17 18 16
+18 19 27 15 14 16 17
+19 25 14 27 18
+20 4 21 23
+21 20 23 22 24
+22 21 24 25 14
+23 20 21 24 26
+24 21 23 26 25 22
+25 24 26 27 19 14 22
+26 28 29 27 25 24 23
+27 26 29 30 25 19 18
+28 31 32 29 26
+29 28 32 30 27 26
+30 32 33 29 27
+31 36 35 34 32 28
+32 28 31 34 33 30 29
+33 32 30 39
+34 31 35 38 32 37
+35 31 36 37 34
+36 31 35 37
+37 36 35 38 1 34
+38 37 34
+39 33 40 41
+40 39 41 42
+41 39 40 42
+42 41 40
