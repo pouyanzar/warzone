@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
@@ -9,8 +11,8 @@ import soen6441.team01.warzone.model.entities.CardType;
  * diplomacy order.
  *
  */
-public class OrderDiplomacy implements IOrder {
-
+public class OrderDiplomacy implements IOrder, Serializable {
+	private static final long serialVersionUID = 1L;
 	private IPlayerModel d_source_player;
 	private IPlayerModel d_target_player;
 

@@ -19,6 +19,16 @@ public class App {
 	 */
 	public static void main(String[] args) throws Exception {
 		GameEngine l_game_engine = new GameEngine();
-		l_game_engine.startNewGame();
+		while (l_game_engine != null) {
+			l_game_engine = l_game_engine.startGame();
+			if (l_game_engine != null) {
+				// if l_game_engine is not null that means a new game was loaded.
+				// the next phase in the game engine will be the issue order phase for a single
+				// game. this is fine, but certain context hasn't been setup yet, therefore
+				// we'll invoke initGamePlay() in SingleGameController to initialize itself in
+				// order for the game play phases to work correctly.
+				l_game_engine.getControllerFactory().getSingleGameController().initGamePlay();
+			}
+		}
 	}
 }

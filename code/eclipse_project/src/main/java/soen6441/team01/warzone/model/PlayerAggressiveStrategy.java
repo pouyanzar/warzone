@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,8 +19,8 @@ import soen6441.team01.warzone.model.entities.CardType;
  * decisions.
  *
  */
-public class PlayerAggressiveStrategy implements IPlayerStrategy {
-
+public class PlayerAggressiveStrategy implements IPlayerStrategy, Serializable {
+	private static final long serialVersionUID = 1L;
 	private IPlayerModel d_player = null; // the map is available from within the player object
 	private boolean d_advance_sw = false;
 

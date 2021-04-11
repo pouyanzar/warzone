@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,7 +20,8 @@ import soen6441.team01.warzone.view.contracts.IGameTournamentView;
  * Warzone game startup console based view. The view interacts with the user via
  * the system console.
  */
-public class GameTournamentConsole implements Observer, IGameTournamentView {
+public class GameTournamentConsole implements Observer, IGameTournamentView, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ITournamentController d_controller = null;
 	private IAppMsg d_message = null;
 	private ModelFactory d_factory_model = null;

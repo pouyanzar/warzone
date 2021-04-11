@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
@@ -8,8 +10,8 @@ import soen6441.team01.warzone.model.entities.CardType;
  * Supports the definition and implementation of the 'blockade' order.
  *
  */
-public class OrderBlockade implements IOrder {
-
+public class OrderBlockade implements IOrder, Serializable {
+	private static final long serialVersionUID = 1L;
 	IPlayerModel d_player = null;
 	ICountryModel d_country = null;
 

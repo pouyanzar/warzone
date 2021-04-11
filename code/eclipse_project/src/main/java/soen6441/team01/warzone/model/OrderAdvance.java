@@ -2,13 +2,16 @@ package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
+
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Supports the definition and implementation of the 'deploy' order.
  *
  */
-public class OrderAdvance implements IOrder {
+public class OrderAdvance implements IOrder, Serializable {
+	private static final long serialVersionUID = 1L;
 	private IPlayerModel d_player = null;
 	private ICountryModel d_country_from = null;
 	private ICountryModel d_country_to = null;

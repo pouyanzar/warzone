@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,7 +18,8 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * game play phase.
  */
 public class IssueOrderController extends SingleGameController
-		implements ISingleGameController, IGameplayOrderDatasource {
+		implements ISingleGameController, IGameplayOrderDatasource, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -161,6 +163,7 @@ public class IssueOrderController extends SingleGameController
 	 * <li>negotiate playerName (requires the diplomacy card)</li>
 	 * <li>showmap</li>
 	 * <li>showcards</li>
+	 * <li>savegame filename</li>
 	 * <li>end (end turn)</li>
 	 * <li>exit (exit game)</li>
 	 * <li>help</li>
@@ -205,6 +208,9 @@ public class IssueOrderController extends SingleGameController
 		case "showcards":
 			showCards(p_player_clone);
 			break;
+		case "savegame":
+			processSaveGame(l_cmd_params[1]);
+			break;
 		case "end":
 			processEndTurn(l_cmd_params[1], p_player_clone);
 			break;
@@ -219,6 +225,26 @@ public class IssueOrderController extends SingleGameController
 			break;
 		}
 		return l_order;
+	}
+
+	/**
+	 * save the current game.<br>
+	 * Syntax:<br>
+	 * <ul>
+	 * <li>savegame filename</li>
+	 * </ul>
+	 * 
+	 * @param p_save_params the savegame parameters (ie filename)
+	 */
+	private void processSaveGame(String p_save_params) {
+		try {
+			String l_params[] = Utl.getFirstWord(p_save_params);
+			String l_filename = l_params[0];
+			d_model_factory.getGameEngine().saveGame(l_filename);
+			d_msg_model.setMessage(MsgType.None, "savegame processed successfully");
+		} catch (Exception ex) {
+			d_msg_model.setMessage(MsgType.Error, ex.getMessage());
+		}
 	}
 
 	/**
@@ -635,6 +661,7 @@ public class IssueOrderController extends SingleGameController
 		d_view.processMessage(MsgType.None, " - negotiate playerName (requires the diplomacy card)");
 		d_view.processMessage(MsgType.None, " - showmap");
 		d_view.processMessage(MsgType.None, " - showcards");
+		d_view.processMessage(MsgType.None, " - savegame filename");
 		d_view.processMessage(MsgType.None, " - end (end turn)");
 		d_view.processMessage(MsgType.None, " - exit (exit game)");
 		d_view.processMessage(MsgType.None, " - help");

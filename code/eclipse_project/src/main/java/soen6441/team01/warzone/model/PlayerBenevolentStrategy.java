@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -13,8 +15,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
  * A computer based player that does not require user interaction to make decisions.
  *
  */
-public class PlayerBenevolentStrategy implements IPlayerStrategy {
-
+public class PlayerBenevolentStrategy implements IPlayerStrategy, Serializable {
+	private static final long serialVersionUID = 1L;
 	// the map is available from within the player object
 	private IPlayerModel d_player;
 	private IAppMsg d_msg_model;

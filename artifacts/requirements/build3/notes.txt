@@ -1,8 +1,9 @@
 * single games
-loadmap ./src/test/resources/maps/conquest_maps/world_small_conquest.map
+loadmap ./src/test/resources/maps/world_small/world_small.map
 gameplayer -add H1 -add B1 bene
 assigncountries
 maxrounds 10
+loadgame d:\tmp\jx1.wz
 
 * tournaments
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10

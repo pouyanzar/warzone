@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
@@ -13,7 +15,8 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
  * Warzone game startup controller. Manages the coordination and progression of
  * the game startup phase.
  */
-public class GameStartupController extends Phase implements IGameStartupController {
+public class GameStartupController extends Phase implements IGameStartupController, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -119,13 +122,16 @@ public class GameStartupController extends Phase implements IGameStartupControll
 		case "maxrounds":
 			processMaxRounds(l_cmd_params[1]);
 			break;
+		case "loadgame":
+			d_msg_model.setMessage(MsgType.Warning, "loadgame coming soon");
+			break;
 		case "assigncountries":
 			if (processAssignCountries(d_gameplay)) {
 				// move on to gameplay
-				//l_next_phase = d_controller_factory.getGamePlayPhase();
-				//d_controller_factory.getGamePlayController().setMaxRounds(d_num_rounds);
+				// l_next_phase = d_controller_factory.getGamePlayPhase();
+				// d_controller_factory.getGamePlayController().setMaxRounds(d_num_rounds);
 				d_controller_factory.getSingleGameController().setMaxRounds(d_num_rounds);
-				l_next_phase = (Phase)d_controller_factory.getSingleGameController();
+				l_next_phase = (Phase) d_controller_factory.getSingleGameController();
 				d_controller_factory.setGamePlayPhase(l_next_phase);
 			}
 			break;

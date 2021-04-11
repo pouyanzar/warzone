@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,9 +22,10 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * Warzone map editor console based view. The view interacts with the user via
  * the system console.
  */
-public class MapEditorConsole implements Observer, IMapEditorView {
+public class MapEditorConsole implements Observer, IMapEditorView, Serializable {
+	private static final long serialVersionUID = 1L;
 	private IMapEditorController d_controller = null;
-	private Scanner d_keyboard = null;
+	private transient Scanner d_keyboard = null;
 	private IAppMsg d_user_message_model = null;
 	private ModelFactory d_factory_model = null;
 

@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Utl;
@@ -12,7 +13,8 @@ import soen6441.team01.warzone.model.entities.CountrySummary;
  * /** Manages the information associated with a country
  *
  */
-public class Country implements ICountryModel {
+public class Country implements ICountryModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private int d_country_id;
 	private String d_country_name;
 	private IContinentModel d_continent;
@@ -21,7 +23,6 @@ public class Country implements ICountryModel {
 	private ArrayList<ICountryModel> d_neighbors = new ArrayList<ICountryModel>();
 	private int d_armies = 0;
 	private IPlayerModel d_owner = null;
-	private ModelFactory d_factory_model = null;
 
 	/**
 	 * The constructor for the Country class.
@@ -42,7 +43,6 @@ public class Country implements ICountryModel {
 		setContinent(p_continent);
 		d_x = p_x;
 		d_y = p_y;
-		d_factory_model = p_factory_model;
 	}
 
 	/**

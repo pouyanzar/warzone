@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.entities.*;
 
@@ -8,8 +10,8 @@ import soen6441.team01.warzone.model.entities.*;
  * game
  * 
  */
-public class Card {
-
+public class Card implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private CardType d_card_type;
 	private String d_card_name;
 

@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IGameEngineModel;
 
@@ -28,7 +30,8 @@ import soen6441.team01.warzone.model.contracts.IGameEngineModel;
  * that needs to support the respective function; otherwise an invalid command
  * error is displayed to the user.
  */
-public abstract class Phase {
+public abstract class Phase implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Contains a reference to the State of the GameEngine so that the state object
@@ -42,9 +45,10 @@ public abstract class Phase {
 
 	// required to be defined by all subclasses
 	abstract public void execPhase() throws Exception;
-	
+
 	/**
 	 * set the next phase of the game
+	 * 
 	 * @param p_next_phase the phase that the game will switch to
 	 */
 	public void nextPhase(Phase p_next_phase) {

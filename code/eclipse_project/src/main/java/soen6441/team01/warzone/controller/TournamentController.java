@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
@@ -14,7 +15,8 @@ import soen6441.team01.warzone.view.contracts.IGameTournamentView;
  * Warzone game tournament controller. Manages the coordination and progression
  * of a game tournament phase.
  */
-public class TournamentController extends Phase implements ITournamentController {
+public class TournamentController extends Phase implements ITournamentController, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;

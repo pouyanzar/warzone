@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.controller.contracts.*;
@@ -12,7 +13,8 @@ import soen6441.team01.warzone.view.ViewFactory;
  * of objects that define the respective classes for the different Warzone
  * controllers.
  */
-public class ControllerFactory {
+public class ControllerFactory implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 

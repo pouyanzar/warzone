@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.entities.MsgType;
@@ -11,7 +12,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Manages the state of game play.
  *
  */
-public class GamePlay implements IGamePlayModel {
+public class GamePlay implements IGamePlayModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private GameState d_game_state = GameState.Startup;
 	private IMapModel d_map = null;
 	private ArrayList<IPlayerModel> d_players = new ArrayList<IPlayerModel>();

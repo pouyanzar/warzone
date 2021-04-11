@@ -1,6 +1,9 @@
 package soen6441.team01.warzone.view;
 
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
+
+import java.io.Serializable;
+
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
@@ -19,7 +22,8 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * of objects that define the respective classes for the different Warzone
  * views.
  */
-public class ViewFactory {
+public class ViewFactory implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 
 	/**

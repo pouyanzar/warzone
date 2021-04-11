@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.model.contracts.IContinentModel;
@@ -15,8 +16,8 @@ import soen6441.team01.warzone.model.entities.*;
  * The class Player provides the implementation of a Warzone human player
  * 
  */
-public class Player implements IPlayerModel {
-
+public class Player implements IPlayerModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private String d_name;
 	private int d_reinforcements = 0;
 	private ArrayList<ICountryModel> d_countries;
