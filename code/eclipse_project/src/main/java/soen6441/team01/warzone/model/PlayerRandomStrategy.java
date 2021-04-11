@@ -80,6 +80,20 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	 */
 	private IOrder doRandomMove() throws Exception {
 		IOrder l_order = null;
+		if (d_player.getReinforcements() < 1) {
+			return l_order;
+		}
+		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
+		int l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
+		ICountryModel l_from_country = l_player_countries.get(l_country_from_idx);
+		int l_country_to_idx = Utl.randomInt(l_player_countries.size() - 1);
+		ICountryModel l_to_country = l_player_countries.get(l_country_to_idx);
+		if (l_country_from_idx != l_country_to_idx) {
+			if ((l_from_country != null) && (l_to_country != null)) {
+				int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
+				l_order = new OrderAdvance(d_player, l_from_country, l_to_country, l_numarmies);
+			}
+		}
 		return l_order;
 	}
 
