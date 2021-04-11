@@ -41,6 +41,13 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 	 * @throws Exception an unexpected error
 	 */
 	public IOrder createOrder() throws Exception {
+		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
+		for (ICountryModel l_country : d_player.getPlayerCountries()) {
+			l_neighbors.add((ICountryModel) l_country.getNeighbors());
+			for(ICountryModel l_neighbor : l_neighbors)
+			d_player.addPlayerCountry(l_neighbor);
+		}
+		
 		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [cheater] issuing order> ";
 		d_msg_model.setMessage(MsgType.Informational, l_msg_header + "end turn");
 		return null;
