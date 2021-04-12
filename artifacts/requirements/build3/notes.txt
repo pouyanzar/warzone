@@ -1,6 +1,6 @@
 * single games
 loadmap ./src/test/resources/maps/world_small/world_small.map
-gameplayer -add H1 -add B1 bene
+gameplayer -add H1 -add B1 rand -add C1 cheat
 assigncountries
 maxrounds 10
 loadgame d:\tmp\jx1.wz

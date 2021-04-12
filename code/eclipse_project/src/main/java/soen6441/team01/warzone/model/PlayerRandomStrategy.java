@@ -14,7 +14,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 
 /**
  * Supports the random player strategy. <br>
- * A computer based player that does not require user interaction to make decisions.
+ * A computer based player that does not require user interaction to make
+ * decisions.
  *
  */
 public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
@@ -28,7 +29,7 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 	/**
 	 * constructor
 	 * 
-	 * @param p_player    the cloned player to which to apply this order strategy 
+	 * @param p_player    the cloned player to which to apply this order strategy
 	 * @param p_msg_model the message model used to send messages to the view
 	 */
 	public PlayerRandomStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {
@@ -74,7 +75,10 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 	}
 
 	/**
-	 * moves armies randomly between its countries, if possible
+	 * moves armies randomly between its countries, if possible:<br>
+	 * 1) find a country that has armies - if none then don't do it
+	 * 2) find a a neighbor that is either your own country or an opponent that has 0 armies on it - if none goto 1
+	 * 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
@@ -99,7 +103,10 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 	}
 
 	/**
-	 * attacks random neighboring countries, if possible
+	 * attacks random neighboring countries, if possible:<br>
+	 * 1) find a country that has armies - if none then don't do it
+	 * 2) find a a neighbor opponent that has armies on it - if none goto 1
+     * 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
@@ -109,14 +116,14 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 		if (d_player.getReinforcements() < 1) {
 			return l_order;
 		}
-		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();		
+		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
 		int l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
-		ICountryModel l_from_countries= l_player_countries.get(l_country_from_idx);
+		ICountryModel l_from_countries = l_player_countries.get(l_country_from_idx);
 		int l_country_to_idx = Utl.randomInt(l_from_countries.getNeighbors().size() - 1);
-		ICountryModel l_to_countries = l_from_countries.getNeighbors().get(l_country_to_idx);	
-		if((l_from_countries!=null)&&(l_to_countries!=null)) {			
+		ICountryModel l_to_countries = l_from_countries.getNeighbors().get(l_country_to_idx);
+		if ((l_from_countries != null) && (l_to_countries != null)) {
 			int l_numarmies = Utl.randomInt(l_from_countries.getArmies() - 1);
-			l_order = new OrderAdvance(d_player, l_from_countries, l_to_countries, l_numarmies);	
+			l_order = new OrderAdvance(d_player, l_from_countries, l_to_countries, l_numarmies);
 		}
 		return l_order;
 	}
