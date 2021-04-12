@@ -3,18 +3,17 @@ package soen6441.team01.warzone.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 
 /**
  * Supports the cheater player strategy. <br>
- * A computer based player that does not require user interaction to make decisions.
+ * A computer based player that does not require user interaction to make
+ * decisions.
  *
  */
 public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
@@ -26,7 +25,7 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 	/**
 	 * constructor
 	 * 
-	 * @param p_player    the true map based player (i.e. not a clone) 
+	 * @param p_player    the true map based player (i.e. not a clone)
 	 * @param p_msg_model the message model used to send messages to the view
 	 */
 	public PlayerCheaterStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {
@@ -44,10 +43,14 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
 		for (ICountryModel l_country : d_player.getPlayerCountries()) {
 			l_neighbors.add((ICountryModel) l_country.getNeighbors());
-			for(ICountryModel l_neighbor : l_neighbors)
-			d_player.addPlayerCountry(l_neighbor);
+			for (ICountryModel l_neighbor : l_neighbors)
+				d_player.addPlayerCountry(l_neighbor);
 		}
-		
+
+		for (ICountryModel l_country : d_player.getPlayerCountries()) {
+			l_country.setArmies(l_country.getArmies() * 2);
+		}
+
 		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [cheater] issuing order> ";
 		d_msg_model.setMessage(MsgType.Informational, l_msg_header + "end turn");
 		return null;
@@ -55,7 +58,7 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 
 	/**
 	 * do not create a deep clone of the current strategy<br>
-	 * required because we want the player to manipulate the original map directly 
+	 * required because we want the player to manipulate the original map directly
 	 * 
 	 * @return a this strategy object
 	 */
