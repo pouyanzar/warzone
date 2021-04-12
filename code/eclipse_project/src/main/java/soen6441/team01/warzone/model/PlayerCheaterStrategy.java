@@ -40,15 +40,22 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 	 * @throws Exception an unexpected error
 	 */
 	public IOrder createOrder() throws Exception {
+
 		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
+
+		// find and conquer neighbor countries
 		for (ICountryModel l_country : d_player.getPlayerCountries()) {
 			l_neighbors.add((ICountryModel) l_country.getNeighbors());
 			for (ICountryModel l_neighbor : l_neighbors)
 				d_player.addPlayerCountry(l_neighbor);
 		}
 
+		// makes double the armies in countries have enemy neighbors
 		for (ICountryModel l_country : d_player.getPlayerCountries()) {
-			l_country.setArmies(l_country.getArmies() * 2);
+			if (l_country.getNeighbors().size() > 0)
+				for (ICountryModel l_country_1 : l_country.getNeighbors())
+					if (!d_player.getPlayerCountries().contains(l_country_1))
+						l_country.setArmies(l_country.getArmies() * 2);
 		}
 
 		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [cheater] issuing order> ";
