@@ -44,8 +44,11 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
 
 		// find and conquer neighbor countries
-		for (ICountryModel l_country : d_player.getPlayerCountries()) {
-			l_neighbors.add((ICountryModel) l_country.getNeighbors());
+		ArrayList<ICountryModel> l_player_countries = new ArrayList<>();
+		for (ICountryModel l_country : d_player.getPlayerCountries())
+			l_player_countries.add(l_country);
+		for (ICountryModel l_country : l_player_countries) {
+			l_neighbors.addAll(l_country.getNeighbors());
 			for (ICountryModel l_neighbor : l_neighbors)
 				d_player.addPlayerCountry(l_neighbor);
 		}
