@@ -68,65 +68,23 @@ Q: cheater mode, works directly on the map during issue_order?
 -----------------------------------------------------
 refactoring:
 
-PMD Source Code Analyzer 
-An extensible cross-language static code analyzer
-https://pmd.github.io/ 
-
-1) all/controller factory references all other factories:
-
-2) all writes to console done via Utl.consoleMessage - adds logging
-
-3) Refactor class names:
-MessageType, MsgType
-OrderExecutionController, OrderExecController
-SoftwareFactoryController, ControllerFactory
-UserMessageModel, AppMsg
-OrderDeploy, DeployOrder
-SoftwareFactoryModel, ModelFactory
-SoftwareFactoryView, ViewFactory
-IUserMessageModel, IAppMsg
-MapEditorConsoleView, MapEditorConsole
-GameStartupConsoleView, GameStartupConsole
-GamePlayConsoleView, GamePlayConsole
-IOrderModel, IOrder
-
-4) moved deploy method from player class to order class
-
-5) State pattern
-
-6) Observer pattern
-
-7) command pattern
-
-8) constructor dependencies to factories
-
-9) Use AssertSame instead OfAssertTrue in unit tests
-
-10) Rename Method: The name of a method does not reveal its purpose. Refactor it by changing the name of the method.
-
-11) remove unused variables:
-Avoid unused local variables
-UnusedPrivateField
-
-12) Remove unused formal parameter
-UnusedFormalParameter
-
-13) Use AssertNull instead of AssertTrue in unit tests
-UseAssertNullInsteadOfAssertTrue
-
-14) Use AssertEquals instead of AssertTrue in unit tests
-UseAssertEqualsInsteadOfAssertTrue
-
-15) Use collection IsEmpty instead of size() == 0 (or size() != 0, size() > 0, size() < 1)
-UseCollectionIsEmpty
-
-
-rename methods:
-setPlayer to cloneToPlayer
-
-rename classes:
+*) Refactor class names:
 GamePlayController -> SingleGameController
 
+
+*) remove unused variables:
+
+
+
+*) rename methods:
+setPlayer to cloneToPlayer
+
+
+-------------
+refactoring for build 3:
+
+1) move all comand parsing into respective Order class (MAYBE - THINK ABOUT IT)
+2) d_reinforcements + Utl.plural(d_reinforcements, " army", " armies")
 
 
 
@@ -169,11 +127,10 @@ test_assignReinforcements_2 -> GamePlayTest
 
 
 
--------------
-refactoring for build 3:
 
-1) move all comand parsing into respective Order class (MAYBE - THINK ABOUT IT)
-2) d_reinforcements + Utl.plural(d_reinforcements, " army", " armies")
 
+
+
+GameEngine : startNewGame() -> startGame()
 
 

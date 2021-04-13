@@ -2,8 +2,6 @@ package soen6441.team01.warzone.model.contracts;
 
 import java.util.ArrayList;
 
-import soen6441.team01.warzone.model.Continent;
-import soen6441.team01.warzone.model.Country;
 import soen6441.team01.warzone.model.entities.CountrySummary;
 
 /**

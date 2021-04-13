@@ -1,39 +1,14 @@
 package soen6441.team01.warzone.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.IGameEndController;
-import soen6441.team01.warzone.controller.contracts.ISingleGameController;
-import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.OrderDeploy;
 import soen6441.team01.warzone.model.Phase;
-import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IOrder;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
-import soen6441.team01.warzone.model.contracts.IAppMsg;
-import soen6441.team01.warzone.model.entities.CountrySummary;
-import soen6441.team01.warzone.model.entities.GameState;
-import soen6441.team01.warzone.view.ViewFactory;
-import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
 /**
  * Warzone game end controller. Manages the coordination and progression of the
  * game end phase.
  */
 public class GameEndController extends Phase implements IGameEndController {
-
-	private ControllerFactory d_controller_factory;
-	private ModelFactory d_model_factory;
-	private IAppMsg d_msg_model;
-
 	/**
 	 * Constructor with view and models defined.
 	 * 
@@ -42,9 +17,6 @@ public class GameEndController extends Phase implements IGameEndController {
 	 */
 	public GameEndController(ControllerFactory p_controller_factory) throws Exception {
 		super(p_controller_factory.getModelFactory().getGameEngine());
-		d_controller_factory = p_controller_factory;
-		d_model_factory = p_controller_factory.getModelFactory();
-		d_msg_model = d_model_factory.getUserMessageModel();
 	}
 
 	/**

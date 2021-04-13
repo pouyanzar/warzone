@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
-import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
@@ -121,9 +120,6 @@ public class GameStartupController extends Phase implements IGameStartupControll
 			break;
 		case "maxrounds":
 			processMaxRounds(l_cmd_params[1]);
-			break;
-		case "loadgame":
-			d_msg_model.setMessage(MsgType.Warning, "loadgame coming soon");
 			break;
 		case "assigncountries":
 			if (processAssignCountries(d_gameplay)) {

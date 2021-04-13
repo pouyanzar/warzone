@@ -3,11 +3,8 @@ package soen6441.team01.warzone.model;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.CardType;
-
 import java.io.Serializable;
-
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IOrder;
 
 /**

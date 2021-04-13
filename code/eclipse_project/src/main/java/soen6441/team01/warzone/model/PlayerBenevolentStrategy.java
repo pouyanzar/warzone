@@ -5,7 +5,6 @@ import java.io.Serializable;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
@@ -48,7 +47,6 @@ public class PlayerBenevolentStrategy implements IPlayerStrategy, Serializable {
 	 */
 	public IOrder createOrder() throws Exception {
 		IOrder l_order = null;
-		IAppMsg l_msg = d_player.getPlayerModelFactory().getUserMessageModel();
 		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [benevolent] issuing order> ";  
 
 		try {

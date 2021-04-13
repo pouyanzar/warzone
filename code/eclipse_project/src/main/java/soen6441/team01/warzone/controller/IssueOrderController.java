@@ -9,7 +9,6 @@ import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
 import soen6441.team01.warzone.model.*;
 import soen6441.team01.warzone.model.contracts.*;
-import soen6441.team01.warzone.model.entities.CardType;
 import soen6441.team01.warzone.view.ViewFactory;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 
@@ -560,8 +559,8 @@ public class IssueOrderController extends SingleGameController
 	 * <li>deploy countryName num_reinforcements</li>
 	 * </ul>
 	 * 
-	 * @param p_deploy_params the loadmap parameters (just the parameters without
-	 *                        the loadmap command itself)
+	 * @param p_deploy_params the deploy parameters (just the parameters without
+	 *                        the deploy command itself)
 	 * @param p_player_clone  the player object who wishes to deploy
 	 * @return the player's order or null if there was a problem creating the order
 	 * @throws Exception unexpected error encountered

@@ -19,7 +19,6 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
  */
 public class GameStartupConsole implements Observer, IGameStartupView, Serializable {
 	private static final long serialVersionUID = 1L;
-	private IGameStartupController d_controller = null;
 	private transient Scanner d_keyboard = null;
 	private IAppMsg d_user_message_model = null;
 	private ModelFactory d_factory_model = null;
@@ -33,7 +32,6 @@ public class GameStartupConsole implements Observer, IGameStartupView, Serializa
 	 */
 	public GameStartupConsole(IGameStartupController p_controller, ModelFactory p_factory_model)
 			throws Exception {
-		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
 		d_user_message_model = d_factory_model.getUserMessageModel();

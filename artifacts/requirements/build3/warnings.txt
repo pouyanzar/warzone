@@ -1,0 +1,183 @@
+Description     Resource        Path    Location        Type
+Build path specifies execution environment JavaSE-1.8. There are no JREs installed in the workspace that are strictly compatible with this environment.         warzone         Build path      JRE System Library Problem
+The compiler compliance specified is 1.8 but a JRE 14 is used   warzone         Compiler Compliance     JRE Compiler Compliance Problem
+The import java.io.IOException is never used    GameEngine.java /warzone/src/main/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import java.io.IOException is never used    MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 6  Java Problem
+The import java.io.IOException is never used    MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 6  Java Problem
+The import java.io.IOException is never used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 6  Java Problem
+The import java.io.Serializable is never used   OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 3  Java Problem
+The import java.util.ArrayList is never used    CountrySummary.java     /warzone/src/main/java/soen6441/team01/warzone/model/entities   line 3  Java Problem
+The import java.util.ArrayList is never used    GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 3  Java Problem
+The import java.util.ArrayList is never used    GameEngine.java /warzone/src/main/java/soen6441/team01/warzone/model    line 9  Java Problem
+The import java.util.ArrayList is never used    MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 9  Java Problem
+The import java.util.ArrayList is never used    OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 4  Java Problem
+The import java.util.ArrayList is never used    ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 3  Java Problem
+The import java.util.LinkedList is never used   GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 4  Java Problem
+The import java.util.LinkedList is never used   OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 5  Java Problem
+The import java.util.LinkedList is never used   ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 4  Java Problem
+The import java.util.Queue is never used        GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 5  Java Problem
+The import java.util.Queue is never used        OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 6  Java Problem
+The import java.util.Queue is never used        ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 5  Java Problem
+The import java.util.Random is never used       OrderAdvance.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 7  Java Problem
+The import java.util.Random is never used       PlayerAggressiveStrategy.java   /warzone/src/main/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import java.util.Scanner is never used      GameTournamentConsole.java      /warzone/src/main/java/soen6441/team01/warzone/view     line 5  Java Problem
+The import org.junit.Assert is never used       GamePlayConsoleTest.java        /warzone/src/test/java/soen6441/team01/warzone/view     line 3  Java Problem
+The import org.junit.Before is never used       CardTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import org.junit.Before is never used       GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 7  Java Problem
+The import soen6441.team01.warzone.common.entities.MsgType is never used        GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 8  Java Problem
+The import soen6441.team01.warzone.common.entities.MsgType is never used        GameEngine.java /warzone/src/main/java/soen6441/team01/warzone/model    line 12 Java Problem
+The import soen6441.team01.warzone.common.entities.MsgType is never used        OrderAirlift.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 10 Java Problem
+The import soen6441.team01.warzone.common.entities.MsgType is never used        Phase.java      /warzone/src/main/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import soen6441.team01.warzone.common.Utl is never used     MapIoAdaptor.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import soen6441.team01.warzone.common.Utl is never used     OrderDiplomacy.java     /warzone/src/main/java/soen6441/team01/warzone/model    line 5  Java Problem
+The import soen6441.team01.warzone.common.Utl is never used     OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 8  Java Problem
+The import soen6441.team01.warzone.common.Utl is never used     ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 7  Java Problem
+The import soen6441.team01.warzone.controller.contracts.IGameStartupController is never used    GamePlayConsole.java    /warzone/src/main/java/soen6441/team01/warzone/view     line 12 Java Problem
+The import soen6441.team01.warzone.controller.contracts.IGameStartupController is never used    GameTournamentConsole.java      /warzone/src/main/java/soen6441/team01/warzone/view     line 11 Java Problem
+The import soen6441.team01.warzone.controller.contracts.ISingleGameController is never used     GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 10 Java Problem
+The import soen6441.team01.warzone.controller.contracts.ISingleGameController is never used     GameStartupController.java      /warzone/src/main/java/soen6441/team01/warzone/controller       line 7  Java Problem
+The import soen6441.team01.warzone.controller.contracts.ISingleGameController is never used     OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 10 Java Problem
+The import soen6441.team01.warzone.controller.contracts.ISingleGameController is never used     ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 9  Java Problem
+The import soen6441.team01.warzone.controller.ControllerFactory is never used   CountryTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 11 Java Problem
+The import soen6441.team01.warzone.controller.ControllerFactory is never used   OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 8  Java Problem
+The import soen6441.team01.warzone.controller.IssueOrderController is never used        GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 12 Java Problem
+The import soen6441.team01.warzone.controller.IssueOrderController is never used        OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 9  Java Problem
+The import soen6441.team01.warzone.controller.MapEditorController is never used GamePlayConsoleTest.java        /warzone/src/test/java/soen6441/team01/warzone/view     line 10 Java Problem
+The import soen6441.team01.warzone.controller.MapEditorController is never used OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 10 Java Problem
+The import soen6441.team01.warzone.controller.SingleGameController is never used        CountryTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 10 Java Problem
+The import soen6441.team01.warzone.controller.SingleGameController is never used        GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 13 Java Problem
+The import soen6441.team01.warzone.model.Continent is never used        ICountryModel.java      /warzone/src/main/java/soen6441/team01/warzone/model/contracts  line 5  Java Problem
+The import soen6441.team01.warzone.model.Continent is never used        IMapModel.java  /warzone/src/main/java/soen6441/team01/warzone/model/contracts  line 5  Java Problem
+The import soen6441.team01.warzone.model.Continent is never used        MapEditorControllerTest.java    /warzone/src/test/java/soen6441/team01/warzone/controller       line 14 Java Problem
+The import soen6441.team01.warzone.model.contracts.IAppMsg is never used        ViewFactory.java        /warzone/src/main/java/soen6441/team01/warzone/view     line 14 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        CountryTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 12 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 14 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        GamePlayTest.java       /warzone/src/test/java/soen6441/team01/warzone/model    line 10 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        MapIoAdaptor.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 6  Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 15 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 15 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 11 Java Problem
+The import soen6441.team01.warzone.model.contracts.IContinentModel is never used        Player.java     /warzone/src/main/java/soen6441/team01/warzone/model    line 6  Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 15 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 15 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  MapIoAdaptor.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 7  Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 12 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 15 Java Problem
+The import soen6441.team01.warzone.model.contracts.ICountryModel is never used  ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 14 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used CountryTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 14 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used GamePlayTest.java       /warzone/src/test/java/soen6441/team01/warzone/model    line 12 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used IGameEndController.java /warzone/src/main/java/soen6441/team01/warzone/controller/contracts     line 3  Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used IGameStartupController.java     /warzone/src/main/java/soen6441/team01/warzone/controller/contracts     line 3  Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used ITournamentController.java      /warzone/src/main/java/soen6441/team01/warzone/controller/contracts     line 5  Java Problem
+The import soen6441.team01.warzone.model.contracts.IGamePlayModel is never used OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 13 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 17 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 17 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       Player.java     /warzone/src/main/java/soen6441/team01/warzone/model    line 8  Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       PlayerBenevolentStrategy.java   /warzone/src/main/java/soen6441/team01/warzone/model    line 8  Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       PlayerRandomStrategy.java       /warzone/src/main/java/soen6441/team01/warzone/model    line 10 Java Problem
+The import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource is never used       ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 18 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 17 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 17 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 18 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 17 Java Problem
+The import soen6441.team01.warzone.model.contracts.IMapModel is never used      ViewFactory.java        /warzone/src/main/java/soen6441/team01/warzone/view     line 13 Java Problem
+The import soen6441.team01.warzone.model.contracts.IOrder is never used GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 19 Java Problem
+The import soen6441.team01.warzone.model.contracts.IOrder is never used IGameEndController.java /warzone/src/main/java/soen6441/team01/warzone/controller/contracts     line 4  Java Problem
+The import soen6441.team01.warzone.model.contracts.IOrder is never used OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 19 Java Problem
+The import soen6441.team01.warzone.model.contracts.IOrder is never used ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 18 Java Problem
+The import soen6441.team01.warzone.model.contracts.IPlayerModel is never used   GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 20 Java Problem
+The import soen6441.team01.warzone.model.contracts.IPlayerModel is never used   IGameEndController.java /warzone/src/main/java/soen6441/team01/warzone/controller/contracts     line 5  Java Problem
+The import soen6441.team01.warzone.model.contracts.IPlayerModel is never used   Map.java        /warzone/src/main/java/soen6441/team01/warzone/model    line 16 Java Problem
+The import soen6441.team01.warzone.model.contracts.IPlayerModel is never used   OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 20 Java Problem
+The import soen6441.team01.warzone.model.contracts.IPlayerModel is never used   ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 19 Java Problem
+The import soen6441.team01.warzone.model.Country is never used  ICountryModel.java      /warzone/src/main/java/soen6441/team01/warzone/model/contracts  line 6  Java Problem
+The import soen6441.team01.warzone.model.entities.CardType is never used        IssueOrderController.java       /warzone/src/main/java/soen6441/team01/warzone/controller       line 12 Java Problem
+The import soen6441.team01.warzone.model.entities.ConquestMap is never used     MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 18 Java Problem
+The import soen6441.team01.warzone.model.entities.CountrySummary is never used  GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 22 Java Problem
+Type safety: Unchecked cast from Object to ArrayList<IPlayerModel>      GamePlay.java   /warzone/src/main/java/soen6441/team01/warzone/model    line 70 Java Problem
+Type safety: Unchecked cast from Object to ArrayList<ICountryModel>     Map.java        /warzone/src/main/java/soen6441/team01/warzone/model    line 55 Java Problem
+Type safety: Unchecked cast from Object to ArrayList<ICountryModel>     Country.java    /warzone/src/main/java/soen6441/team01/warzone/model    line 225        Java Problem
+Type safety: Unchecked cast from Object to ArrayList<IContinentModel>   Map.java        /warzone/src/main/java/soen6441/team01/warzone/model    line 48 Java Problem
+Type safety: Unchecked cast from Object to ArrayList<Card>      Player.java     /warzone/src/main/java/soen6441/team01/warzone/model    line 322        Java Problem
+The value of the local variable l_msg is not used       PlayerBenevolentStrategy.java   /warzone/src/main/java/soen6441/team01/warzone/model    line 51 Java Problem
+The value of the field ReinforcementController.d_view is not used       ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 34 Java Problem
+The value of the field ReinforcementController.d_game_over is not used  ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 37 Java Problem
+The value of the field ReinforcementController.d_exit is not used       ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 36 Java Problem
+The value of the field OrderExecController.d_view is not used   OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 35 Java Problem
+The value of the local variable l_msg is not used       GameStartupControllerTest.java  /warzone/src/test/java/soen6441/team01/warzone/controller       line 297        Java Problem
+The value of the local variable l_msg is not used       GameStartupControllerTest.java  /warzone/src/test/java/soen6441/team01/warzone/controller       line 319        Java Problem
+The value of the local variable l_player is not used    GameStartupControllerTest.java  /warzone/src/test/java/soen6441/team01/warzone/controller       line 344        Java Problem
+The value of the field OrderExecController.d_game_over is not used      OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 39 Java Problem
+The value of the local variable next_phase is not used  IssueOrderControllerTest.java   /warzone/src/test/java/soen6441/team01/warzone/controller       line 207        Java Problem
+The value of the field OrderExecController.d_exit is not used   OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 38 Java Problem
+The value of the field MapEditorConsole.d_controller is not used        MapEditorConsole.java   /warzone/src/main/java/soen6441/team01/warzone/view     line 27 Java Problem
+The value of the field IssueOrderControllerTest.d_MAP_DIR is not used   IssueOrderControllerTest.java   /warzone/src/test/java/soen6441/team01/warzone/controller       line 28 Java Problem
+The value of the field GameTournamentConsole.d_controller is not used   GameTournamentConsole.java      /warzone/src/main/java/soen6441/team01/warzone/view     line 25 Java Problem
+The value of the field GameStartupConsole.d_controller is not used      GameStartupConsole.java /warzone/src/main/java/soen6441/team01/warzone/view     line 22 Java Problem
+The value of the field GamePlayConsole.d_controller is not used GamePlayConsole.java    /warzone/src/main/java/soen6441/team01/warzone/view     line 28 Java Problem
+The value of the field GameEndController.d_msg_model is not used        GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 35 Java Problem
+The value of the field GameEndController.d_controller_factory is not used       GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 33 Java Problem
+The serializable class ReinforcementController does not declare a static final serialVersionUID field of type long      ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 30 Java Problem
+The serializable class OrderExecController does not declare a static final serialVersionUID field of type long  OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 31 Java Problem
+The serializable class GameEndController does not declare a static final serialVersionUID field of type long    GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 31 Java Problem
+The import soen6441.team01.warzone.view.ViewFactory is never used       GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 24 Java Problem
+The import soen6441.team01.warzone.view.ViewFactory is never used       CountryTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 15 Java Problem
+The import soen6441.team01.warzone.view.contracts.IGameStartupView is never used        GameTournamentConsole.java      /warzone/src/main/java/soen6441/team01/warzone/view     line 16 Java Problem
+The import soen6441.team01.warzone.view.contracts.IGamePlayView is never used   GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 25 Java Problem
+The import soen6441.team01.warzone.model.OrderDeploy is never used      ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 11 Java Problem
+The import soen6441.team01.warzone.model.OrderDeploy is never used      OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 12 Java Problem
+The import soen6441.team01.warzone.model.OrderDeploy is never used      GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 12 Java Problem
+The value of the local variable l_c1 is not used        GamePlayTest.java       /warzone/src/test/java/soen6441/team01/warzone/model    line 311        Java Problem
+The value of the local variable l_c2 is not used        GamePlayTest.java       /warzone/src/test/java/soen6441/team01/warzone/model    line 312        Java Problem
+The import soen6441.team01.warzone.model.Map is never used      ViewFactory.java        /warzone/src/main/java/soen6441/team01/warzone/view     line 10 Java Problem
+The import soen6441.team01.warzone.model.Map is never used      ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 10 Java Problem
+The import soen6441.team01.warzone.model.Map is never used      OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 11 Java Problem
+The import soen6441.team01.warzone.model.Map is never used      MapEditorConsole.java   /warzone/src/main/java/soen6441/team01/warzone/view     line 12 Java Problem
+The import soen6441.team01.warzone.model.Map is never used      IMapEditorView.java     /warzone/src/main/java/soen6441/team01/warzone/view/contracts   line 6  Java Problem
+The import soen6441.team01.warzone.model.Map is never used      GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 11 Java Problem
+The import soen6441.team01.warzone.model.MapIoAdaptor is never used     MapEditorControllerTest.java    /warzone/src/test/java/soen6441/team01/warzone/controller       line 21 Java Problem
+The import soen6441.team01.warzone.model.LogEntryBuffer is never used   ViewFactory.java        /warzone/src/main/java/soen6441/team01/warzone/view     line 12 Java Problem
+The import soen6441.team01.warzone.model.GameEngine is never used       UtlTest.java    /warzone/src/test/java/soen6441/team01/warzone/common   line 7  Java Problem
+The import soen6441.team01.warzone.model.GameEngine is never used       MapEditorControllerTest.java    /warzone/src/test/java/soen6441/team01/warzone/controller       line 15 Java Problem
+The import soen6441.team01.warzone.model.entities.UserMessage is never used     IGameTournamentView.java        /warzone/src/main/java/soen6441/team01/warzone/view/contracts   line 6  Java Problem
+The import soen6441.team01.warzone.model.entities.UserMessage is never used     IGameStartupView.java   /warzone/src/main/java/soen6441/team01/warzone/view/contracts   line 4  Java Problem
+The import soen6441.team01.warzone.model.entities.UserMessage is never used     IGamePlayView.java      /warzone/src/main/java/soen6441/team01/warzone/view/contracts   line 6  Java Problem
+The import soen6441.team01.warzone.model.entities.GameState is never used       ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 22 Java Problem
+The value of the local variable l_map is not used       MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 68 Java Problem
+The value of the local variable l_north_america is not used     MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 92 Java Problem
+The value of the local variable l_europe is not used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 93 Java Problem
+The value of the local variable l_north_america is not used     MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 108        Java Problem
+The value of the local variable l_europe is not used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 109        Java Problem
+The value of the local variable l_canada is not used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 121        Java Problem
+The value of the local variable l_usa is not used       MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 122        Java Problem
+The value of the local variable l_canada is not used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 138        Java Problem
+The value of the local variable l_usa is not used       MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 139        Java Problem
+The value of the local variable l_canada is not used    MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 180        Java Problem
+The import soen6441.team01.warzone.model.entities.GameState is never used       OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 23 Java Problem
+The import soen6441.team01.warzone.model.entities.GameState is never used       GameEngineTest.java     /warzone/src/test/java/soen6441/team01/warzone/model    line 18 Java Problem
+The import soen6441.team01.warzone.model.entities.GameState is never used       GameEndController.java  /warzone/src/main/java/soen6441/team01/warzone/controller       line 23 Java Problem
+The import soen6441.team01.warzone.model.entities.DominationMap is never used   MapTest.java    /warzone/src/test/java/soen6441/team01/warzone/model    line 15 Java Problem
+The import soen6441.team01.warzone.model.entities.DominationMap is never used   MapIoDominationTest.java        /warzone/src/test/java/soen6441/team01/warzone/model    line 19 Java Problem
+The import soen6441.team01.warzone.view.ViewFactory is never used       OrderAdvanceTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 14 Java Problem
+The import soen6441.team01.warzone.model.entities.DominationMap is never used   MapIoConquestTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 19 Java Problem
+The value of the local variable l_airlift is not used   OrderAirliftTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 62 Java Problem
+The value of the local variable l_airlift is not used   OrderAirliftTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 83 Java Problem
+The value of the local variable l_airlift is not used   OrderAirliftTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 105        Java Problem
+The value of the local variable l_airlift is not used   OrderAirliftTest.java   /warzone/src/test/java/soen6441/team01/warzone/model    line 127        Java Problem
+The value of the local variable l_blockade is not used  OrderBlockadeTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 70 Java Problem
+The value of the local variable l_blockade is not used  OrderBlockadeTest.java  /warzone/src/test/java/soen6441/team01/warzone/model    line 92 Java Problem
+The value of the local variable l_bomb is not used      OrderBombTest.java      /warzone/src/test/java/soen6441/team01/warzone/model    line 70 Java Problem
+The value of the local variable l_bomb is not used      OrderBombTest.java      /warzone/src/test/java/soen6441/team01/warzone/model    line 80 Java Problem
+The value of the local variable l_bomb is not used      OrderBombTest.java      /warzone/src/test/java/soen6441/team01/warzone/model    line 102        Java Problem
+The value of the local variable l_bomb is not used      OrderBombTest.java      /warzone/src/test/java/soen6441/team01/warzone/model    line 124        Java Problem
+The import soen6441.team01.warzone.model.entities.CountrySummary is never used  ReinforcementController.java    /warzone/src/main/java/soen6441/team01/warzone/controller       line 21 Java Problem
+The import soen6441.team01.warzone.model.entities.CountrySummary is never used  OrderExecController.java        /warzone/src/main/java/soen6441/team01/warzone/controller       line 22 Java Problem
+The import soen6441.team01.warzone.view.contracts.IMapEditorView is never used  GamePlayConsoleTest.java        /warzone/src/test/java/soen6441/team01/warzone/view     line 23 Java Problem
+The value of the local variable l_msg is not used       GamePlayConsoleTest.java        /warzone/src/test/java/soen6441/team01/warzone/view     line 75 Java Problem
+The import soen6441.team01.warzone.view.contracts.IMapEditorView is never used  MapEditorConsoleTest.java       /warzone/src/test/java/soen6441/team01/warzone/view     line 14 Java Problem
+The value of the local variable l_msg is not used       MapEditorConsoleTest.java       /warzone/src/test/java/soen6441/team01/warzone/view     line 51 Java Problem

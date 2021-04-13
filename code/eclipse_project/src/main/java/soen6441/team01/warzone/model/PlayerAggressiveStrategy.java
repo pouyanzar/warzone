@@ -2,8 +2,6 @@ package soen6441.team01.warzone.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Random;
-
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IAppMsg;

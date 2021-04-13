@@ -1,13 +1,8 @@
 package soen6441.team01.warzone.view;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import soen6441.team01.warzone.controller.MapEditorController;
 import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.controller.IssueOrderController;
 import soen6441.team01.warzone.model.ModelFactory;
@@ -20,7 +15,6 @@ import soen6441.team01.warzone.model.Continent;
 import soen6441.team01.warzone.model.Country;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
-import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
  * Supports all the test methods used to test class MapEditorConsoleView
@@ -72,7 +66,6 @@ public class GamePlayConsoleTest {
 	 */
 	@Test
 	public void test_showmap_command_1() throws Exception {
-		String l_msg;
 		d_player.addPlayerCountry(d_canada);
 		d_canada.addNeighbor(d_us);
 

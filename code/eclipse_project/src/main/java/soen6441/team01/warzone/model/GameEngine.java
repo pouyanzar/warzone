@@ -2,14 +2,10 @@ package soen6441.team01.warzone.model;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.*;

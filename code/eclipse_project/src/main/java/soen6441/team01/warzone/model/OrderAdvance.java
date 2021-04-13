@@ -2,9 +2,7 @@ package soen6441.team01.warzone.model;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.model.contracts.*;
-
 import java.io.Serializable;
-import java.util.Random;
 
 /**
  * Supports the definition and implementation of the 'deploy' order.

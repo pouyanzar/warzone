@@ -59,14 +59,13 @@ public class OrderAirliftTest {
 	 */
 	@Test
 	public void test_airlift_invalid_noairliftcard() throws Exception {
-		OrderAirlift l_airlift = null;
 		d_canada.addNeighbor(d_usa);
 		d_canada.setArmies(6);
 		d_player.addPlayerCountry(d_canada);
 
 		String l_msg = "";
 		try {
-			l_airlift = new OrderAirlift("Canada", "USA", 3, d_player);
+			new OrderAirlift("Canada", "USA", 3, d_player);
 		} catch (Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -80,7 +79,6 @@ public class OrderAirliftTest {
 	 */
 	@Test
 	public void test_airlift_invalid_airliftmycountry_1() throws Exception {
-		OrderAirlift l_airlift = null;
 		d_canada.addNeighbor(d_usa);
 		d_canada.setArmies(6);
 		Card l_card = new Card(CardType.airlift);
@@ -88,7 +86,7 @@ public class OrderAirliftTest {
 
 		String l_msg = "";
 		try {
-			l_airlift = new OrderAirlift("Canada", "USA", 3, d_player);
+			new OrderAirlift("Canada", "USA", 3, d_player);
 		} catch (Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -102,7 +100,6 @@ public class OrderAirliftTest {
 	 */
 	@Test
 	public void test_airlift_invalid_airliftmycountry_2() throws Exception {
-		OrderAirlift l_airlift = null;
 		d_player.addPlayerCountry(d_canada);
 		d_canada.setArmies(3);
 		Card l_card = new Card(CardType.airlift);
@@ -110,7 +107,7 @@ public class OrderAirliftTest {
 
 		String l_msg = "";
 		try {
-			l_airlift = new OrderAirlift("Canada", "USA", 3, d_player);
+			new OrderAirlift("Canada", "USA", 3, d_player);
 		} catch (Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -124,7 +121,6 @@ public class OrderAirliftTest {
 	 */
 	@Test
 	public void test_airlift_invalid_airliftmycountry_3() throws Exception {
-		OrderAirlift l_airlift = null;
 		d_player.addPlayerCountry(d_canada);
 		d_canada.setArmies(2);
 		Card l_card = new Card(CardType.airlift);
@@ -132,7 +128,7 @@ public class OrderAirliftTest {
 		
 		String l_msg = "";
 		try {
-			l_airlift = new OrderAirlift("Canada", "USA", 3, d_player);
+			new OrderAirlift("Canada", "USA", 3, d_player);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}

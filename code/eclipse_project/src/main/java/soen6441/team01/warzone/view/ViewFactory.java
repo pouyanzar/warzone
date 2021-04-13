@@ -1,17 +1,11 @@
 package soen6441.team01.warzone.view;
 
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
-
 import java.io.Serializable;
-
 import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
-import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.ModelFactory;
-import soen6441.team01.warzone.model.LogEntryBuffer;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.view.contracts.IGamePlayView;
 import soen6441.team01.warzone.view.contracts.IGameStartupView;
 import soen6441.team01.warzone.view.contracts.IGameTournamentView;

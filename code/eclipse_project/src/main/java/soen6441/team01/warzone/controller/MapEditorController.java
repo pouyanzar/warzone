@@ -93,6 +93,7 @@ public class MapEditorController extends Phase implements IMapEditorController, 
 	 * <li>savemap [-d|-c] filename</li>
 	 * <li>editmap filename</li>
 	 * <li>loadmap filename (this command initiates game startup)</li>
+	 * <li>loadgame filename</li>
 	 * <li>validatemap</li>
 	 * <li>tournament -M listofmapfiles(1-5) -P listofplayerstrategies (2-4) -G
 	 * numberofgames (1-5) -D maxnumberofturns (10-50)</li>
@@ -165,7 +166,9 @@ public class MapEditorController extends Phase implements IMapEditorController, 
 
 	/**
 	 * process the loadgame command. if the map is not a valid map then stay in the
-	 * editor, otherwise move on to the phase saved in the game.
+	 * editor, otherwise move on to the phase saved in the game.<br>
+	 * Syntax:<br>
+	 * loadgame filename
 	 * 
 	 * @param p_loadgame_params the loadgame parameters (just the parameters without
 	 *                          the loadgame command itself)
@@ -675,11 +678,11 @@ public class MapEditorController extends Phase implements IMapEditorController, 
 		d_view.processMessage(MsgType.None,
 				" - editneighbor -add countryName neighborcountryName -remove countryName neighborcountryName");
 		d_view.processMessage(MsgType.None, " - showmap");
-
 		d_view.processMessage(MsgType.None, " - savemap [-d|-c] filename");
 		d_view.processMessage(MsgType.None, " -         where -d = domination map format, -c = conquest map format");
 		d_view.processMessage(MsgType.None, " - editmap filename");
 		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup in single game mode)");
+		d_view.processMessage(MsgType.None, " - loadgame filename");
 		d_view.processMessage(MsgType.None, " - validatemap");
 		d_view.processMessage(MsgType.None,
 				" - tournament -M listofmapfiles(1-5) -P listofplayerstrategies(2-4) -G numberofgames(1-5) -D maxnumberofturns(10-50)");

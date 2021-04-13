@@ -1,15 +1,10 @@
 package soen6441.team01.warzone.model;
 
 import static org.junit.Assert.*;
-
 import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.GameState;
 
@@ -308,8 +303,8 @@ public class GamePlayTest {
 		d_gameplay.assignCountries();
 		ArrayList<IPlayerModel> l_players = d_gameplay.getPlayers();
 		assertTrue(l_players.get(0).getPlayerCountries().size() == 2);
-		String l_c1 = l_players.get(0).getPlayerCountries().get(0).getName();
-		String l_c2 = l_players.get(0).getPlayerCountries().get(1).getName();
+		l_players.get(0).getPlayerCountries().get(0).getName();
+		l_players.get(0).getPlayerCountries().get(1).getName();
 		assertTrue(l_players.get(0).getPlayerCountries().size() > 0);
 		assertTrue(l_players.get(1).getPlayerCountries().size() > 0);
 	}

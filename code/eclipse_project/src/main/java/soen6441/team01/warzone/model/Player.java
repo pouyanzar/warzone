@@ -2,10 +2,7 @@ package soen6441.team01.warzone.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;

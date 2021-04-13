@@ -1,17 +1,8 @@
 package soen6441.team01.warzone.model;
 
 import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import soen6441.team01.warzone.controller.ControllerFactory;
-import soen6441.team01.warzone.controller.IssueOrderController;
-import soen6441.team01.warzone.controller.MapEditorController;
-import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGamePlayModel;
-import soen6441.team01.warzone.view.ViewFactory;
 
 /**
  * Tests for Player model class
