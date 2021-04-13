@@ -25,7 +25,6 @@ import soen6441.team01.warzone.view.ViewFactory;
  *
  */
 public class IssueOrderControllerTest {
-	private String d_MAP_DIR = "./src/test/resources/maps/";
 	public MapEditorController d_map_editor_controller = null;
 
 	public ModelFactory d_model_factory = null;
@@ -204,7 +203,7 @@ public class IssueOrderControllerTest {
 		String l_msg;
 		d_gameplay_controller.processGamePlayCommand("end", d_player);
 		assertTrue(d_msg.getLastMessageAndClear() == null);
-		Phase next_phase = ((IssueOrderController) d_gameplay_controller).getNextPhase();
+		((IssueOrderController) d_gameplay_controller).getNextPhase();
 
 		d_gameplay_controller.processGamePlayCommand("end turn", d_player);
 		l_msg = d_msg.getLastMessageAndClear().d_message;

@@ -67,7 +67,7 @@ public class OrderBombTest {
 
 		String l_msg = "";
 		try {
-			OrderBomb l_bomb = new OrderBomb(d_player, d_us);
+			new OrderBomb(d_player, d_us);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -77,7 +77,7 @@ public class OrderBombTest {
 		d_player.addCard(l_card);
 
 		try {
-			OrderBomb l_bomb = new OrderBomb(d_player, d_us);
+			new OrderBomb(d_player, d_us);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -99,7 +99,7 @@ public class OrderBombTest {
 		
 		String l_msg = "";
 		try {
-			OrderBomb l_bomb = new OrderBomb(d_player, d_canada);
+			new OrderBomb(d_player, d_canada);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -121,7 +121,7 @@ public class OrderBombTest {
 		
 		String l_msg = "";
 		try {
-			OrderBomb l_bomb = new OrderBomb(d_player, d_canada);
+			new OrderBomb(d_player, d_canada);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}

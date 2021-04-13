@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.view;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 import soen6441.team01.warzone.common.Observable;
@@ -16,9 +17,9 @@ import soen6441.team01.warzone.view.contracts.IGameStartupView;
  * Warzone game startup console based view. The view interacts with the user via
  * the system console.
  */
-public class GameStartupConsole implements Observer, IGameStartupView {
-	private IGameStartupController d_controller = null;
-	private Scanner d_keyboard = null;
+public class GameStartupConsole implements Observer, IGameStartupView, Serializable {
+	private static final long serialVersionUID = 1L;
+	private transient Scanner d_keyboard = null;
 	private IAppMsg d_user_message_model = null;
 	private ModelFactory d_factory_model = null;
 
@@ -31,7 +32,6 @@ public class GameStartupConsole implements Observer, IGameStartupView {
 	 */
 	public GameStartupConsole(IGameStartupController p_controller, ModelFactory p_factory_model)
 			throws Exception {
-		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
 		d_user_message_model = d_factory_model.getUserMessageModel();

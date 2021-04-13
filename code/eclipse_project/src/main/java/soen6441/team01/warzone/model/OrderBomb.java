@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.model.entities.CardType;
 
@@ -7,8 +9,8 @@ import soen6441.team01.warzone.model.entities.CardType;
  * Supports the definition and implementation of the 'bomb' order.
  *
  */
-public class OrderBomb implements IOrder {
-
+public class OrderBomb implements IOrder, Serializable {
+	private static final long serialVersionUID = 1L;
 	IPlayerModel d_player = null;
 	ICountryModel d_country_to_bomb = null;
 

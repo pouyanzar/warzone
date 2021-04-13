@@ -3,16 +3,16 @@ package soen6441.team01.warzone.model;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.CardType;
+import java.io.Serializable;
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IOrder;
 
 /**
  * Supports the definition and implementation of the 'airlift' order.
  *
  */
-public class OrderAirlift implements IOrder {
-
+public class OrderAirlift implements IOrder, Serializable {
+	private static final long serialVersionUID = 1L;
 	private String d_source_country = "";
 	private String d_target_country = "";
 	private int d_reinforcements = 0;

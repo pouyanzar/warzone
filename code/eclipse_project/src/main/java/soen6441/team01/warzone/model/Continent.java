@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Utl;
@@ -11,7 +12,8 @@ import soen6441.team01.warzone.model.contracts.IMapModel;
  * Manages the information associated with a continent
  *
  */
-public class Continent implements IContinentModel {
+public class Continent implements IContinentModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private int d_id;
 	private String d_continent_name;
 	private int d_extra_army;

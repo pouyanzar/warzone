@@ -2,7 +2,6 @@ package soen6441.team01.warzone.model;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
-import org.junit.Before;
 import org.junit.Test;
 import soen6441.team01.warzone.model.entities.CardType;
 

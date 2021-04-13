@@ -11,7 +11,6 @@ import soen6441.team01.warzone.controller.MapEditorController;
 import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.LogEntryBuffer;
-import soen6441.team01.warzone.view.contracts.IMapEditorView;
 
 /**
  * Supports all the test methods used to test class MapEditorConsoleView
@@ -48,7 +47,6 @@ public class MapEditorConsoleTest {
 	 */
 	@Test
 	public void test_showmap_command_1() throws Exception {
-		String l_msg;
 		d_map_editor_controller.processMapEditorCommand("editcontinent -add 1 Europe");
 		d_map_editor_controller.processMapEditorCommand("editcountry -add Italy 1 -add France 1");
 		d_map_editor_controller.processMapEditorCommand("editneighbor -add Italy France");

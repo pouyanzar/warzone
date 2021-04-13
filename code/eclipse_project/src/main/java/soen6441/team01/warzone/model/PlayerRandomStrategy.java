@@ -1,12 +1,11 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IAppMsg;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
@@ -17,8 +16,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
  * decisions.
  *
  */
-public class PlayerRandomStrategy implements IPlayerStrategy {
-
+public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
+	private static final long serialVersionUID = 1L;
 	// the map is available from within the player object
 	private IPlayerModel d_player;
 	private IAppMsg d_msg_model;
@@ -74,7 +73,10 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	}
 
 	/**
-	 * moves armies randomly between its countries, if possible
+	 * moves armies randomly between its countries, if possible:<br>
+	 * 1) find a country that has armies - if none then don't do it
+	 * 2) find a a neighbor that is either your own country or an opponent that has 0 armies on it - if none goto 1
+	 * 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
@@ -99,19 +101,20 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	}
 
 	/**
-	 * attacks random neighboring countries, if possible
+	 * attacks random neighboring countries, if possible:<br>
+	 * 1) find a country that has armies - if none then don't do it
+	 * 2) find a a neighbor opponent that has armies on it - if none goto 1
+     * 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
 	 */
-
 	private IOrder doRandomAttack() throws Exception {
 		IOrder l_order = null;
 		if (d_player.getReinforcements() < 1) {
 			return l_order;
-		}		
+		}
 		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
-
 		int l_country_from_idx = 0;
 		ICountryModel l_from_countries = null;
 		do {

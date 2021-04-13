@@ -3,6 +3,7 @@ package soen6441.team01.warzone.model;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.contracts.IPlayerModel;
 import soen6441.team01.warzone.model.entities.DominationBorder;
 import soen6441.team01.warzone.model.entities.DominationContinent;
 import soen6441.team01.warzone.model.entities.DominationCountry;
@@ -25,8 +25,8 @@ import soen6441.team01.warzone.model.contracts.IAppMsg;
  * and the links (ie neighbors) between countries.
  *
  */
-public class Map implements IMapModel {
-
+public class Map implements IMapModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_factory_model = null;
 	private ArrayList<IContinentModel> d_continents = new ArrayList<IContinentModel>();
 	private ArrayList<ICountryModel> d_countries = new ArrayList<ICountryModel>();

@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Observable;
@@ -12,7 +13,8 @@ import soen6441.team01.warzone.model.entities.UserMessage;
  * appropriate view)(e.g. command completion messages)
  * 
  */
-public class LogEntryBuffer extends Observable implements IAppMsg {
+public class LogEntryBuffer extends Observable implements IAppMsg, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ArrayList<UserMessage> d_user_messages = new ArrayList<UserMessage>();
 
 	/**

@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.model.contracts.IGameplayOrderDatasource;
 import soen6441.team01.warzone.model.contracts.IOrder;
 import soen6441.team01.warzone.model.contracts.IPlayerModel;
@@ -10,8 +12,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
  * A human player that requires user interaction to make decisions.
  *
  */
-public class PlayerHumanStrategy implements IPlayerStrategy {
-
+public class PlayerHumanStrategy implements IPlayerStrategy, Serializable {
+	private static final long serialVersionUID = 1L;
 	IPlayerModel d_player = null;
 	IGameplayOrderDatasource d_order_datasource = null;
 

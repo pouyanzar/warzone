@@ -67,7 +67,7 @@ public class OrderBlockadeTest {
 
 		String l_msg = "";
 		try {
-			OrderBlockade l_blockade = new OrderBlockade(d_player, d_us);
+			new OrderBlockade(d_player, d_us);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}
@@ -89,7 +89,7 @@ public class OrderBlockadeTest {
 		
 		String l_msg = "";
 		try {
-			OrderBlockade l_blockade = new OrderBlockade(d_player, d_us);
+			new OrderBlockade(d_player, d_us);
 		} catch(Exception ex) {
 			l_msg = ex.getMessage();
 		}

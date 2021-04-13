@@ -1,14 +1,13 @@
 package soen6441.team01.warzone.view;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import soen6441.team01.warzone.common.Observable;
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.contracts.Observer;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
-import soen6441.team01.warzone.controller.contracts.IGameStartupController;
 import soen6441.team01.warzone.model.Card;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
@@ -22,9 +21,9 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play console based view. The view interacts with the user via
  * the system console.
  */
-public class GamePlayConsole implements Observer, IGamePlayView {
-	private ISingleGameController d_controller = null;
-	private Scanner d_keyboard = null;
+public class GamePlayConsole implements Observer, IGamePlayView, Serializable {
+	private static final long serialVersionUID = 1L;
+	private transient Scanner d_keyboard = null;
 	private IAppMsg d_user_message_model = null;
 	private ModelFactory d_factory_model = null;
 
@@ -37,7 +36,6 @@ public class GamePlayConsole implements Observer, IGamePlayView {
 	 */
 	public GamePlayConsole(ISingleGameController p_controller, ModelFactory p_factory_model)
 			throws Exception {
-		d_controller = p_controller;
 		d_keyboard = new Scanner(System.in);
 		d_factory_model = p_factory_model;
 		d_user_message_model = d_factory_model.getUserMessageModel();

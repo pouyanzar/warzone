@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.model.entities;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.entities.MsgType;
 
 /**
@@ -7,7 +9,8 @@ import soen6441.team01.warzone.common.entities.MsgType;
  * of user messages
  *
  */
-public class UserMessage {
+public class UserMessage implements Serializable{
+	private static final long serialVersionUID = 1L;
 	public MsgType d_message_type = MsgType.None;
 	public String d_message = "";
 

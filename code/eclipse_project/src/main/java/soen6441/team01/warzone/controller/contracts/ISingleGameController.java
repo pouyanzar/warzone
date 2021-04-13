@@ -8,4 +8,6 @@ public interface ISingleGameController {
 	void endGamePlayPhase();
 
 	void setMaxRounds(int p_max_rounds);
+	
+	void initGamePlay() throws Exception;
 }

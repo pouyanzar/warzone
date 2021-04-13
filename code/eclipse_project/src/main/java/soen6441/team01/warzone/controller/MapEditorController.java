@@ -1,11 +1,13 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.ITournamentController;
 import soen6441.team01.warzone.controller.contracts.IMapEditorController;
+import soen6441.team01.warzone.model.GameEngine;
 import soen6441.team01.warzone.model.Map;
 import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.ModelFactory;
@@ -21,7 +23,8 @@ import soen6441.team01.warzone.view.contracts.IMapEditorView;
  * Warzone Map Editor controller. Manages the coordination and progression of
  * the Map Editor.
  */
-public class MapEditorController extends Phase implements IMapEditorController {
+public class MapEditorController extends Phase implements IMapEditorController, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -90,6 +93,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * <li>savemap [-d|-c] filename</li>
 	 * <li>editmap filename</li>
 	 * <li>loadmap filename (this command initiates game startup)</li>
+	 * <li>loadgame filename</li>
 	 * <li>validatemap</li>
 	 * <li>tournament -M listofmapfiles(1-5) -P listofplayerstrategies (2-4) -G
 	 * numberofgames (1-5) -D maxnumberofturns (10-50)</li>
@@ -144,6 +148,9 @@ public class MapEditorController extends Phase implements IMapEditorController {
 				l_next_phase = d_controller_factory.getGameStartupPhase();
 			}
 			break;
+		case "loadgame":
+			l_next_phase = processLoadGame(l_cmd_params[1]);
+			break;
 		case "tournament":
 			if (processTournament(l_cmd_params[1])) {
 				l_next_phase = (Phase) d_controller_factory.getGameTournamentController();
@@ -155,6 +162,37 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			break;
 		}
 		return l_next_phase;
+	}
+
+	/**
+	 * process the loadgame command. if the map is not a valid map then stay in the
+	 * editor, otherwise move on to the phase saved in the game.<br>
+	 * Syntax:<br>
+	 * loadgame filename
+	 * 
+	 * @param p_loadgame_params the loadgame parameters (just the parameters without
+	 *                          the loadgame command itself)
+	 * @return true if successful
+	 * @throws Exception unexpected error encountered
+	 */
+	public Phase processLoadGame(String p_loadgame_params) throws Exception {
+		try {
+			String l_params[] = Utl.getFirstWord(p_loadgame_params);
+			String l_filename = l_params[0];
+			GameEngine l_new_engine = d_model_factory.getGameEngine().loadGame(l_filename);
+			d_msg.setMessage(MsgType.None, "loadgame processed successfully");
+			// the gamed loaded successfully, set the current game engine to exit and let
+			// the main() method resume execution on the newly loaded game engine.
+			((GameEngine) d_model_factory.getGameEngine()).setNewGameEngineToRun(l_new_engine);
+			// set the next phase to any phase. which phase doesn't matter since the game
+			// engine has been set to exit to the main() function and resume execution on
+			// the newly loaded game engine.
+			return d_controller_factory.getGameEndPhase();
+		} catch (Exception ex) {
+			d_msg.setMessage(MsgType.Error, ex.getMessage());
+		}
+
+		return null;
 	}
 
 	/**
@@ -227,7 +265,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 	 * @throws Exception unexpected error encountered
 	 */
 	public boolean processSaveMap(String p_savemap_params) throws Exception {
-		SaveMapFormat l_map_format = SaveMapFormat.Domination; 
+		SaveMapFormat l_map_format = SaveMapFormat.Domination;
 		String l_filename = "";
 
 		try {
@@ -235,8 +273,8 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			String l_token = l_params[0];
 			l_params = Utl.getFirstWord(l_params[1]);
 			l_filename = l_params[0];
-			
-			switch(l_token.toLowerCase()) {
+
+			switch (l_token.toLowerCase()) {
 			case "-d":
 				l_map_format = SaveMapFormat.Domination;
 				break;
@@ -254,7 +292,7 @@ public class MapEditorController extends Phase implements IMapEditorController {
 			d_msg.setMessage(MsgType.Error, ex.getMessage());
 			return false;
 		}
-		
+
 		d_msg.setMessage(MsgType.None, "map saved successfully to file '" + l_filename + "'");
 		return true;
 	}
@@ -640,11 +678,11 @@ public class MapEditorController extends Phase implements IMapEditorController {
 		d_view.processMessage(MsgType.None,
 				" - editneighbor -add countryName neighborcountryName -remove countryName neighborcountryName");
 		d_view.processMessage(MsgType.None, " - showmap");
-
 		d_view.processMessage(MsgType.None, " - savemap [-d|-c] filename");
 		d_view.processMessage(MsgType.None, " -         where -d = domination map format, -c = conquest map format");
 		d_view.processMessage(MsgType.None, " - editmap filename");
 		d_view.processMessage(MsgType.None, " - loadmap filename (initiates game startup in single game mode)");
+		d_view.processMessage(MsgType.None, " - loadgame filename");
 		d_view.processMessage(MsgType.None, " - validatemap");
 		d_view.processMessage(MsgType.None,
 				" - tournament -M listofmapfiles(1-5) -P listofplayerstrategies(2-4) -G numberofgames(1-5) -D maxnumberofturns(10-50)");

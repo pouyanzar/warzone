@@ -1,5 +1,7 @@
 package soen6441.team01.warzone.controller;
 
+import java.io.Serializable;
+
 import soen6441.team01.warzone.common.Utl;
 import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.contracts.ISingleGameController;
@@ -14,7 +16,8 @@ import soen6441.team01.warzone.view.contracts.IGamePlayView;
  * Warzone game play controller. Manages the coordination and progression of the
  * game play phase.
  */
-public class SingleGameController extends Phase implements ISingleGameController {
+public class SingleGameController extends Phase implements ISingleGameController, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
@@ -46,10 +49,7 @@ public class SingleGameController extends Phase implements ISingleGameController
 	public void execPhase() {
 		try {
 			if (d_round == 1) {
-				d_view.activate();
-				d_view.displayGamePlayBanner();
-				d_gameplay_model = d_model_factory.getGamePlayModel();
-				d_gameplay_model.setGameState(GameState.GamePlay);
+				initGamePlay();
 			}
 			if (d_gameplay_model.detectWinner() == null) {
 				if (d_round > d_max_rounds) {
@@ -66,6 +66,18 @@ public class SingleGameController extends Phase implements ISingleGameController
 		} catch (Exception ex) {
 			d_msg_model.setMessage(MsgType.Error, "exception in GamePlayController: " + ex.getMessage());
 		}
+	}
+
+	/**
+	 * initialize the single game gameplay environment.<br>
+	 * invoked also when a new game is loaded.
+	 * @throws Exception unexpected error
+	 */
+	public void initGamePlay() throws Exception {
+		d_view.activate();
+		d_view.displayGamePlayBanner();
+		d_gameplay_model = d_model_factory.getGamePlayModel();
+		d_gameplay_model.setGameState(GameState.GamePlay);		
 	}
 
 	/**

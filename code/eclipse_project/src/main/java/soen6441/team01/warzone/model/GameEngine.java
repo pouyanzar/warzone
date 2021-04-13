@@ -1,7 +1,11 @@
 package soen6441.team01.warzone.model;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.common.entities.MsgType;
 import soen6441.team01.warzone.controller.ControllerFactory;
 import soen6441.team01.warzone.model.contracts.*;
 import soen6441.team01.warzone.view.*;
@@ -11,15 +15,18 @@ import soen6441.team01.warzone.view.*;
  * different stages of the game. As well as supporting user actions (ie.
  * interactions, gestures).
  */
-public class GameEngine implements IGameEngineModel {
+public class GameEngine implements IGameEngineModel, Serializable {
+	private static final long serialVersionUID = 1L;
 	private ModelFactory d_model_factory;
 	private ViewFactory d_view_factory;
 	private ControllerFactory d_controller_factory;
 	private Phase d_phase = null;
+	private GameEngine d_switch_to_loaded_engine = null;
 
 	/**
 	 * Constructor with no views or models defined. Use Software factory with
 	 * defaults
+	 * 
 	 * @throws Exception unexpected error
 	 */
 	public GameEngine() throws Exception {
@@ -42,8 +49,8 @@ public class GameEngine implements IGameEngineModel {
 	 *                             console based).
 	 * @throws Exception unexpected error
 	 */
-	public GameEngine(ModelFactory p_model_factory, ViewFactory p_view_factory,
-			ControllerFactory p_controller_factory) throws Exception {
+	public GameEngine(ModelFactory p_model_factory, ViewFactory p_view_factory, ControllerFactory p_controller_factory)
+			throws Exception {
 		if (p_model_factory != null) {
 			d_model_factory = p_model_factory;
 		} else {
@@ -68,10 +75,15 @@ public class GameEngine implements IGameEngineModel {
 
 	/**
 	 * Starts executing the game dynamics
+	 * 
+	 * @return null = terminate game; otherwise a loaded game to be played next
 	 */
-	public void startNewGame() {
+	public GameEngine startGame() {
 		try {
-			while( d_phase != null ) {
+			while (d_phase != null) {
+				if (d_switch_to_loaded_engine != null) {
+					return d_switch_to_loaded_engine;
+				}
 				d_phase.execPhase();
 			}
 		} catch (Exception ex) {
@@ -81,6 +93,8 @@ public class GameEngine implements IGameEngineModel {
 
 		Utl.lprintln("Game execution terminated.\n");
 		Utl.closeLog();
+
+		return null;
 	}
 
 	/**
@@ -91,12 +105,76 @@ public class GameEngine implements IGameEngineModel {
 	public void setNextPhase(Phase p_next_phase) {
 		d_phase = p_next_phase;
 	}
-	
+
 	/**
 	 * used mainly for unit testing
-	 * @return the current / next phase to be invoked  
+	 * 
+	 * @return the current / next phase to be invoked
 	 */
-	public Phase  getPhase() {
+	public Phase getPhase() {
 		return d_phase;
 	}
+
+	/**
+	 * 
+	 * @return the current model factory
+	 */
+	public ModelFactory getModelFactory() {
+		return d_model_factory;
+	}
+
+	/**
+	 * @return the current view factory
+	 */
+	public ViewFactory getViewFactory() {
+		return d_view_factory;
+	}
+
+	/**
+	 * 
+	 * @return the current controller factory
+	 */
+	public ControllerFactory getControllerFactory() {
+		return d_controller_factory;
+	}
+
+	/**
+	 * set the game to run the new game engine
+	 * 
+	 * @param p_game_engine the game engine to switch to
+	 */
+
+	public void setNewGameEngineToRun(GameEngine p_game_engine) {
+		d_switch_to_loaded_engine = p_game_engine;
+	}
+
+	/**
+	 * saves the current game to a file
+	 * 
+	 * @param p_filename the filename of the saved game file
+	 * @throws Exception unexpected error
+	 */
+	public void saveGame(String p_filename) throws Exception {
+		FileOutputStream l_file_output_stream = new FileOutputStream(p_filename);
+		ObjectOutputStream l_object_output_stream = new ObjectOutputStream(l_file_output_stream);
+		l_object_output_stream.writeObject(this);
+		l_object_output_stream.flush();
+		l_object_output_stream.close();
+	}
+
+	/**
+	 * loads the game from a file.<br>
+	 * 
+	 * @param p_filename the filename of the saved game file to load
+	 * @return the saved game engine
+	 * @throws Exception unexpected error
+	 */
+	public GameEngine loadGame(String p_filename) throws Exception {
+		FileInputStream l_file_input_stream = new FileInputStream(p_filename);
+		ObjectInputStream l_object_input_stream = new ObjectInputStream(l_file_input_stream);
+		GameEngine l_game_engine = (GameEngine) l_object_input_stream.readObject();
+		l_object_input_stream.close();
+		return l_game_engine;
+	}
+
 }

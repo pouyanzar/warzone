@@ -3,16 +3,12 @@ package soen6441.team01.warzone.model;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import soen6441.team01.warzone.model.contracts.IContinentModel;
 import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.entities.DominationMap;
 import soen6441.team01.warzone.model.entities.SaveMapFormat;
 
 /**
@@ -65,9 +61,8 @@ public class MapTest {
 	@Test
 	public void test_loadmap_command_2() {
 		Boolean l_assert_result = true;
-		IMapModel l_map = new Map(d_model_factory);
 		try {
-			l_map = Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map", d_model_factory);
+			Map.loadMapFromFile(d_MAP_DIR + "canada/quebec.map", d_model_factory);
 			l_assert_result = false;
 		} catch (Exception e) {
 			if (!e.getMessage().contains("Error loading map file")) {
@@ -89,8 +84,8 @@ public class MapTest {
 	@Test
 	public void test_add_continent_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
-		IContinentModel l_europe = l_map.addContinent(2, "Europe", 4, null);
+		l_map.addContinent(1, "North-America", 4, null);
+		l_map.addContinent(2, "Europe", 4, null);
 		ArrayList<IContinentModel> l_continents = l_map.getContinents();
 		assertTrue(l_continents.size() == 2);
 		assertTrue(l_continents.get(0).getId() == 1);
@@ -105,8 +100,8 @@ public class MapTest {
 	@Test(expected = Exception.class)
 	public void test_add_dup_continent_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
-		IContinentModel l_europe = l_map.addContinent(1, "Europe", 4, null);
+		l_map.addContinent(1, "North-America", 4, null);
+		l_map.addContinent(1, "Europe", 4, null);
 	}
 
 	/**
@@ -118,8 +113,8 @@ public class MapTest {
 	public void test_add_country_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
-		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry("USA", l_north_america, 0, 0);
+		l_map.addCountry("Canada", l_north_america, 0, 0);
+		l_map.addCountry("USA", l_north_america, 0, 0);
 		ArrayList<ICountryModel> l_countries = l_map.getCountries();
 		assertTrue(l_countries.size() == 2);
 		assertTrue(l_countries.get(0).getId() == 1);
@@ -135,8 +130,8 @@ public class MapTest {
 	public void test_add_dup_country_1() throws Exception {
 		Map l_map = new Map(d_model_factory);
 		IContinentModel l_north_america = l_map.addContinent(1, "North-America", 4, null);
-		ICountryModel l_canada = l_map.addCountry("Canada", l_north_america, 0, 0);
-		ICountryModel l_usa = l_map.addCountry("Canada", l_north_america, 0, 0);
+		l_map.addCountry("Canada", l_north_america, 0, 0);
+		l_map.addCountry("Canada", l_north_america, 0, 0);
 	}
 
 	/**
@@ -177,7 +172,7 @@ public class MapTest {
 	@Test(expected = Exception.class)
 	public void test_add_neighbor_invalid_2() throws Exception {
 		Map l_map = new Map(d_model_factory);
-		ICountryModel l_canada = l_map.addCountry("Canada", null, 0, 0);
+		l_map.addCountry("Canada", null, 0, 0);
 		l_map.addNeighbor("Canada", "USA");
 	}
 

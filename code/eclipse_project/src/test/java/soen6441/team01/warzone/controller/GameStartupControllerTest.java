@@ -294,9 +294,7 @@ public class GameStartupControllerTest {
 	 */
 	@Test
 	public void test_processGameStartupCommand_gameplayer_mixed_valid() throws Exception {
-		String l_msg;
 		IPlayerModel l_player;
-
 		d_startup_controller.processGameStartupCommand("gameplayer -add pa1 aggr -add pa2 rand -add pa3 -add pa4 bene",
 				d_gameplay);
 		l_player = Player.FindPlayer("pa1", d_model_factory.getGamePlayModel().getPlayers());
@@ -316,7 +314,6 @@ public class GameStartupControllerTest {
 	 */
 	@Test
 	public void test_processGameStartupCommand_gameplayer_mixed_1_valid() throws Exception {
-		String l_msg;
 		IPlayerModel l_player;
 
 		d_startup_controller.processGameStartupCommand(
@@ -341,8 +338,6 @@ public class GameStartupControllerTest {
 	@Test
 	public void test_processGameStartupCommand_gameplayer_mixed_1_invalid() throws Exception {
 		String l_msg;
-		IPlayerModel l_player;
-
 		d_startup_controller.processGameStartupCommand(
 				"gameplayer -add pa1 rand remove pa1", d_gameplay);
 		l_msg = d_msg.getLastMessageAndClear().d_message;

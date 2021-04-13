@@ -6,19 +6,14 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.model.Continent;
-import soen6441.team01.warzone.model.GameEngine;
 import soen6441.team01.warzone.model.ModelFactory;
 import soen6441.team01.warzone.model.Phase;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.LogEntryBuffer;
 import soen6441.team01.warzone.model.Map;
-import soen6441.team01.warzone.model.MapIoAdaptor;
 import soen6441.team01.warzone.model.MapIoConquest;
 import soen6441.team01.warzone.model.MapIoDomination;
 import soen6441.team01.warzone.view.ViewFactory;

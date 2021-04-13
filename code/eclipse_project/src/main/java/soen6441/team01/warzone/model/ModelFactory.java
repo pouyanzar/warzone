@@ -1,5 +1,6 @@
 package soen6441.team01.warzone.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import soen6441.team01.warzone.model.contracts.*;
@@ -10,7 +11,8 @@ import soen6441.team01.warzone.model.entities.SaveMapFormat;
  * of objects that define the respective classes for the different Warzone
  * models.
  */
-public class ModelFactory {
+public class ModelFactory implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private IMapModel d_map_model = null;
 	private IAppMsg d_user_message_model = null;
 	private IGamePlayModel d_gameplay = null;

@@ -3,20 +3,12 @@ package soen6441.team01.warzone.model;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
-import soen6441.team01.warzone.model.contracts.IMapModel;
-import soen6441.team01.warzone.model.entities.ConquestMap;
-import soen6441.team01.warzone.model.entities.DominationMap;
 
 /**
  * Tests for the Map model class

@@ -2,9 +2,6 @@ package soen6441.team01.warzone.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import soen6441.team01.warzone.common.Utl;
-import soen6441.team01.warzone.model.contracts.IContinentModel;
-import soen6441.team01.warzone.model.contracts.ICountryModel;
 import soen6441.team01.warzone.model.contracts.IMapModel;
 import soen6441.team01.warzone.model.entities.ConquestContinent;
 import soen6441.team01.warzone.model.entities.ConquestMap;
