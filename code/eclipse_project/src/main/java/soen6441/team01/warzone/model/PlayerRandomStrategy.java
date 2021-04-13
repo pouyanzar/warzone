@@ -74,9 +74,9 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 
 	/**
 	 * moves armies randomly between its countries, if possible:<br>
-	 * 1) find a country that has armies - if none then don't do it
-	 * 2) find a a neighbor that is either your own country or an opponent that has 0 armies on it - if none goto 1
-	 * 3) create order
+	 * 1) find a country that has armies - if none then don't do it 2) find a a
+	 * neighbor that is either your own country or an opponent that has 0 armies on
+	 * it - if none goto 1 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
@@ -86,15 +86,33 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 		if (d_player.getReinforcements() < 1) {
 			return l_order;
 		}
+		/*
+		 * 1) find a country that has armies - if none then don't do it 
+		 * 2) find a neighbor that is either your own country or an opponent that has 0 armies on
+		 * it - if none goto 1
+		 */
 		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
-		int l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
-		ICountryModel l_from_country = l_player_countries.get(l_country_from_idx);
-		int l_country_to_idx = Utl.randomInt(l_player_countries.size() - 1);
-		ICountryModel l_to_country = l_player_countries.get(l_country_to_idx);
-		if (l_country_from_idx != l_country_to_idx) {
-			if ((l_from_country != null) && (l_to_country != null)) {
-				int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
-				l_order = new OrderAdvance(d_player, l_from_country, l_to_country, l_numarmies);
+		int SumArmies = 0;
+		for (ICountryModel d_c : l_player_countries)
+			SumArmies += d_c.getArmies();
+		if (SumArmies > 0) {
+			int l_country_from_idx = 0;
+			ICountryModel l_from_country = null;
+			do {
+				l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
+				l_from_country = l_player_countries.get(l_country_from_idx);
+			} while (l_from_country.getArmies() <= 0);
+			SumArmies = 0;
+			for (ICountryModel d_c : l_from_country.getNeighbors())
+				SumArmies += d_c.getArmies();
+			
+			int l_country_to_idx = Utl.randomInt(l_player_countries.size() - 1);
+			ICountryModel l_to_country = l_player_countries.get(l_country_to_idx);
+			if (l_country_from_idx != l_country_to_idx) {
+				if ((l_from_country != null) && (l_to_country != null)) {
+					int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
+					l_order = new OrderAdvance(d_player, l_from_country, l_to_country, l_numarmies);
+				}
 			}
 		}
 		return l_order;
@@ -102,9 +120,8 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 
 	/**
 	 * attacks random neighboring countries, if possible:<br>
-	 * 1) find a country that has armies - if none then don't do it
-	 * 2) find a a neighbor opponent that has armies on it - if none goto 1
-     * 3) create order
+	 * 1) find a country that has armies - if none then don't do it 2) find a a
+	 * neighbor opponent that has armies on it - if none goto 1 3) create order
 	 * 
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
@@ -115,29 +132,31 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 			return l_order;
 		}
 		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
-		int l_country_from_idx = 0;
-		ICountryModel l_from_countries = null;
-		do {
-			l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
-			l_from_countries = l_player_countries.get(l_country_from_idx);
-		} while (l_from_countries.getArmies() <= 0);
-
-		int l_country_to_idx = 0;
-		ICountryModel l_to_countries = null;
 		int SumArmies = 0;
 		for (ICountryModel d_c : l_player_countries)
 			SumArmies += d_c.getArmies();
 		if (SumArmies > 0) {
+			int l_country_from_idx = 0;
+			ICountryModel l_from_country = null;
 			do {
-				l_country_to_idx = Utl.randomInt(l_from_countries.getNeighbors().size() - 1);
-				l_to_countries = l_from_countries.getNeighbors().get(l_country_to_idx);
-			} while (l_to_countries.getArmies() <= 0);
+				l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
+				l_from_country = l_player_countries.get(l_country_from_idx);
+			} while (l_from_country.getArmies() <= 0);
+
 			SumArmies = 0;
-			for (ICountryModel d_c : l_from_countries.getNeighbors())
+			for (ICountryModel d_c : l_from_country.getNeighbors())
 				SumArmies += d_c.getArmies();
-			if ((SumArmies > 0) && (l_from_countries != null) && (l_to_countries != null)) {
-				int l_numarmies = Utl.randomInt(l_from_countries.getArmies() - 1);
-				l_order = new OrderAdvance(d_player, l_from_countries, l_to_countries, l_numarmies);
+			if (SumArmies > 0) {
+				int l_country_to_idx = 0;
+				ICountryModel l_to_countries = null;
+				do {
+					l_country_to_idx = Utl.randomInt(l_from_country.getNeighbors().size() - 1);
+					l_to_countries = l_from_country.getNeighbors().get(l_country_to_idx);
+				} while (l_to_countries.getArmies() <= 0);
+				if ((l_from_country != null) && (l_to_countries != null)) {
+					int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
+					l_order = new OrderAdvance(d_player, l_from_country, l_to_countries, l_numarmies);
+				}
 			}
 		}
 		return l_order;
