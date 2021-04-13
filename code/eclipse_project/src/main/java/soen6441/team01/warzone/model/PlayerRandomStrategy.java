@@ -87,8 +87,8 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 			return l_order;
 		}
 		/*
-		 * 1) find a country that has armies - if none then don't do it 
-		 * 2) find a neighbor that is either your own country or an opponent that has 0 armies on
+		 * 1) find a country that has armies - if none then don't do it 2) find a
+		 * neighbor that is either your own country or an opponent that has 0 armies on
 		 * it - if none goto 1
 		 */
 		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
@@ -96,23 +96,27 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 		for (ICountryModel d_c : l_player_countries)
 			SumArmies += d_c.getArmies();
 		if (SumArmies > 0) {
+			ArrayList<ICountryModel> l_nbr = new ArrayList<ICountryModel>();
 			int l_country_from_idx = 0;
 			ICountryModel l_from_country = null;
 			do {
 				l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
 				l_from_country = l_player_countries.get(l_country_from_idx);
 			} while (l_from_country.getArmies() <= 0);
-			SumArmies = 0;
-			for (ICountryModel d_c : l_from_country.getNeighbors())
-				SumArmies += d_c.getArmies();
-			
-			int l_country_to_idx = Utl.randomInt(l_player_countries.size() - 1);
-			ICountryModel l_to_country = l_player_countries.get(l_country_to_idx);
-			if (l_country_from_idx != l_country_to_idx) {
-				if ((l_from_country != null) && (l_to_country != null)) {
-					int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
-					l_order = new OrderAdvance(d_player, l_from_country, l_to_country, l_numarmies);
-				}
+
+			for (ICountryModel d_c : l_from_country.getNeighbors()) {
+				if (d_c.getOwner() != d_player) {
+					if (d_c.getArmies() == 0)
+						l_nbr.add(d_c);
+				} else
+					l_nbr.add(d_c);
+			}
+			if (l_nbr.size() > 0) {
+				int l_country_to_idx = 0;
+				l_country_to_idx = Utl.randomInt(l_nbr.size() - 1);
+				ICountryModel l_to_country = l_nbr.get(l_country_to_idx);
+				int l_numarmies = Utl.randomInt(l_from_country.getArmies() - 1);
+				l_order = new OrderAdvance(d_player, l_from_country, l_to_country, l_numarmies);
 			}
 		}
 		return l_order;
