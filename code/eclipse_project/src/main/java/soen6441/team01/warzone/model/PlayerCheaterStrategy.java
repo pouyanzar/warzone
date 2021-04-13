@@ -49,8 +49,10 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 			l_player_countries.add(l_country);
 		for (ICountryModel l_country : l_player_countries) {
 			l_neighbors.addAll(l_country.getNeighbors());
-			for (ICountryModel l_neighbor : l_neighbors)
+			for (ICountryModel l_neighbor : l_neighbors) {
+				l_neighbor.getOwner().removePlayerCountry(l_neighbor);
 				d_player.addPlayerCountry(l_neighbor);
+			}
 		}
 
 		// makes double the armies in countries have enemy neighbors
