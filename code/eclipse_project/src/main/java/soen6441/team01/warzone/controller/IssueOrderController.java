@@ -156,7 +156,7 @@ public class IssueOrderController extends SingleGameController
 	 * <li>advance countrynamefrom countynameto numarmies</li>
 	 * <li>bomb countryName (requires bomb card)</li>
 	 * <li>blockade countryName (required blockade card)</li>
-	 * <li>airlift sourcecountryName targetcountryName numarmies (requires the
+	 * <li>airlift sourcepccountryName targetcountryName numarmies (requires the
 	 * airlift card)</li>
 	 * <li>negotiate playerName (requires the diplomacy card)</li>
 	 * <li>showmap</li>

@@ -13,7 +13,8 @@ import soen6441.team01.warzone.model.contracts.IPlayerStrategy;
 
 /**
  * Supports the random player strategy. <br>
- * A computer based player that does not require user interaction to make decisions.
+ * A computer based player that does not require user interaction to make
+ * decisions.
  *
  */
 public class PlayerRandomStrategy implements IPlayerStrategy {
@@ -27,7 +28,7 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	/**
 	 * constructor
 	 * 
-	 * @param p_player    the cloned player to which to apply this order strategy 
+	 * @param p_player    the cloned player to which to apply this order strategy
 	 * @param p_msg_model the message model used to send messages to the view
 	 */
 	public PlayerRandomStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {
@@ -103,19 +104,38 @@ public class PlayerRandomStrategy implements IPlayerStrategy {
 	 * @return the order or null if this order type is not possible
 	 * @throws Exception an unexpected error
 	 */
+
 	private IOrder doRandomAttack() throws Exception {
 		IOrder l_order = null;
 		if (d_player.getReinforcements() < 1) {
 			return l_order;
-		}
-		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();		
-		int l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
-		ICountryModel l_from_countries= l_player_countries.get(l_country_from_idx);
-		int l_country_to_idx = Utl.randomInt(l_from_countries.getNeighbors().size() - 1);
-		ICountryModel l_to_countries = l_from_countries.getNeighbors().get(l_country_to_idx);	
-		if((l_from_countries!=null)&&(l_to_countries!=null)) {			
-			int l_numarmies = Utl.randomInt(l_from_countries.getArmies() - 1);
-			l_order = new OrderAdvance(d_player, l_from_countries, l_to_countries, l_numarmies);	
+		}		
+		ArrayList<ICountryModel> l_player_countries = d_player.getPlayerCountries();
+
+		int l_country_from_idx = 0;
+		ICountryModel l_from_countries = null;
+		do {
+			l_country_from_idx = Utl.randomInt(l_player_countries.size() - 1);
+			l_from_countries = l_player_countries.get(l_country_from_idx);
+		} while (l_from_countries.getArmies() <= 0);
+
+		int l_country_to_idx = 0;
+		ICountryModel l_to_countries = null;
+		int SumArmies = 0;
+		for (ICountryModel d_c : l_player_countries)
+			SumArmies += d_c.getArmies();
+		if (SumArmies > 0) {
+			do {
+				l_country_to_idx = Utl.randomInt(l_from_countries.getNeighbors().size() - 1);
+				l_to_countries = l_from_countries.getNeighbors().get(l_country_to_idx);
+			} while (l_to_countries.getArmies() <= 0);
+			SumArmies = 0;
+			for (ICountryModel d_c : l_from_countries.getNeighbors())
+				SumArmies += d_c.getArmies();
+			if ((SumArmies > 0) && (l_from_countries != null) && (l_to_countries != null)) {
+				int l_numarmies = Utl.randomInt(l_from_countries.getArmies() - 1);
+				l_order = new OrderAdvance(d_player, l_from_countries, l_to_countries, l_numarmies);
+			}
 		}
 		return l_order;
 	}
