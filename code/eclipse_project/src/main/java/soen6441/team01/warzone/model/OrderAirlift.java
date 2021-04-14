@@ -128,7 +128,7 @@ public class OrderAirlift implements IOrder, Serializable {
 	 */
 	@Override
 	public String toString() {
-		String l_str = "advance " + d_reinforcements + " from " + d_source_country + " to " + d_target_country;
+		String l_str = "airlift " + d_reinforcements + " from " + d_source_country + " to " + d_target_country;
 		return l_str;
 	}
 }

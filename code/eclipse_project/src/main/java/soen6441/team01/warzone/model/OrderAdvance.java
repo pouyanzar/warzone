@@ -94,6 +94,37 @@ public class OrderAdvance implements IOrder, Serializable {
 	}
 
 	/**
+	 * return a string that indicates if this advance is a move or attack
+	 * 
+	 * @return a message that describes the advancement done
+	 * @throws Exception unexpected error
+	 */
+	private String advanceType() {
+		String l_advance_type = "";
+		IPlayerModel l_dest_owner = d_country_to.getOwner();
+
+		// decide if it's an attack or simply a move
+		if (d_country_to.getArmies() == 0) {
+			l_advance_type = "move";
+		} else {
+			if (l_dest_owner == null) {
+				// no one owns the destination country
+				l_advance_type = "attack";
+			} else {
+				if (l_dest_owner.getName().equals(d_player.getName())) {
+					// we own the destination country, so simply move armies
+					l_advance_type = "move";
+				} else {
+					// the target country is owned by another player - attack!
+					l_advance_type = "attack";
+				}
+			}
+		}
+
+		return l_advance_type;
+	}
+
+	/**
 	 * advance the specified number of armies (reinforcements) to the specified
 	 * country. <br>
 	 * attack if the destination country is owned by an opponent, otherwise simply
@@ -106,16 +137,16 @@ public class OrderAdvance implements IOrder, Serializable {
 		String l_msg = "";
 
 		IPlayerModel l_dest_owner = d_country_to.getOwner();
-		
+
 		// do we have diplomatic relations?
 		if (l_dest_owner != null) {
-			if(d_player.isDiplomatic(l_dest_owner)) {
-				l_msg = "no advancement on " + d_country_to.getName() + " permitted since " + d_player.getName() 
-				+ " and " + l_dest_owner.getName() + " have diplomatic relations.";
+			if (d_player.isDiplomatic(l_dest_owner)) {
+				l_msg = "no advancement on " + d_country_to.getName() + " permitted since " + d_player.getName()
+						+ " and " + l_dest_owner.getName() + " have diplomatic relations.";
 				return l_msg;
 			}
 		}
-		
+
 		// decide if it's an attack or simply a move
 		if (d_country_to.getArmies() == 0) {
 			l_msg = doMoveArmies();
@@ -276,8 +307,8 @@ public class OrderAdvance implements IOrder, Serializable {
 	 */
 	@Override
 	public String toString() {
-		String l_str = "advance " + d_num_armies + Utl.plural(d_num_armies, " army", " armies") + " from "
-				+ d_country_from.getName() + " to " + d_country_to.getName();
+		String l_str = "advance (" + advanceType() + ") " + d_num_armies + Utl.plural(d_num_armies, " army", " armies")
+				+ " from " + d_country_from.getName() + " to " + d_country_to.getName();
 		return l_str;
 	}
 }

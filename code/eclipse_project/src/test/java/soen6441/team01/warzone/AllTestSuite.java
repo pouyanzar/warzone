@@ -15,7 +15,8 @@ import soen6441.team01.warzone.view.*;
 		MapEditorControllerTest.class, CardTest.class, ContinentTest.class, CountryTest.class, GamePlayTest.class,
 		MapTest.class, OrderAdvanceTest.class, OrderBombTest.class, OrderDeployTest.class, PlayerTest.class,
 		MapEditorConsoleTest.class, OrderBlockadeTest.class, GamePlayConsoleTest.class, OrderAirliftTest.class, 
-		OrderDiplomacyTest.class, MapIoConquestTest.class, MapIoDominationTest.class, GameEngineTest.class })
+		OrderDiplomacyTest.class, MapIoConquestTest.class, MapIoDominationTest.class, GameEngineTest.class,
+		PlayerRandomStrategyTest.class })
 /**
  * Test Suite for all the classes
  * 

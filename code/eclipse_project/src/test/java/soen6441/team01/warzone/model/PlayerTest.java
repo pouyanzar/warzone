@@ -8,8 +8,6 @@ import org.junit.Test;
 /**
  * Tests for Player model class
  * 
- * @author pouyan
- *
  */
 public class PlayerTest {
 

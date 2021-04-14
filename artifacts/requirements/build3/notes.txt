@@ -1,9 +1,12 @@
 * single games
-loadmap ./src/test/resources/maps/world_small/world_small.map
-gameplayer -add H1 -add B1 rand -add C1 cheat
+loadmap ./src/test/resources/maps/canada/canada.map
+gameplayer -add R1 rand -add B1 bene -add C1 cheat
+gameplayer -add R1 rand -add B1 bene -add A1 aggr
+gameplayer -add R1 rand -add B1 bene
 assigncountries
 maxrounds 10
 loadgame d:\tmp\jx1.wz
+tournament -M ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive, random -G 5 -D 50
 
 * tournaments
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
@@ -88,6 +91,9 @@ refactoring for build 3:
 
 
 
+GameEngine : startNewGame() -> startGame()
+
+
 -------------
 Unit Tests - Build 2
 
@@ -95,7 +101,12 @@ Unit Tests - Build 2
 test_validatemap_false -> MapTest
 test_validatemap_false2 -> MapTest
 test_validatemap_false3 -> MapTest
+
 test_processMapEditorCommand_loadmap_invalid -> MapEditorControllerTest
+test_validatemap_countries_not_connected_2() 
+test_validatemap_countries_not_connected_1()
+test_validatemap_fully_connected() 
+test_processMapEditorCommand_loadmap_valid()
 
 (2) reading an invalid map file;
 test_processMapEditorCommand_loadmap_invalid -> MapEditorControllerTest 
@@ -123,14 +134,28 @@ test_assignReinforcements_2 -> GamePlayTest
    test_processGamePlayCommand_bomb_valid -> test_processGamePlayCommand_advance_invalid 
    test_processGamePlayCommand_bomb_invalid -> test_processGamePlayCommand_advance_invalid 
  
+6) saving/loading a game :
+MapTest ->
+test_loadmap_command_1
+test_loadmap_command_2
+test_saveMap_1
+test_loadmap_domination_file_1
+test_loadmap_conquest_file_1
+
+MapEditorControllerTest ->
+test_processCommand_savemap_valid_4 
+test_processCommand_savemap_valid_3
+test_processCommand_savemap_valid_2()
+test_processCommand_savemap_valid_1() 
 
 
+7) tournament mode
 
+MapEditorControllerTest -> 
+test_processCommand_tournament_invalid_2()
+test_processCommand_tournament_invalid_1()
+test_processCommand_tournament_valid_2()
+test_processCommand_tournament_valid_1()
 
-
-
-
-
-GameEngine : startNewGame() -> startGame()
 
 

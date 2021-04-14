@@ -252,12 +252,24 @@ public class GamePlay implements IGamePlayModel, Serializable {
 	 */
 	public IPlayerModel detectWinner() {
 		IPlayerModel l_winner = null;
+		ArrayList<IPlayerModel> l_not_losers = new ArrayList<IPlayerModel>();
+
 		for (IPlayerModel l_player : d_players) {
 			if (l_player.isWinner()) {
 				l_winner = l_player;
 				break;
 			}
+			if (!l_player.isLoser()) {
+				l_not_losers.add(l_player);
+			}
 		}
+		if( l_winner == null ) {
+			// check if there is only 1 non-loser, ie. winner
+			if(l_not_losers.size() == 1 ) {
+				l_winner = l_not_losers.get(0);
+			}
+		}
+		
 		return l_winner;
 	}
 }

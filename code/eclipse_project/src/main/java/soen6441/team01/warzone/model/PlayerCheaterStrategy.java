@@ -34,7 +34,14 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 	}
 
 	/**
-	 * cheaters don't create orders, they manipulate the map directly.
+	 * cheaters don't create orders, they manipulate the map directly.<br>
+	 * computer player strategy whose issueOrder() method conquers all the immediate
+	 * neighboring enemy countries, and then doubles the number of armies on its
+	 * countries that have enemy neighbors. Note that in order to achieve this, the
+	 * cheater’s strategy implementation will still be called when the issueOrder()
+	 * method, but will not end up creating orders, but rather implement the
+	 * above-stated behavior by directly affecting the map during the order creation
+	 * phase.
 	 * 
 	 * @return the next order, null = end turn (always null)
 	 * @throws Exception an unexpected error
@@ -43,7 +50,7 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 
 		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
 
-		// find and conquer neighbor countries
+		// conquers all the immediate neighboring enemy countries
 		ArrayList<ICountryModel> l_player_countries = new ArrayList<>();
 		for (ICountryModel l_country : d_player.getPlayerCountries())
 			l_player_countries.add(l_country);
@@ -55,7 +62,7 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 			}
 		}
 
-		// makes double the armies in countries have enemy neighbors
+		// doubles the number of armies on its countries that have enemy neighbors
 		for (ICountryModel l_country : d_player.getPlayerCountries()) {
 			if (l_country.getNeighbors().size() > 0)
 				for (ICountryModel l_country_1 : l_country.getNeighbors())
