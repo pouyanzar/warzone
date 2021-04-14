@@ -1,12 +1,17 @@
 * single games
 loadmap ./src/test/resources/maps/canada/canada.map
-gameplayer -add R1 rand -add B1 bene -add C1 cheat
+gameplayer -add R1 rand -add B1 bene -add A1 aggr -add C1 cheat
 gameplayer -add R1 rand -add B1 bene -add A1 aggr
 gameplayer -add R1 rand -add B1 bene
-assigncountries
+gameplayer -add R1 rand -add R2 rand
+gameplayer -add C1 cheat -add C2 cheat
 maxrounds 10
+assigncountries
+
 loadgame d:\tmp\jx1.wz
 tournament -M ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive, random -G 5 -D 50
+tournament -M ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive, random, cheater -G 5 -D 50
+tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, aggressive, random -G 5 -D 50
 
 * tournaments
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10

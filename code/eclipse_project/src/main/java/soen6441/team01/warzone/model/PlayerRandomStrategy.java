@@ -36,8 +36,10 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 	public PlayerRandomStrategy(IPlayerModel p_player, IAppMsg p_msg_model) {
 		d_player = p_player;
 		d_msg_model = p_msg_model;
-		d_cards = new ArrayList<Card>(); 
-		d_cards.addAll(d_player.getCards());
+		d_cards = new ArrayList<Card>();
+		if (d_player != null) {
+			d_cards.addAll(d_player.getCards());
+		}
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 		}
 
 		if (l_order != null) {
-			d_cards = new ArrayList<Card>(); 
+			d_cards = new ArrayList<Card>();
 		}
 
 		return l_order;
@@ -346,7 +348,7 @@ public class PlayerRandomStrategy implements IPlayerStrategy, Serializable {
 		// reset counters to allow for attacks and moves
 		d_random_attack = 1;
 		d_random_move = 1;
-		d_cards = new ArrayList<Card>(); 
+		d_cards = new ArrayList<Card>();
 		d_cards.addAll(d_player.getCards());
 
 		// find a random country that belongs to me and deploy all reinforcements

@@ -137,7 +137,6 @@ public class OrderAdvance implements IOrder, Serializable {
 		String l_msg = "";
 
 		IPlayerModel l_dest_owner = d_country_to.getOwner();
-
 		// do we have diplomatic relations?
 		if (l_dest_owner != null) {
 			if (d_player.isDiplomatic(l_dest_owner)) {

@@ -47,31 +47,47 @@ public class PlayerCheaterStrategy implements IPlayerStrategy, Serializable {
 	 * @throws Exception an unexpected error
 	 */
 	public IOrder createOrder() throws Exception {
+		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [cheater] ";
 
 		ArrayList<ICountryModel> l_neighbors = new ArrayList<>();
 
 		// conquers all the immediate neighboring enemy countries
 		ArrayList<ICountryModel> l_player_countries = new ArrayList<>();
-		for (ICountryModel l_country : d_player.getPlayerCountries())
+		ArrayList<String> l_cheats = new ArrayList<>();
+		for (ICountryModel l_country : d_player.getPlayerCountries()) {
 			l_player_countries.add(l_country);
+		}
 		for (ICountryModel l_country : l_player_countries) {
 			l_neighbors.addAll(l_country.getNeighbors());
 			for (ICountryModel l_neighbor : l_neighbors) {
-				l_neighbor.getOwner().removePlayerCountry(l_neighbor);
-				d_player.addPlayerCountry(l_neighbor);
+				if (!l_neighbor.getOwner().getName().equals(d_player.getName()) && !l_cheats.contains(l_neighbor.getName())) {
+					l_neighbor.getOwner().removePlayerCountry(l_neighbor);
+					d_player.addPlayerCountry(l_neighbor);
+					d_msg_model.setMessage(MsgType.Warning, l_msg_header + "issuing cheat> taking over country " + l_neighbor.getName());
+					l_cheats.add(l_neighbor.getName());
+				}
 			}
 		}
 
 		// doubles the number of armies on its countries that have enemy neighbors
+		l_cheats = new ArrayList<>();
 		for (ICountryModel l_country : d_player.getPlayerCountries()) {
-			if (l_country.getNeighbors().size() > 0)
-				for (ICountryModel l_country_1 : l_country.getNeighbors())
-					if (!d_player.getPlayerCountries().contains(l_country_1))
-						l_country.setArmies(l_country.getArmies() * 2);
+			if (l_country.getNeighbors().size() > 0) {
+				for (ICountryModel l_country_1 : l_country.getNeighbors()) {
+					if (!d_player.getPlayerCountries().contains(l_country_1)) {
+						if (!l_cheats.contains(l_country.getName())) {
+							l_country.setArmies(l_country.getArmies() * 2);
+							l_cheats.add(l_country.getName());
+							d_msg_model.setMessage(MsgType.Warning,
+									l_msg_header + "issuing cheat> doubling armies on country " + l_country.getName());
+						}
+					}
+				}
+			}
 		}
 
-		String l_msg_header = "Gameplay - computer player " + d_player.getName() + " [cheater] issuing order> ";
-		d_msg_model.setMessage(MsgType.Informational, l_msg_header + "end turn");
+		l_msg_header += "issuing order> end turn";
+		d_msg_model.setMessage(MsgType.Informational, l_msg_header);
 		return null;
 	}
 

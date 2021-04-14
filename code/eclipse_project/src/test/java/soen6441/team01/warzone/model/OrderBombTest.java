@@ -127,4 +127,30 @@ public class OrderBombTest {
 		}
 		assertTrue(l_msg.contains("Cannot bomb your own country"));
 	}
+	
+	/**
+	 * Test bomb order - diplomactic country
+	 * 
+	 * @throws Exception when there is an exception
+	 */
+	@Test
+	public void test_bomb_diplomacy_1() throws Exception {
+		Player d_player2 = new Player("Player2", d_model_factory);
+		d_player2.addPlayerCountry(d_us);
+
+		d_canada.addNeighbor(d_us);
+		d_us.setArmies(6);
+		d_player.addPlayerCountry(d_canada);
+		d_player.addCard(new Card(CardType.bomb));
+		
+		d_player.addDiplomacy(d_player2);
+
+		OrderBomb l_bomb = new OrderBomb(d_player, d_us);
+		assertTrue(d_player.getCards().size() == 1);
+		String l_msg = l_bomb.execute();
+		assertTrue(l_msg.contains("no bombing on US permitted since John and Player2 have diplomatic relations"));
+		assertTrue(d_player.getCards().size() == 0);
+	}
+	
+
 }

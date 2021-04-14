@@ -93,10 +93,8 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy, Serializable {
 
 	/**
 	 * play a card if one is available.<br>
-	 * note that being aggressive the player will only play the bomb card if it's
-	 * available.
 	 * 
-	 * @return the bomb order or null if cannot
+	 * @return the order or null if no card played
 	 * @throws Exception unexpected error
 	 */
 	private IOrder doCards() throws Exception {
@@ -104,12 +102,30 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy, Serializable {
 		if (d_advance_sw) {
 			return null;
 		}
-		if (d_player.hasCard(CardType.bomb)) {
-			ICountryModel l_country_dest = findStrongestOpponentAdjacentCountry();
-			if (l_country_dest != null) {
-				l_order = new OrderBomb(d_player, l_country_dest);
-			}
+		if (l_order == null) {
+			l_order = tryBomb();
 		}
+		return l_order;
+	}
+
+	/**
+	 * use the bomb card if possible
+	 * 
+	 * @return bomb order or null if cannot bomb
+	 * @throws Exception unexpected error
+	 */
+	public IOrder tryBomb() throws Exception {
+		IOrder l_order = null;
+
+		if (!d_player.hasCard(CardType.bomb)) {
+			return l_order;
+		}
+
+		ICountryModel l_country_dest = findStrongestOpponentAdjacentCountry();
+		if (l_country_dest != null) {
+			l_order = new OrderBomb(d_player, l_country_dest);
+		}
+
 		return l_order;
 	}
 
@@ -179,7 +195,7 @@ public class PlayerAggressiveStrategy implements IPlayerStrategy, Serializable {
 				l_country_opponent = null;
 			}
 		}
-		
+
 		return l_country_opponent;
 	}
 

@@ -113,13 +113,24 @@ public class OrderBomb implements IOrder, Serializable {
 	 * @return a message to show half of the armies destroyed
 	 */
 	public String doBombing() {
+		String l_msg;
+		IPlayerModel l_dest_owner = d_country_to_bomb.getOwner();
+		// do we have diplomatic relations?
+		if (l_dest_owner != null) {
+			if (d_player.isDiplomatic(l_dest_owner)) {
+				l_msg = "no bombing on " + d_country_to_bomb.getName() + " permitted since " + d_player.getName()
+						+ " and " + l_dest_owner.getName() + " have diplomatic relations.";
+				return l_msg;
+			}
+		}
+		
 		int l_armies = d_country_to_bomb.getArmies();
 		int l_new_armies = l_armies / 2;
 		if (l_new_armies < 0) {
 			l_new_armies = 0;
 		}
 		d_country_to_bomb.setArmies(l_new_armies);
-		String l_msg = d_country_to_bomb.getName() + " has been bombed. Armies reduced from " + l_armies + " to "
+		l_msg = d_country_to_bomb.getName() + " has been bombed. Armies reduced from " + l_armies + " to "
 				+ l_new_armies + " army/armies";
 		return l_msg;
 	}
