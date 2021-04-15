@@ -1,9 +1,10 @@
 * single games
-loadmap ./src/test/resources/maps/canada/canada.map
+loadmap ./src/test/resources/maps/world_small/world_small.map
 gameplayer -add R1 rand -add B1 bene -add A1 aggr -add C1 cheat
 gameplayer -add R1 rand -add B1 bene -add A1 aggr
 gameplayer -add R1 rand -add B1 bene
 gameplayer -add R1 rand -add R2 rand
+gameplayer -add H1 human -add R2 rand
 gameplayer -add C1 cheat -add C2 cheat
 maxrounds 10
 assigncountries
@@ -16,7 +17,7 @@ tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolen
 * tournaments
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent -G 1 -D 10
 tournament -M ./src/test/resources/maps/world_small/world_small.map -P benevolent, aggressive -G 2 -D 25
-tournament -M ./src/test/resources/maps/world_small/world_small.map, ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive -G 5 -D 30
+tournament -M ./src/test/resources/maps/world_small/world_small.map, ./src/test/resources/maps/canada/canada.map -P benevolent, aggressive, random, cheater -G 5 -D 50
 
 * maps:
 loadmap ./src/test/resources/maps/world_small/world_small.map
@@ -36,11 +37,21 @@ gameplayer -add R1 aggr -add B1 bene
 assigncountries
 
 * map editor
-editcontinent -add 1 North_America
-editcountry -add Canada 1 -add USA 1
-editneighbor -add Canada USA -add USA Canada
+editcontinent -add 1 Europe -add 2 Asia
+editcountry -add UK 1 -add France 1 -add Spain 1 -add Germany 1 -add Italy 1 -add China 2 -add Japan 2
+editneighbor -add UK France -add France UK -add France Spain -add Spain France -add France Germany -add Germany France -add Germany Italy 
+editneighbor -add Italy Germany -add Germany China -add China Germany -add China Japan -add Japan China -add Japan Italy -add Italy Japan
+savemap -d d:\tmp\xsmapdomination.map
+loadmap d:\tmp\xsmapdomination.map
+editmap d:\tmp\xsmapdomination.map
+savemap -c d:\tmp\xsmapconquest.map
+loadmap d:\tmp\xsmapconquest.map
+editmap d:\tmp\xsmapconquest.map
+
 editmap ./src/test/resources/maps/canada/canada.map
 editmap ./src/test/resources/maps/conquest_maps/Earth.map
+
+
 
 
 -----------------------------------------------------
